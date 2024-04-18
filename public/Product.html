@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Product</title>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <!-- Font Awesome CSS -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+    <style>
+        .navbar {
+            background-color: #ffffff; /* culoarea navbarului */
+        }
+        .navbar-nav .nav-link {
+            color: #dedcdc; /* culoarea textului */
+        }
+        .navbar-nav .nav-link:hover {
+            color: #06b6d4; /* culoarea textului la hover */
+        }
+        .product {
+            border: 1px solid #cccccc;
+            padding: 10px;
+            margin-bottom: 10px;
+        }
+        .card {
+            border-radius: 15px;
+            background-color: #ffffff;
+        }
+        .card-body .btn {
+            background-color: #06b6d4;
+            color: white;
+            border-radius: 15px;
+            border: 0px solid transparent;
+        }
+        .rating {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+        }
+        .checked {
+            color: orange;
+        }
+    </style>
+</head>
+<body style="background-color: #f5f5f5;">
+    <nav class="navbar navbar-expand-lg navbar-light fixed-top">
+        <div class="container">
+            <!-- Logo -->
+            <a class="navbar-brand" href="/">GymArticles</a>
+            <!-- Buton pentru toggle pe dispozitive mobile -->
+            <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation" style="color: #06b6d4; border-color: #06b6d4;">
+                <span class="navbar-toggler-icon" style="color: #06b6d4;"></span>
+            </button>
+        
+            <!-- Elemente ale navbarului -->
+            <div class="collapse navbar-collapse" id="navbarSupportedContent">
+                <ul class="navbar-nav mr-auto">
+                    <!-- Elemente la stânga -->
+                    <li class="nav-item">
+                        <a class="nav-link" href="#" style="white-space: nowrap;">My Basket</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="#" style="white-space: nowrap;">My Favorite</a>
+                    </li>
+                </ul>
+                <!-- Input search -->
+                <form class="form-inline my-2 my-lg-0 mx-auto">
+                    <div style="display: flex; flex-direction: row; justify-content: center; align-items: center; min-width: 350px;">
+                        <input class="form-control mr-sm-2" type="search" placeholder="Search" aria-label="Search" style="border-color: #06b6d4; border-radius: 15px; width: 100%">
+                        <button class="btn my-2 my-sm-0" type="submit" style="color: #06b6d4; border-color: #06b6d4; border-radius: 15px;"><i class="fas fa-search"></i></button>
+                    </div>
+                </form>
+                <!-- Butonul Log In -->
+                <ul class="navbar-nav ml-auto">
+                    <li class="nav-item">
+                        <a class="nav-link" href="/login" style="white-space: nowrap;">Log In</a>
+                    </li>
+                    <!-- Butonul Sign Up -->
+                    <li class="nav-item">
+                        <a class="nav-link" href="/signup" style="white-space: nowrap;">Sign Up</a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+    
+    <div class="container justify-content-center" style="margin-top: 200px;">
+        <div class="row justify-content-center align-items-center">
+            <div class="col-lg-4 col-md-6 mb-4" id="card">
+                <div class="card">
+                    <div class="card-body d-flex align-items-center">
+                        <img src="https://gymbeam.ro/media/catalog/product/cache/70f742f66feec18cb83790f14444a3d1/h/e/hexagonal-dumbbell-gymbeam_5_.jpg" alt="" style="width: 200px; height: 200px;">
+                        <div class="ml-3">
+                            <h5 class="card-title" id="name">Dumbell</h5>
+                            <ul class="rating">
+                                <span class="fa fa-star checked"></span>
+                                <span class="fa fa-star checked"></span>
+                                <span class="fa fa-star checked"></span>
+                                <span class="fa fa-star checked"></span>
+                                <span class="fa fa-star"></span>
+                            </ul>
+                            <div class="d-flex align-items-baseline">
+                                <a href="/product" class="btn btn-primary">Add to basket</a>
+                                <p id="price" class="ml-2">100$</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Bootstrap JS -->
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.16.0/umd/popper.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+</body>
+</html>

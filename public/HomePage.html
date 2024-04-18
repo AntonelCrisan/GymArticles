@@ -1,0 +1,330 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>GymArticles</title>
+<!-- Bootstrap CSS -->
+<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+<!-- Font Awesome CSS -->
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+<link rel="stylesheet" type="text/css" href="./HomePage.css">
+
+</head>
+<body style="background-color: #f5f5f5;">
+<nav class="navbar navbar-expand-lg navbar-light fixed-top">
+<div class="container">
+    <!-- Logo -->
+    <a class="navbar-brand" href="/">GymArticles</a>
+    <!-- Buton pentru toggle pe dispozitive mobile -->
+    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation" style="color: #06b6d4; border-color: #06b6d4;">
+        <span class="navbar-toggler-icon" style="color: #06b6d4;"></span>
+    </button>
+
+    <!-- Elemente ale navbarului -->
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+        <ul class="navbar-nav mr-auto">
+            <!-- Elemente la stânga -->
+            <li class="nav-item">
+                <a class="nav-link" href="#" style="white-space: nowrap;">My Basket</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" href="#"  style="white-space: nowrap;">My Favorite</a>
+            </li>
+        </ul>
+        <!-- Input search -->
+        <form class="form-inline my-2 my-lg-0 mx-auto">
+            <div style="display: flex; flex-direction: row; justify-content: center; align-items: center; min-width: 350px;">
+                <input class="form-control mr-sm-2" type="search" placeholder="Search" aria-label="Search"  style="border-color: #06b6d4; border-radius: 15px; width: 100%">
+                <button class="btn my-2 my-sm-0" type="submit" style="color: #06b6d4; border-color: #06b6d4; border-radius: 15px;"><i class="fas fa-search"></i></button>
+            </div>
+        </form>
+        <!-- Butonul Log In -->
+        <ul class="navbar-nav ml-auto">
+            <li class="nav-item">
+                <a class="nav-link" href="/login"  style="white-space: nowrap;">Log In</a>
+            </li>
+            <!-- Butonul Sign Up -->
+            <li class="nav-item">
+                <a class="nav-link" href="/signup"  style="white-space: nowrap;">Sign Up</a>
+            </li>
+        </ul>
+    </div>
+</div>
+</nav>
+
+<div class="container mt-5">
+<div class="row">
+    <!-- Sidebar -->
+    <div class="col-md-3" style="margin-top: 30px;">
+        <div class="sidebar">
+            <!-- Meniu drop-down pentru sortare -->
+            <h5 class="text-center mb-3">Category</h5>
+            <ul class="list-unstyled">
+                <li>
+                    <a href="#" class="c-clothes">Clothes</a>
+                    <ul class="subcategories">
+                        <li>
+                            <a href="#">Clothes for women</a>
+                            <ul class="subcategories1">
+                                <li><a href="#">T-Shirt</a></li>
+                                <li><a href="#">Hoodies</a></li>
+                                <li><a href="#">Sport pants</a></li>
+                                <li><a href="#">Short pants</a></li>
+                                <li><a href="#">Tops & sport bras</a></li>
+                                <li><a href="#">Swimsuits</a></li>
+                                <li><a href="#">Sports caps and hats</a></li>
+                            </ul>
+                        </li>
+                        <li>
+                            <a href="#">Clothes for men</a>
+                            <ul class="subcategories2">
+                                <li><a href="#">T-Shirt</a></li>
+                                <li><a href="#">Fitness tank top</a></li>
+                                <li><a href="#">Hoodies</a></li>
+                                <li><a href="#">Sport pants</a></li>
+                                <li><a href="#">Short pants</a></li>
+                                <li><a href="#">Functional clothes</a></li>
+                                <li><a href="#">Swimsuits</a></li>
+                                <li><a href="#">Sports caps and hats</a></li>
+                            </ul>
+                        </li>
+                    </ul>
+                </li>
+                <li>
+                    <a href="#" class="c-workout_home">Workout home</a>
+                    <ul class="subcategories">
+                        <li><a href="#">Jump ropes</a></li>
+                        <li><a href="#">Resistance bands and elastic bands</a></li>
+                        <li><a href="#">Fitness balls and balance discs</a></li>
+                        <li><a href="#">Fitness mats</a></li>
+                        <li><a href="#">Weights and dumbbells</a></li>
+                        <li><a href="#">Dumbbells</a></li>
+                        <li><a href="#">Suspension training system</a></li>
+                        <li><a href="#">Fitness bars and parallel bars</a></li>
+                        <li><a href="#">Smart fitness accessories</a></li>
+                        <li><a href="#">Home workouts and others</a></li>
+                        <li><a href="#">Power rack and stands</a></li>
+                        
+                        <!-- Alte subcategorii pentru antrenamentul la domiciliu -->
+                    </ul>
+                </li>
+                <li>
+                    <a href="#" class="c-fitness">Fitness accessories</a>
+                    <ul class="subcategories">
+                        <li><a href="#">Fitness belts</a></li>
+                        <li><a href="#">Fitness gloves</a></li>
+                        <li><a href="#">Shakers</a></li>
+                        <li><a href="#">Sports bottles</a></li>
+                        <li><a href="#">Classic straps and hooks straps</a></li>
+                        <li><a href="#">Training wraps</a></li>
+                        <li><a href="#">Towels</a></li>
+                    </ul>
+                </li>
+                <li>
+                    <a href="#" class="c-bags">Bags & Backpacks</a>
+                    <ul class="subcategories">
+                        <li><a href="#">Bags for gym</a></li>
+                        <li><a href="#">Backpacks</a></li>
+                        <li><a href="#">Bags & accessories for food</a></li>
+                    </ul>
+                </li>
+                <li>
+                    <a href="#" class="c-accessory">Accessory depending on the activity</a>
+                    <ul class="subcategories">
+                        <li><a href="#">Running</a></li>
+                        <li><a href="#">Contact sports</a></li>
+                        <li><a href="#">Yoga & pilates</a></li>
+                        <li><a href="#">Cold therapy</a></li>
+                    </ul>
+                </li>
+            </ul>
+            
+        </div>
+        
+    </div>
+    <!-- Lista de produse -->
+    <div class="col-md-9" style="margin-top: 30px;">
+        <div class="row">
+            <!-- Aici puteți adăuga carduri pentru articole sportive -->
+            <div class="col-lg-4 col-md-6 mb-4" id="card">
+                <div class="card">
+                    <div class="card-body">
+                        <img src="https://gymbeam.ro/media/catalog/product/cache/70f742f66feec18cb83790f14444a3d1/h/e/hexagonal-dumbbell-gymbeam_5_.jpg" alt="" style="width: 150px; height: 150px;">
+                        <h5 class="card-title" id="name">Dumbell</h5>
+                        <ul class="rating">
+                            <span class="fa fa-star checked"></span>
+                            <span class="fa fa-star checked"></span>
+                            <span class="fa fa-star checked"></span>
+                            <span class="fa fa-star checked"></span>
+                            <span class="fa fa-star"></span>
+                        </ul>
+                        <div style="display: flex; align-items: baseline; justify-content: start; gap: 10px; margin-top: 10px;">
+                            <a href="/product" class="btn btn-primary">Buy</a>
+                            <p id="price">100$</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-lg-4 col-md-6 mb-4" id="card">
+                <div class="card">
+                    <div class="card-body">
+                        <img src="https://gymbeam.ro/media/catalog/product/cache/70f742f66feec18cb83790f14444a3d1/h/e/hexagonal-dumbbell-gymbeam_5_.jpg" alt="" style="width: 150px; height: 150px;">
+                        <h5 class="card-title" id="name">Dumbell</h5>
+                        <ul class="rating">
+                            <span class="fa fa-star checked"></span>
+                            <span class="fa fa-star checked"></span>
+                            <span class="fa fa-star checked"></span>
+                            <span class="fa fa-star checked"></span>
+                            <span class="fa fa-star"></span>
+                        </ul>
+                        <div style="display: flex; align-items: baseline; justify-content: start; gap: 10px; margin-top: 10px;">
+                            <a href="#" class="btn btn-primary">Buy</a>
+                            <p id="price">100$</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-lg-4 col-md-6 mb-4" id="card">
+                <div class="card">
+                    <div class="card-body">
+                        <img src="https://gymbeam.ro/media/catalog/product/cache/70f742f66feec18cb83790f14444a3d1/h/e/hexagonal-dumbbell-gymbeam_5_.jpg" alt="" style="width: 150px; height: 150px;">
+                        <h5 class="card-title" id="name">Dumbell</h5>
+                        <ul class="rating">
+                            <span class="fa fa-star checked"></span>
+                            <span class="fa fa-star checked"></span>
+                            <span class="fa fa-star checked"></span>
+                            <span class="fa fa-star checked"></span>
+                            <span class="fa fa-star"></span>
+                        </ul>
+                        <div style="display: flex; align-items: baseline; justify-content: start; gap: 10px; margin-top: 10px;">
+                            <a href="#" class="btn btn-primary">Buy</a>
+                            <p id="price">100$</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-lg-4 col-md-6 mb-4" id="card">
+                <div class="card">
+                    <div class="card-body">
+                        <img src="https://gymbeam.ro/media/catalog/product/cache/70f742f66feec18cb83790f14444a3d1/h/e/hexagonal-dumbbell-gymbeam_5_.jpg" alt="" style="width: 150px; height: 150px;">
+                        <h5 class="card-title" id="name">Dumbell</h5>
+                        <ul class="rating">
+                            <span class="fa fa-star checked"></span>
+                            <span class="fa fa-star checked"></span>
+                            <span class="fa fa-star checked"></span>
+                            <span class="fa fa-star checked"></span>
+                            <span class="fa fa-star"></span>
+                        </ul>
+                        <div style="display: flex; align-items: baseline; justify-content: start; gap: 10px; margin-top: 10px;">
+                            <a href="#" class="btn btn-primary">Buy</a>
+                            <p id="price">100$</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-lg-4 col-md-6 mb-4" id="card">
+                <div class="card">
+                    <div class="card-body">
+                        <img src="https://gymbeam.ro/media/catalog/product/cache/70f742f66feec18cb83790f14444a3d1/h/e/hexagonal-dumbbell-gymbeam_5_.jpg" alt="" style="width: 150px; height: 150px;">
+                        <h5 class="card-title" id="name">Dumbell</h5>
+                        <ul class="rating">
+                            <span class="fa fa-star checked"></span>
+                            <span class="fa fa-star checked"></span>
+                            <span class="fa fa-star checked"></span>
+                            <span class="fa fa-star checked"></span>
+                            <span class="fa fa-star"></span>
+                        </ul>
+                        <div style="display: flex; align-items: baseline; justify-content: start; gap: 10px; margin-top: 10px;">
+                            <a href="#" class="btn btn-primary">Buy</a>
+                            <p id="price">100$</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-lg-4 col-md-6 mb-4" id="card">
+                <div class="card">
+                    <div class="card-body">
+                        <img src="https://gymbeam.ro/media/catalog/product/cache/70f742f66feec18cb83790f14444a3d1/h/e/hexagonal-dumbbell-gymbeam_5_.jpg" alt="" style="width: 150px; height: 150px;">
+                        <h5 class="card-title" id="name">Dumbell</h5>
+                        <ul class="rating">
+                            <span class="fa fa-star checked"></span>
+                            <span class="fa fa-star checked"></span>
+                            <span class="fa fa-star checked"></span>
+                            <span class="fa fa-star checked"></span>
+                            <span class="fa fa-star"></span>
+                        </ul>
+                        <div style="display: flex; align-items: baseline; justify-content: start; gap: 10px; margin-top: 10px;">
+                            <a href="#" class="btn btn-primary">Buy</a>
+                            <p id="price">100$</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-lg-4 col-md-6 mb-4" id="card">
+                <div class="card">
+                    <div class="card-body">
+                        <img src="https://gymbeam.ro/media/catalog/product/cache/70f742f66feec18cb83790f14444a3d1/h/e/hexagonal-dumbbell-gymbeam_5_.jpg" alt="" style="width: 150px; height: 150px;">
+                        <h5 class="card-title" id="name">Dumbell</h5>
+                        <ul class="rating">
+                            <span class="fa fa-star checked"></span>
+                            <span class="fa fa-star checked"></span>
+                            <span class="fa fa-star checked"></span>
+                            <span class="fa fa-star checked"></span>
+                            <span class="fa fa-star"></span>
+                        </ul>
+                        <div style="display: flex; align-items: baseline; justify-content: start; gap: 10px; margin-top: 10px;">
+                            <a href="#" class="btn btn-primary">Buy</a>
+                            <p id="price">100$</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-lg-4 col-md-6 mb-4" id="card">
+                <div class="card">
+                    <div class="card-body">
+                        <img src="https://gymbeam.ro/media/catalog/product/cache/70f742f66feec18cb83790f14444a3d1/h/e/hexagonal-dumbbell-gymbeam_5_.jpg" alt="" style="width: 150px; height: 150px;">
+                        <h5 class="card-title" id="name">Dumbell</h5>
+                        <ul class="rating">
+                            <span class="fa fa-star checked"></span>
+                            <span class="fa fa-star checked"></span>
+                            <span class="fa fa-star checked"></span>
+                            <span class="fa fa-star checked"></span>
+                            <span class="fa fa-star"></span>
+                        </ul>
+                        <div style="display: flex; align-items: baseline; justify-content: start; gap: 10px; margin-top: 10px;">
+                            <a href="#" class="btn btn-primary">Buy</a>
+                            <p id="price">100$</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-lg-4 col-md-6 mb-4" id="card">
+                <div class="card">
+                    <div class="card-body">
+                        <img src="https://gymbeam.ro/media/catalog/product/cache/70f742f66feec18cb83790f14444a3d1/h/e/hexagonal-dumbbell-gymbeam_5_.jpg" alt="" style="width: 150px; height: 150px;">
+                        <h5 class="card-title" id="name">Dumbell</h5>
+                        <ul class="rating">
+                            <span class="fa fa-star checked"></span>
+                            <span class="fa fa-star checked"></span>
+                            <span class="fa fa-star checked"></span>
+                            <span class="fa fa-star checked"></span>
+                            <span class="fa fa-star"></span>
+                        </ul>
+                        <div style="display: flex; align-items: baseline; justify-content: start; gap: 10px; margin-top: 10px;">
+                            <a href="#" class="btn btn-primary">Buy</a>
+                            <p id="price">100$</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+    </div>
+</div>
+</div>
+<!-- Bootstrap JS -->
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.16.0/umd/popper.min.js"></script>
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+</body>
+</html>
