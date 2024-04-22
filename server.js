@@ -1,12 +1,13 @@
 const express = require('express');
 const path = require('path');
 const passport = require('passport');
-const LocalStrategy = require('passport-local').Strategy;
 const session = require('express-session');
 const mongoose = require('mongoose');
-const User = require('./user');
+const User = require('./public/user');
 const flash = require('connect-flash');
-const bcrypt = require('bcrypt');
+const cookieParser = require('cookie-parser')
+const {requireAuth, checkUser} = require('./public/authMiddleWare');
+const jwt = require('jsonwebtoken');
 const app = express();
 const port = 3012;
 const publicDir = path.join(__dirname, 'public'); // Calea către directorul public
@@ -19,6 +20,7 @@ mongoose.connect('mongodb://0.0.0.0:27017/GymArticles', { useNewUrlParser: true,
 // Middleware-uri
 app.use(express.static(publicDir));
 app.use(express.json());
+app.use(cookieParser());
 app.use(express.urlencoded({ extended: true }));
 app.use(flash());
 app.use(session({
@@ -28,46 +30,58 @@ app.use(session({
 }));
 app.use(passport.initialize());
 app.use(passport.session());
+const handleErros = (err) => {
+  console.log(err.message, err.code);
+  let errors = {name: '',emails: '', password: '', confPassword: ''};
 
+  if(err.code === 11000){
+    errors.emails = 'This email is already used!';
+    return errors;
+  }
+  //validation errors
+  if(err.message.includes('user validation faild')){
+    Object.values(err.errors).forEach(({properties}) => {
+      errors[properties.path] = properties.message;
+    })
+  }
+  return errors;
+}
 app.post('/signup', async (req, res) => {
     const { name, email, password, confPassword } = req.body;
     try {
-        const newUser = new User({ name, email, password, confPassword });
-        const user = await User.findOne({email : req.body.email});
-        if(user){
-            res.send("This email is already used!");
-        }if(password !== confPassword){
-            res.send("The passwords do not match!");
-        }if(password.length < 8 || confPassword.length < 8){
-            res.send("The password must be at least 8 characters long!");
+        if(confPassword !== password){
+          res.send("The passwords don't match!");
         }else{
-            await newUser.save();
-            res.redirect('/login');
-        }    
+          const user = await User.create({name, email, password});
+          const token = createToken(User._id);
+          res.status(201).json(user);
+          res.cookie('jwt', token, {httpOnly: true, maxAge: maxAge * 1000})
+          res.redirect('/login');
+        }
     } catch (error) {
         // Tratează erorile de salvare în baza de date
-        console.error('Eroare la salvarea utilizatorului:', error);
-        res.status(500).send('Something went wrong!');
+        const errors = handleErros(error);
+        console.error({errors});
     }
 });
 app.post('/login', async(req, res) => {
+  const {email, password} = req.body;
     try{
-        const check = await User.findOne({email : req.body.email});
-    if (!check){
-        return res.send("This email doesn't exist!");
-    }
-    if(check.password === req.body.password){
-        res.redirect('/');
-        console.log({email : req.body.email});
-    }else{
-       return res.send("Wrong password!");
-    }
-    }catch(error){
-        console.log(error);
-       return res.send("Something went wrong!");
+      const user = await User.login(email, password);
+      res.redirect('/');
+      console.log(user);
+    }catch{
+      res.status(500).send('Something went wrong!');
+
     }
     
 })
+const maxAge = 3 * 24 * 60 * 60;
+const createToken = (id) => {
+  return jwt.sign({id}, 'net ninja secret', {
+    expiresIn: maxAge
+  })
+}
 app.get('/', (req, res) => {
   res.sendFile(path.join(__dirname, 'public', 'HomePage.html'));
 });
@@ -83,5 +97,12 @@ app.get('/reset', (req, res) => {
 })
 app.get('/product', (req, res) => {
   res.sendFile(path.join(__dirname, 'public',"Product.html"))
+})
+app.get('/myAccount', (req, res) => {
+  res.sendFile(path.join(__dirname, 'public', "MyAccount.html"));
+})
+app.get('/logout', (req, res) => {
+  res.cookie('jwt', '', {maxAge: 1});
+  res.redirect('/');
 })
 app.listen(port, ()=> console.log(`Server is running at http://localhost:${port}`)); 
