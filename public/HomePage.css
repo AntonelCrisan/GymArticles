@@ -19,6 +19,9 @@
     padding: 10px;
     margin-bottom: 10px;
 }
+.card-title{
+    font-size: 14px;
+}
 .card{
     border-radius: 15px;
     background-color: #ffffff;
@@ -62,4 +65,23 @@ li:hover .subcategories {
 .subcategories > li:hover .subcategories1,
 .subcategories > li:hover .subcategories2 {
     display: block;
+}
+
+.btn-addBooks{
+    border-radius: 15px;
+    border: none;
+    height: 40px;
+    margin-top: 10px;
+}
+.btn-addBooks:hover{
+    background-color: #02879e;
+}
+.heartIcon{
+    position: absolute; 
+    top: 20px; 
+    left: 20px;
+    cursor: pointer;
+}
+.heartIcon.clicked{
+    color: red;
 }

@@ -1,6 +1,6 @@
 const mongoose = require('mongoose');
 const bcrypt = require('bcrypt');
-
+const {isEmail} = require('validator');
 // Definirea schemei pentru utilizatori
 const userSchema = new mongoose.Schema({
   name: {
@@ -10,7 +10,8 @@ const userSchema = new mongoose.Schema({
   email: {
     type: String,
     required: [true, 'Please enter a email'],
-    unique: true // Asigură că fiecare email este unic
+    unique: true,
+    validate: [isEmail, "Please enter a valid email"]
   },
   password: {
     type: String,
@@ -38,6 +39,15 @@ userSchema.statics.login = async function(email, password){
     throw Error('Incorect password!');
   }
   throw Error('Incorect email!');
+}
+
+userSchema.statics.checkEmail = async function(email){
+  const checkEmail = await this.findOne({email});
+  if(checkEmail){
+    return checkEmail;
+  }else{
+    throw Error("Incorect email!");
+  }
 }
 
 // Definirea modelului utilizatorului

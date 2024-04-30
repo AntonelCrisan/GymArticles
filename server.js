@@ -1,24 +1,18 @@
 const express = require('express');
-const path = require('path');
 const passport = require('passport');
 const session = require('express-session');
 const mongoose = require('mongoose');
 const User = require('./public/user');
 const flash = require('connect-flash');
-const cookieParser = require('cookie-parser')
+const cookieParser = require('cookie-parser');
 const {requireAuth, checkUser} = require('./public/authMiddleWare');
+require("dotenv").config();
 const jwt = require('jsonwebtoken');
 const app = express();
-const port = 3012;
-const publicDir = path.join(__dirname, 'public'); // Calea către directorul public
-
-// Conectarea la baza de date MongoDB
-mongoose.connect('mongodb://0.0.0.0:27017/GymArticles', { useNewUrlParser: true, useUnifiedTopology: true })
-    .then(() => console.log('Conectat la baza de date MongoDB!'))
-    .catch(err => console.error('Eroare la conectarea la MongoDB:', err));
-
+const port = process.env.PORT;
+const Article = require('./public/article');
 // Middleware-uri
-app.use(express.static(publicDir));
+app.use(express.static('public'));
 app.use(express.json());
 app.use(cookieParser());
 app.use(express.urlencoded({ extended: true }));
@@ -30,16 +24,31 @@ app.use(session({
 }));
 app.use(passport.initialize());
 app.use(passport.session());
+app.set('view engine', 'ejs');
+// Connecting to DataBase
+let dbURL = process.env.DB_URL;
+mongoose.connect(dbURL, { useNewUrlParser: true, useUnifiedTopology: true })
+    .then(() => console.log('Conectat la baza de date MongoDB!'))
+    .catch(err => console.error('Eroare la conectarea la MongoDB:', err));
+//Handle errors
 const handleErros = (err) => {
   console.log(err.message, err.code);
-  let errors = {name: '',emails: '', password: '', confPassword: ''};
+  let errors = {name: '',email: '', password: ''};
 
   if(err.code === 11000){
-    errors.emails = 'This email is already used!';
+    errors.email = 'This email is already used!';
+    return errors;
+  }
+  if(err.message === 'Incorect email!'){
+    errors.email = 'This email is not registered!';
+    return errors;
+  }
+  if(err.message === 'Incorect password!'){
+    errors.password = 'Incorect password!';
     return errors;
   }
   //validation errors
-  if(err.message.includes('user validation faild')){
+  if(err.message.includes('User validation failed')){
     Object.values(err.errors).forEach(({properties}) => {
       errors[properties.path] = properties.message;
     })
@@ -47,62 +56,110 @@ const handleErros = (err) => {
   return errors;
 }
 app.post('/signup', async (req, res) => {
-    const { name, email, password, confPassword } = req.body;
+    const { name, email, password } = req.body;
     try {
-        if(confPassword !== password){
-          res.send("The passwords don't match!");
-        }else{
-          const user = await User.create({name, email, password});
-          const token = createToken(User._id);
-          res.status(201).json(user);
-          res.cookie('jwt', token, {httpOnly: true, maxAge: maxAge * 1000})
-          res.redirect('/login');
-        }
-    } catch (error) {
-        // Tratează erorile de salvare în baza de date
+      if(name === '' || email === '' || password === ''){
+        res.status(400).json({warning: 'All fields must be filled!'});
+      }else{
+        const user = await User.create({name, email, password});
+        const token = createToken(user._id);
+        res.cookie('jwt', token, {httpOnly: true, maxAge: maxAge * 1000})
+        res.status(201).json({user: user._id});
+      }
+      } catch (error) {
         const errors = handleErros(error);
-        console.error({errors});
+        res.status(400).json({errors});
     }
 });
 app.post('/login', async(req, res) => {
   const {email, password} = req.body;
     try{
-      const user = await User.login(email, password);
-      res.redirect('/');
-      console.log(user);
-    }catch{
-      res.status(500).send('Something went wrong!');
-
+      if(email === '' || password === ''){
+        res.status(400).json({warning: 'All fields must be filled!'});
+      }else{
+        const user = await User.login(email, password);
+        const token = createToken(user._id);
+        res.cookie('jwt', token, {httpOnly: true, maxAge: maxAge * 1000})
+        console.log(user);
+        res.status(201).json({user: user._id, user: user.role});
+      }
+    }catch(error){
+      const errors = handleErros(error);
+      console.log(errors)
+      res.status(400).json({errors});
     }
     
 })
-const maxAge = 3 * 24 * 60 * 60;
-const createToken = (id) => {
-  return jwt.sign({id}, 'net ninja secret', {
-    expiresIn: maxAge
-  })
-}
-app.get('/', (req, res) => {
-  res.sendFile(path.join(__dirname, 'public', 'HomePage.html'));
-});
-app.get('/login', (req, res) => {
-  res.sendFile(path.join(__dirname, 'public', 'LoginPage.html')); 
-})
 
-app.get('/signup', (req, res) => {
-  res.sendFile(path.join(__dirname, 'public','SignUpPage.html'))
+app.post('/forgot-password', async(req, res) => {
+  const {email} = req.body;
+  try{
+    if(email === ''){
+      res.status(400).json({warning: 'Plase enter your email!'});
+    }else{
+      const user = await User.checkEmail(email);
+      res.status(201).json({user: user.email});
+    }
+  }catch(err){
+    const error = handleErros(err);
+    res.status(400).json({error});
+  }
 })
-app.get('/reset', (req, res) => {
-  res.sendFile(path.join(__dirname, 'public',"ResetPassword.html"))
+app.post('/reset-password', async (req, res) => {
+  const {password, confPassword} = req.body;
+  try{
+    if(password === '' || confPassword === ''){
+      res.status(400).json({warning: 'All fields must be filled!'});
+    }
+    if(password !== confPassword){
+      res.status(400).json({notEqual: 'Passwords are not equal!'});
+    }else{
+      return;
+    }
+  }catch(error){
+    return error;
+  }
 })
-app.get('/product', (req, res) => {
-  res.sendFile(path.join(__dirname, 'public',"Product.html"))
-})
-app.get('/myAccount', (req, res) => {
-  res.sendFile(path.join(__dirname, 'public', "MyAccount.html"));
+app.post('/add-article', async (req, res) => {
+  const {image, name, price, category} = req.body;
+  try{
+      const article = await Article.create({image, name, price, category});
+      article.save();
+      res.status(201).json({msg:'Article added successfully'});
+  }catch(err){
+    console.log("eroare la adaugarea articolului: ", err);
+    res.status(400).json({error: "Something went wrong!"});
+  }
 })
 app.get('/logout', (req, res) => {
   res.cookie('jwt', '', {maxAge: 1});
   res.redirect('/');
 })
+//Token age
+const maxAge = 3 * 24 * 60 * 60;
+//Creating token
+const createToken = (id) => {
+  const jwt_secret = process.env.JWT_SECRET;
+  return jwt.sign({id}, jwt_secret, {
+    expiresIn: maxAge
+  })
+}
+app.get('*', checkUser);
+app.get('/', async (req, res) => {
+  try{
+    const article = await Article.find();
+    res.render('HomePage', {article});
+  }catch(err){
+    res.status(500).json({error: err.message});
+  }
+});
+app.get('/login', (req, res) => res.render('LoginPage'));
+app.get('/signup', (req, res) => res.render('SignUpPage'));
+app.get('/forgot-password', (req, res) => res.render('ForgotPassword'));
+app.get('/product', (req, res) => res.render('Product'));
+app.get('/myAccount', (req, res) => res.render('MyAccount'));
+app.get('/basket', requireAuth, (req, res) => res.render('Basket'));
+app.get('/favorite', requireAuth, (req, res) => res.render('Favorite'));
+app.get('/reset-password', (req, res) => res.render('ResetPassword'));
+app.get('/add-article', (req, res) => res.render('AddArticle'));
 app.listen(port, ()=> console.log(`Server is running at http://localhost:${port}`)); 

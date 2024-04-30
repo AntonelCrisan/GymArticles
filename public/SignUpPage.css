@@ -12,9 +12,14 @@
   .form-control {
     border-radius: 15px; /* border-radius pentru input-uri */
   }
-  .btn-login {
+  .btn-signup {
     border-radius: 15px; /* border-radius pentru butonul de autentificare */
+    margin-bottom: 20px;
   }
-  .btn-login:hover{
+  .btn-signup:hover{
       background-color: #02879e;
+  }
+
+  #nameError, #emailError, #passwordError {
+     color : red;
   }

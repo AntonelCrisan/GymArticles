@@ -13,53 +13,17 @@
     padding: 20px;
     border-radius: 15px;
 }
-/* Stilizare pentru claritate */
-.product {
-    border: 1px solid #cccccc;
-    padding: 10px;
-    margin-bottom: 10px;
-}
-.card{
-    border-radius: 15px;
-    background-color: #ffffff;
-}
-.card-body .btn{
-    background-color: #06b6d4;
-    color: white;
-    border-radius: 15px;
-    border: 0px solid  transparent;
-}
-.rating {
-    list-style: none;
-    padding: 0;
-    margin: 0;
-}
-.checked {
-  color: orange;
-}
-/* Ascunde subcategoriile în mod implicit */
-/* Ascunde subcategoriile în mod implicit și modifică stilul legăturilor */
-.subcategories {
-    display: none;
-}
-.list-unstyled a{
-    text-decoration: none; /* Elimină sublinierea */
-    color: #000000; 
-}
-.list-unstyled a:hover{
-    color: #06b6d4;
-}
-
-/* Afiseaza subcategoriile atunci când li se face hover */
-li:hover .subcategories {
-    display: block;
-}
-.subcategories1, .subcategories2 {
-    display: none;
-}
-
-/* Afiseaza subcategoriile1 sau subcategoriile2 atunci cand cursorul este peste categoriile corespunzatoare */
-.subcategories > li:hover .subcategories1,
-.subcategories > li:hover .subcategories2 {
-    display: block;
-}
+/* Custom CSS */
+.profile-container {
+    display: flex;
+    flex-direction: row;
+  }
+  .nav-menu {
+    flex: 0 0 20%; /* 20% width */
+    background-color: #dedcdc;
+    padding: 20px;
+  }
+  .main-content {
+    flex: 1; /* Take remaining width */
+    padding: 20px;
+  }

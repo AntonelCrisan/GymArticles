@@ -1,13 +1,15 @@
 const jwt = require('jsonwebtoken');
+const User = require('./user');
+require("dotenv").config();
+const jwt_secret = process.env.JWT_SECRET;
 const requireAuth = (req, res, next) => {
     const token = req.cookies.jwt;
     if(token){
-        jwt.verify(token, 'net ninja secret', (err, decodedToken) => {
+        jwt.verify(token, jwt_secret, (err, decodedToken) => {
             if(err){
                 console.log("Invalid Token", err);
                 res.redirect('/login');
             }else{
-                console.log(decodedToken);
                 next();
             }
         })
@@ -15,23 +17,29 @@ const requireAuth = (req, res, next) => {
         res.redirect('/login');
     }
 }
-
-const checkUser = (res, req, next) => {
+const checkUser = (req, res, next) => {
     const token = req.cookies.jwt;
-    if(token){
-        jwt.verify(token, 'net ninja secret', async (err, decodedToken) => {
-            if(err){
+    if (token) {
+        jwt.verify(token, jwt_secret, async (err, decodedToken) => {
+            if (err) {
+                console.log(err.message);
+                res.locals.user = null;
                 next();
-                res.local.user = null;
-            }else{
-                let user = await User.findById(decodedToken.id);
-                res.local.user = user;
-                next();
+            } else {
+                try {
+                    let user = await User.findById(decodedToken.id);
+                    res.locals.user = user;
+                    next();
+                } catch (error) {
+                    console.log(error);
+                    res.locals.user = null;
+                    next();
+                }
             }
-        })
-        }else{
-            res.local.user = null;
-            next();
+        });
+    } else {
+        res.locals.user = null;
+        next();
     }
-}
+};
 module.exports = {requireAuth, checkUser};

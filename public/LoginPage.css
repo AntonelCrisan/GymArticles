@@ -18,3 +18,6 @@
 .btn-login:hover{
     background-color: #02879e;
 }
+#emailError, #passwordError {
+  color : red;
+}

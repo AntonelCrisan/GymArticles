@@ -1,0 +1,235 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>GymArticles</title>
+<!-- Bootstrap CSS -->
+<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+<!-- Font Awesome CSS -->
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+<style>
+  .carousel-item {
+    height: 400px;
+    background-size: cover;
+    background-position: center;
+  }
+</style>
+<link rel="stylesheet" type="text/css" href="./HomePage.css">
+
+</head>
+<body style="background-color: #f5f5f5;">
+<nav class="navbar navbar-expand-lg navbar-light fixed-top">
+<div class="container">
+    <!-- Logo -->
+    <a class="navbar-brand" href="/">GymArticles</a>
+    <!-- Buton pentru toggle pe dispozitive mobile -->
+    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation" style="color: #06b6d4; border-color: #06b6d4;">
+        <span class="navbar-toggler-icon" style="color: #06b6d4;"></span>
+    </button>
+
+    <!-- Elemente ale navbarului -->
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+        <ul class="navbar-nav mr-auto">
+            <!-- Elemente la stânga -->
+            <li class="nav-item">
+                <a class="nav-link" href="/basket" style="white-space: nowrap;" id="loginLink">My Basket</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" href="/favorite"  style="white-space: nowrap;" id="signupLink">My Favorite</a>
+            </li>
+           
+        </ul>
+        <!-- Input search -->
+        <form class="form-inline my-2 my-lg-0 mx-auto">
+            <div style="display: flex; flex-direction: row; justify-content: center; align-items: center; min-width: 350px;">
+                <input class="form-control mr-sm-2" type="search" placeholder="Search" aria-label="Search"  style="border-color: #06b6d4; border-radius: 15px; width: 100%">
+                <button class="btn my-2 my-sm-0" type="submit" style="color: #06b6d4; border-color: #06b6d4; border-radius: 15px;"><i class="fas fa-search"></i></button>
+            </div>
+        </form>
+        <ul class="navbar-nav ml-auto">
+            <% if(user) { %>
+                <li class="nav-item">
+                    <a class="nav-link" href="/myAccount"  style="white-space: nowrap;" id="myAccountLink">My Account</a>
+                </li>
+            <% } else { %>
+                <li class="nav-item">
+                    <a class="nav-link" href="/login"  style="white-space: nowrap;">Log In</a>
+                </li>
+                <!-- Butonul Sign Up -->
+                <li class="nav-item">
+                    <a class="nav-link" href="/signup"  style="white-space: nowrap;">Sign Up</a>
+                </li>
+            <% } %>
+        </ul>
+    </div>
+</div>
+</nav>
+
+
+<div id="carouselExampleIndicators" class="carousel slide" data-ride="carousel" data-interval="3000">
+    <ol class="carousel-indicators">
+      <li data-target="#carouselExampleIndicators" data-slide-to="0" class="active"></li>
+      <li data-target="#carouselExampleIndicators" data-slide-to="1"></li>
+      <li data-target="#carouselExampleIndicators" data-slide-to="2"></li>
+      <li data-target="#carouselExampleIndicators" data-slide-to="3"></li>
+      <li data-target="#carouselExampleIndicators" data-slide-to="4"></li>
+    </ol>
+    <div class="carousel-inner">
+      <div class="carousel-item active" style="background-image: url('https://media.istockphoto.com/id/615919228/photo/girl-prepairing-for-workout.jpg?s=612x612&w=0&k=20&c=WX-gV6EACTUjD9ePIgQdYwyOyF2W02Khua9vgy6xiRA=')"></div>
+      <div class="carousel-item" style="background-image: url('https://www.briellesportsclub.com/wp-content/uploads/2021/11/fitness-motivation-tips.webp')"></div>
+      <div class="carousel-item" style="background-image: url('https://gymbeam.ro/media/catalog/product/cache/bf5a31e851f50f3ed6850cbbf183db11/m/e/men_s-sweatshirt-zipper-hoodie-black-gymbeam_3_.png')"></div>
+      <div class="carousel-item" style="background-image: url('https://gymbeam.ro/media/catalog/product/cache/bf5a31e851f50f3ed6850cbbf183db11/c/r/cropped-t-shirt-serenity-beastpink-olivine-2.jpg')"></div>
+      <div class="carousel-item" style="background-image: url('https://gymbeam.ro/media/catalog/product/cache/bf5a31e851f50f3ed6850cbbf183db11/b/o/boom_2.0_preworkout_forest_fruit_400_g_gymbeam.png')"></div>
+    </div>
+    <a class="carousel-control-prev" href="#carouselExampleIndicators" role="button" data-slide="prev">
+      <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+      <span class="sr-only">Previous</span>
+    </a>
+    <a class="carousel-control-next" href="#carouselExampleIndicators" role="button" data-slide="next">
+      <span class="carousel-control-next-icon" aria-hidden="true"></span>
+      <span class="sr-only">Next</span>
+    </a>
+  </div>
+
+<div class="container mt-5">
+<div class="row">
+    <!-- Sidebar -->
+    <div class="col-md-3" style="margin-top: 30px;">
+        <div class="sidebar">
+            <!-- Meniu drop-down pentru sortare -->
+            <h5 class="text-center mb-3">Category</h5>
+            <ul class="list-unstyled">
+                <li>
+                    <a href="#" class="c-clothes">Clothes</a>
+                    <ul class="subcategories">
+                        <li>
+                            <a href="#">Clothes for women</a>
+                            <ul class="subcategories1">
+                                <li><a href="#">T-Shirt</a></li>
+                                <li><a href="#">Hoodies</a></li>
+                                <li><a href="#">Sport pants</a></li>
+                                <li><a href="#">Short pants</a></li>
+                                <li><a href="#">Tops & sport bras</a></li>
+                                <li><a href="#">Swimsuits</a></li>
+                                <li><a href="#">Sports caps and hats</a></li>
+                            </ul>
+                        </li>
+                        <li>
+                            <a href="#">Clothes for men</a>
+                            <ul class="subcategories2">
+                                <li><a href="#">T-Shirt</a></li>
+                                <li><a href="#">Fitness tank top</a></li>
+                                <li><a href="#">Hoodies</a></li>
+                                <li><a href="#">Sport pants</a></li>
+                                <li><a href="#">Short pants</a></li>
+                                <li><a href="#">Functional clothes</a></li>
+                                <li><a href="#">Swimsuits</a></li>
+                                <li><a href="#">Sports caps and hats</a></li>
+                            </ul>
+                        </li>
+                    </ul>
+                </li>
+                <li>
+                    <a href="#" class="c-workout_home">Workout home</a>
+                    <ul class="subcategories">
+                        <li><a href="#">Jump ropes</a></li>
+                        <li><a href="#">Resistance bands and elastic bands</a></li>
+                        <li><a href="#">Fitness balls and balance discs</a></li>
+                        <li><a href="#">Fitness mats</a></li>
+                        <li><a href="#">Weights and dumbbells</a></li>
+                        <li><a href="#">Dumbbells</a></li>
+                        <li><a href="#">Suspension training system</a></li>
+                        <li><a href="#">Fitness bars and parallel bars</a></li>
+                        <li><a href="#">Smart fitness accessories</a></li>
+                        <li><a href="#">Home workouts and others</a></li>
+                        <li><a href="#">Power rack and stands</a></li>
+                        
+                        <!-- Alte subcategorii pentru antrenamentul la domiciliu -->
+                    </ul>
+                </li>
+                <li>
+                    <a href="#" class="c-fitness">Fitness accessories</a>
+                    <ul class="subcategories">
+                        <li><a href="#">Fitness belts</a></li>
+                        <li><a href="#">Fitness gloves</a></li>
+                        <li><a href="#">Shakers</a></li>
+                        <li><a href="#">Sports bottles</a></li>
+                        <li><a href="#">Classic straps and hooks straps</a></li>
+                        <li><a href="#">Training wraps</a></li>
+                        <li><a href="#">Towels</a></li>
+                    </ul>
+                </li>
+                <li>
+                    <a href="#" class="c-bags">Bags & Backpacks</a>
+                    <ul class="subcategories">
+                        <li><a href="#">Bags for gym</a></li>
+                        <li><a href="#">Backpacks</a></li>
+                        <li><a href="#">Bags & accessories for food</a></li>
+                    </ul>
+                </li>
+                <li>
+                    <a href="#" class="c-accessory">Accessory depending on the activity</a>
+                    <ul class="subcategories">
+                        <li><a href="#">Running</a></li>
+                        <li><a href="#">Contact sports</a></li>
+                        <li><a href="#">Yoga & pilates</a></li>
+                        <li><a href="#">Cold therapy</a></li>
+                    </ul>
+                </li>
+            </ul>
+            
+        </div>
+        <% if (user) { %>
+            <% if (user.role === 'admin') { %>
+                <a href="/add-article">
+                    <button type="button" class="btn-addBooks" style="background-color: #06b6d4; color: #ffffff;">Add article</button>
+                </a>
+            <% } else {%>
+                <div></div>
+                <% } %>
+        <% } else { %>
+         <div></div>
+         <% } %>
+    </div>
+    <!-- Lista de produse -->
+    <div class="col-md-9" style="margin-top: 30px;">
+        <div class="row">
+        <% article.forEach(element => { %>
+            <!-- Aici puteți adăuga carduri pentru articole sportive -->
+            <div class="col-lg-4 col-md-6 mb-4" id="card">
+                <div class="card">
+                    <div class="card-body">
+                        <span class="fa fa-heart heartIcon"></span>
+                        <img src="<%= element.image %>" alt="img" style="width: 200px;">
+                        <h5 class="card-title" id="name"><%=  element.name %></h5>
+                        <ul class="rating">
+                            <span class="fa fa-star checked"></span>
+                            <span class="fa fa-star checked"></span>
+                            <span class="fa fa-star checked"></span>
+                            <span class="fa fa-star checked"></span>
+                            <span class="fa fa-star"></span>
+                        </ul>
+                        <p id="price"><strong><%= element.price %>$</strong></p>
+                        <div>
+                            <a href="/product" class="btn btn-primary">Buy</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <% }) %>
+    </div>
+</div>
+</div>
+<!-- Bootstrap JS -->
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.16.0/umd/popper.min.js"></script>
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+<script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.4/dist/umd/popper.min.js"></script>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+</body>
+</html>
