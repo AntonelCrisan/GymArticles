@@ -26,17 +26,20 @@
             <div class="row">
               <div class="col-md-4">
                 <!-- Imaginea produsului -->
-                <img src="https://gymbeam.ro/media/catalog/product/cache/bf5a31e851f50f3ed6850cbbf183db11/s/h/shaker_black_gymbeam.jpg" alt="Produs" class="img-fluid product-image">
+                <img src="<%= article.image %>" alt="Produs" class="img-fluid product-image">
               </div>
               <div class="col-md-8">
                 <!-- Detalii despre produs -->
-                <div class="product-details">
-                  <h2>Numele Produsului</h2>
-                  <p>Detalii despre produs: Aici puteți introduce o descriere a produsului.</p>
-                  <p>Preț: $XX.XX</p>
-                  <p>Disponibilitate: În stoc</p>
-                  <!-- Alte informații despre produs pot fi adăugate aici -->
-                </div>
+                  <div class="product-details">
+                    <h2><%= article.name %></h2>
+                    <p>Detalii despre produs: Aici puteți introduce o descriere a produsului.</p>
+                    <p>Price: $<%= article.price %></p>
+                    <% if (article.cantity > 0) { %>
+                    <p class="text-success">In stock</p>
+                  <% } else {%>
+                     <p class="text-danger">Not available in stock</p>
+                     <% } %>
+                  </div>
               </div>
             </div>
           </div>

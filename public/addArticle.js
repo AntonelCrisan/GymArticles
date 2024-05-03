@@ -20,6 +20,7 @@ form.addEventListener('submit', async (e) => {
         const data = await res.json();
         if(data.msg){
             alert(data.msg);
+            location.reload();
         }
         if(data.error){
             msgError.textContent = data.error;

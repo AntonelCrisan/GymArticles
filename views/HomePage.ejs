@@ -125,6 +125,7 @@
                             <li><a href="/category-results/?subcategory=Contact sports">Contact sports</a></li>
                             <li><a href="/category-results/?subcategory=Yoga & pilates">Yoga & pilates</a></li>
                             <li><a href="/category-results/?subcategory=Cold therapy">Cold therapy</a></li>
+                            <li><a href="/category-results/?subcategory=Swimming">Swimming</a></li>
                         </ul>
                     </li>
                 </ul>
@@ -132,7 +133,7 @@
             </div>
             <% if (user) { %>
                 <% if (user.role === 'admin') { %>
-                    <a href="/add-article">
+                    <a href="/add-article" target="_blank">
                         <button type="button" class="btn-addBooks" style="background-color: #06b6d4; color: #ffffff;">Add article</button>
                     </a>
                 <% } else {%>
@@ -162,7 +163,7 @@
                             </ul>
                             <p id="price"><strong><%= element.price %>$</strong></p>
                             <div>
-                                <a href="/product" class="btn btn-primary" id="btn-buy">Buy</a>
+                                <a href="/product?name=<%= element.name %>&id=<%= element._id %>" class="btn btn-primary" id="btn-buy">Buy</a>
                             </div>
                         </div>
                     </div>

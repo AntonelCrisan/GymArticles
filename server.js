@@ -183,14 +183,23 @@ app.get('/category-results', async (req, res) => {
     results = articles.length;
     res.render( 'CategoryResults', {articles, subcategory, results})   
   } catch (error) {
-    console.error('Eroare la căutarea produselor:', err);
+    console.error('Eroare la căutarea produselor:', error);
   }
  
 });
 app.get('/login', (req, res) => res.render('LoginPage'));
 app.get('/signup', (req, res) => res.render('SignUpPage'));
 app.get('/forgot-password', (req, res) => res.render('ForgotPassword'));
-app.get('/product', (req, res) => res.render('Product'));
+app.get('/product', async (req, res) => {
+  try {
+    const {name, id} = req.query;
+    const article = await Article.findById(id);
+    res.render('Product', {article});
+  } catch (error) {
+    console.error('Eroare:', error);
+  }
+ 
+});
 app.get('/myAccount', (req, res) => res.render('MyAccount'));
 app.get('/basket', requireAuth, (req, res) => res.render('Basket'));
 app.get('/favorites', requireAuth, (req, res) => res.render('Favorites'));

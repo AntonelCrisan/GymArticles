@@ -137,7 +137,7 @@ li:hover .subcategories {
                             </ul>
                             <p id="price"><strong><%= element.price %>$</strong></p>
                             <div>
-                                <a href="/product" class="btn btn-primary" id="btn-buy">Buy</a>
+                                <a href="/product?name=<%= element.name %>&id=<%= element._id %>" class="btn btn-primary" id="btn-buy">Buy</a>
                             </div>
                         </div>
                     </div>
