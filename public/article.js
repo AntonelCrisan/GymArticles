@@ -15,8 +15,16 @@ const articleSchema = new mongoose.Schema({
     category: {
         type: String,
         required: true
+    },
+    subcategory: {
+        type: String,
+        required: true
+    },
+    cantity: {
+        type: Number,
+        required: true
     }
 });
-
+articleSchema.index({name: 'text'});
 const Article = mongoose.model('Article', articleSchema);
 module.exports = Article; 

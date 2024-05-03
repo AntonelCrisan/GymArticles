@@ -5,6 +5,7 @@ const mongoose = require('mongoose');
 const User = require('./public/user');
 const flash = require('connect-flash');
 const cookieParser = require('cookie-parser');
+const bodyParser = require("body-parser");   
 const {requireAuth, checkUser} = require('./public/authMiddleWare');
 require("dotenv").config();
 const jwt = require('jsonwebtoken');
@@ -24,6 +25,7 @@ app.use(session({
 }));
 app.use(passport.initialize());
 app.use(passport.session());
+app.use(bodyParser.json());
 app.set('view engine', 'ejs');
 // Connecting to DataBase
 let dbURL = process.env.DB_URL;
@@ -121,14 +123,14 @@ app.post('/reset-password', async (req, res) => {
   }
 })
 app.post('/add-article', async (req, res) => {
-  const {image, name, price, category} = req.body;
+  const {image, name, price, category, subcategory, cantity} = req.body;
   try{
-      const article = await Article.create({image, name, price, category});
+      const article = await Article.create({image, name, price, category, subcategory, cantity});
       article.save();
       res.status(201).json({msg:'Article added successfully'});
   }catch(err){
     console.log("eroare la adaugarea articolului: ", err);
-    res.status(400).json({error: "Something went wrong!"});
+    res.status(400).json({error: "Please enter all the required information!"});
   }
 })
 app.get('/logout', (req, res) => {
@@ -146,12 +148,44 @@ const createToken = (id) => {
 }
 app.get('*', checkUser);
 app.get('/', async (req, res) => {
-  try{
-    const article = await Article.find();
-    res.render('HomePage', {article});
-  }catch(err){
-    res.status(500).json({error: err.message});
+  try {
+    const { subcategory, category } = req.query;
+    let articles;
+    if (category) {
+      articles = await Article.find({ category: category });
+    } else if (subcategory) {
+      articles = await Article.find({ subcategory: subcategory });
+    } else {
+      articles = await Article.find();
+    }
+    res.render('HomePage', { articles});
+  } catch (err) {
+    res.status(500).json({ error: err.message });
   }
+});
+
+app.get('/search', async (req, res) => {
+  try {
+    let nrArticle = 0;
+    const query = req.query.q; 
+    const article = await Article.find({ $text: { $search: query } }); 
+    nrArticle = article.length;
+    res.render('SearchResults', { article, query, nrArticle });
+  } catch (err) {
+    console.error('Eroare la căutarea produselor:', err);
+  }
+});
+app.get('/category-results', async (req, res) => {
+  const {subcategory} = req.query;
+  try {
+    let results = 0;
+    const articles = await Article.find({subcategory: subcategory});
+    results = articles.length;
+    res.render( 'CategoryResults', {articles, subcategory, results})   
+  } catch (error) {
+    console.error('Eroare la căutarea produselor:', err);
+  }
+ 
 });
 app.get('/login', (req, res) => res.render('LoginPage'));
 app.get('/signup', (req, res) => res.render('SignUpPage'));
@@ -159,7 +193,7 @@ app.get('/forgot-password', (req, res) => res.render('ForgotPassword'));
 app.get('/product', (req, res) => res.render('Product'));
 app.get('/myAccount', (req, res) => res.render('MyAccount'));
 app.get('/basket', requireAuth, (req, res) => res.render('Basket'));
-app.get('/favorite', requireAuth, (req, res) => res.render('Favorite'));
+app.get('/favorites', requireAuth, (req, res) => res.render('Favorites'));
 app.get('/reset-password', (req, res) => res.render('ResetPassword'));
 app.get('/add-article', (req, res) => res.render('AddArticle'));
 app.listen(port, ()=> console.log(`Server is running at http://localhost:${port}`)); 

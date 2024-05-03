@@ -1,0 +1,157 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Rezultate căutare</title>
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+<!-- Font Awesome CSS -->
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+<style>
+    .navbar {
+    background-color: #ffffff; /* culoarea navbarului */
+}
+.navbar-nav .nav-link {
+    color: #dedcdc; /* culoarea textului */
+}
+.navbar-nav .nav-link:hover {
+    color: #06b6d4; /* culoarea textului la hover */
+}
+/* Sidebar fixat pe stânga */
+.sidebar {
+    background-color: #ffffff;
+    padding: 20px;
+    border-radius: 15px;
+}
+/* Stilizare pentru claritate */
+.product {
+    border: 1px solid #cccccc;
+    padding: 10px;
+    margin-bottom: 10px;
+}
+.card-title{
+    font-size: 14px;
+}
+.card{
+    border-radius: 15px;
+    background-color: #ffffff;
+}
+.card-body .btn{
+    background-color: #06b6d4;
+    color: white;
+    border-radius: 15px;
+    border: 0px solid  transparent;
+}
+.rating {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+.checked {
+  color: orange;
+}
+/* Ascunde subcategoriile în mod implicit */
+/* Ascunde subcategoriile în mod implicit și modifică stilul legăturilor */
+.subcategories {
+    display: none;
+}
+.list-unstyled a{
+    text-decoration: none; /* Elimină sublinierea */
+    color: #000000; 
+}
+.subcategories li:hover{
+    color: #06b6d4;
+    cursor: pointer;
+    text-decoration:  underline;
+}
+label:hover{
+    cursor: pointer;
+    color: #06b6d4;
+}
+/* Afiseaza subcategoriile atunci când li se face hover */
+li:hover .subcategories {
+    display: block;
+}
+.subcategories1, .subcategories2 {
+    display: none;
+}
+
+/* Afiseaza subcategoriile1 sau subcategoriile2 atunci cand cursorul este peste categoriile corespunzatoare */
+.subcategories > li:hover .subcategories1,
+.subcategories > li:hover .subcategories2 {
+    display: block;
+}
+
+.btn-addBooks{
+    border-radius: 15px;
+    border: none;
+    height: 40px;
+    margin-top: 10px;
+}
+.btn-addBooks:hover{
+    background-color: #02879e;
+}
+.heartIcon{
+    position: absolute; 
+    top: 20px; 
+    left: 20px;
+    cursor: pointer;
+}
+.heartIcon.clicked{
+    color: red;
+}
+.card.hide{
+    display: none;
+}
+
+</style>
+</head>
+<body style="background-color: #f5f5f5;">
+    <%- include('navbar') %>
+    <div class="container mt-5">
+<div class="row">
+        <div class="col-md-9" style="margin-top: 30px;">
+            <div class="row">
+            <% articles.forEach(element => { %>
+                <!-- Aici puteți adăuga carduri pentru articole sportive -->
+                <% if (!subcategory) { %>
+                    <div class="text-danger">
+                        The article you are looking for does not exist!
+                    </div>
+                <% } else { %>
+                <div style="margin-bottom: 10px;"> <%= results %> results found for <strong>"<%= subcategory %>"</strong></div>
+                <div class="col-lg-4 col-md-6 mb-4 filtrable-card">
+                    <div class="card" data-name = "<%= element.subcategory %>">
+                        <div class="card-body"> 
+                            <span class="fa fa-heart heartIcon"></span>
+                            <img src="<%= element.image %>" alt="img" style="max-width: 100%; height: auto;">
+                            <h5 class="card-title" id="name" style="white-space: nowrap; overflow: hidden; text-overflow: ellipsis; padding-top: 10px;"><%=  element.name %></h5>
+                            <ul class="rating">
+                                <span class="fa fa-star checked"></span>
+                                <span class="fa fa-star checked"></span>
+                                <span class="fa fa-star checked"></span>
+                                <span class="fa fa-star checked"></span>
+                                <span class="fa fa-star"></span>
+                            </ul>
+                            <p id="price"><strong><%= element.price %>$</strong></p>
+                            <div>
+                                <a href="/product" class="btn btn-primary" id="btn-buy">Buy</a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <% } %>
+                <% }) %>
+
+        </div>
+        </div>
+</div>
+    </div>
+  
+<script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.4/dist/umd/popper.min.js"></script>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+</body>
+</html>

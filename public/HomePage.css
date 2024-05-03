@@ -49,10 +49,15 @@
     text-decoration: none; /* Elimină sublinierea */
     color: #000000; 
 }
-.list-unstyled a:hover{
+.subcategories li:hover{
+    color: #06b6d4;
+    cursor: pointer;
+    text-decoration:  underline;
+}
+label:hover{
+    cursor: pointer;
     color: #06b6d4;
 }
-
 /* Afiseaza subcategoriile atunci când li se face hover */
 li:hover .subcategories {
     display: block;
@@ -84,4 +89,7 @@ li:hover .subcategories {
 }
 .heartIcon.clicked{
     color: red;
+}
+.card.hide{
+    display: none;
 }

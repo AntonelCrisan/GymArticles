@@ -1,13 +1,3 @@
-// const category = document.getElementsByTagName('a');
-// for(let i = 0; i < category.length; i++){
-//     category[i].addEventListener("click", () =>{
-//     for(let j = 0; j < category.length; j++){
-//     category[j].style.color = 'black';
-//     }
-//     category[i].style.color = '#b26ce0';
-// })
-// }
-
 const form = document.querySelector('form');
 const msgError = document.getElementById('msgError');
 const msgOk = document.getElementById('msgOk');
@@ -17,18 +7,19 @@ form.addEventListener('submit', async (e) => {
     const name = form.name.value;
     const price = form.price.value;
     const category = form.category.value;
+    const subcategory = form.subcategory.value;
+    const cantity = form.cantity.value;
     msgError.textContent = '';
     msgOk.textContent = '';
     try{
         const res = await fetch('/add-article', {
             method: 'POST',
-            body: JSON.stringify({image, name, price, category}),
+            body: JSON.stringify({image, name, price, category, subcategory, cantity}),
             headers: {'Content-Type': 'application/json'}
           });
         const data = await res.json();
         if(data.msg){
-            msgOk.textContent = data.msg;
-            location.reload();
+            alert(data.msg);
         }
         if(data.error){
             msgError.textContent = data.error;
