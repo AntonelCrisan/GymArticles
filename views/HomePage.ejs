@@ -133,8 +133,8 @@
             </div>
             <% if (user) { %>
                 <% if (user.role === 'admin') { %>
-                    <a href="/add-article" target="_blank">
-                        <button type="button" class="btn-addBooks" style="background-color: #06b6d4; color: #ffffff;">Add article</button>
+                    <a href="/add-article" target="_blank" class="card-btn">
+                        <button type="button" class="btn btn-primary">Add article</button>
                     </a>
                 <% } else {%>
                     <div></div>
@@ -179,6 +179,5 @@
 <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.4/dist/umd/popper.min.js"></script>
 <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
-<script src="homePage.js"></script>
 </body>
 </html>

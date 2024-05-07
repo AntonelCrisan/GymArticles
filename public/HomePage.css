@@ -26,12 +26,16 @@
     border-radius: 15px;
     background-color: #ffffff;
 }
-.card-body .btn{
+.card-body .btn, .card-btn .btn{
     background-color: #06b6d4;
     color: white;
     border-radius: 15px;
     border: 0px solid  transparent;
 }
+.card-body .btn:hover, .card-btn .btn:hover{
+    background-color: #119db0;
+}
+
 .rating {
     list-style: none;
     padding: 0;

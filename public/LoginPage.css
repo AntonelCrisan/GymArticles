@@ -12,11 +12,13 @@
 .form-control {
   border-radius: 15px; /* border-radius pentru input-uri */
 }
-.btn-login {
+.card-body .btn{
+  background-color: #06b6d4; 
+  color: #ffffff;
   border-radius: 15px; /* border-radius pentru butonul de autentificare */
 }
-.btn-login:hover{
-    background-color: #02879e;
+.card-body .btn:hover{
+    background-color: #119db0;
 }
 #emailError, #passwordError {
   color : red;

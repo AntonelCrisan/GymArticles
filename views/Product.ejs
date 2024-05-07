@@ -4,52 +4,74 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Product</title>
+    <!-- Bootstrap CSS -->
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
-    <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
     <!-- Font Awesome CSS -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
-   <style>
-    .product-details {
-      margin-top: 100px;
-    }
-    .product-image {
-      max-width: 300px;
-      margin-bottom: 20px;
-    }
+    <style>
+        body {
+            background-color: #f5f5f5;
+        }
+        .product-details {
+            margin-top: 20px;
+            border: 1px solid #ddd;
+            border-radius: 10px;
+            padding: 20px;
+            background-color: #fff;
+        }
+        .product-image {
+            max-width: 100%;
+            height: auto;
+            margin-bottom: 20px;
+        }
+        .product-details .btn {
+            background-color: #06b6d4;
+            color: white;
+            border-radius: 15px;
+            border: 0px solid transparent;
+        }
+        .product-details .btn:hover {
+            background-color: #119db0;
+        }
     </style>
 </head>
 <body style="background-color: #f5f5f5;">
-<%- include('Navbar') %>
-    <div class="d-flex justify-content-center align-items-center"  style="height: 100vh;">
-        <div class="container">
-            <div class="row">
-              <div class="col-md-4">
-                <!-- Imaginea produsului -->
-                <img src="<%= article.image %>" alt="Produs" class="img-fluid product-image">
-              </div>
-              <div class="col-md-8">
-                <!-- Detalii despre produs -->
-                  <div class="product-details">
+    <!-- Navbar -->
+    <%- include('Navbar') %>
+
+    <div class="container mt-5">
+        <div class="row justify-content-center align-items-center">
+            <div class="col-md-6 mt-5">
+                <!-- Product Image -->
+                <img src="<%= article.image %>" alt="Product" class="img-fluid product-image">
+            </div>
+            <div class="col-md-6">
+                <!-- Product Details -->
+                <div class="product-details">
                     <h2><%= article.name %></h2>
                     <p>Detalii despre produs: Aici puteți introduce o descriere a produsului.</p>
                     <p>Price: $<%= article.price %></p>
                     <% if (article.cantity > 0) { %>
-                    <p class="text-success">In stock</p>
-                  <% } else {%>
-                     <p class="text-danger">Not available in stock</p>
-                     <% } %>
-                  </div>
-              </div>
+                        <p class="text-success">In stock</p>
+                    <% } else { %>
+                        <p class="text-danger">Not available in stock</p>
+                    <% } %>
+                      <div>
+                        <a class="btn btn-primary mb-3" type="submit">Add to cart</a>
+                    </div>
+                    <div>
+                        <a href="#" class="btn btn-primary">Leave a review</a>
+                    </div>
+                </div>
             </div>
-          </div>
+        </div>
     </div>
-   
-    
+
     <!-- Bootstrap JS -->
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.16.0/umd/popper.min.js"></script>
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
-    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+    <script src="product.js"></script>
 </body>
 </html>

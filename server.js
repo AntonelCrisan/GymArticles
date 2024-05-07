@@ -12,6 +12,7 @@ const jwt = require('jsonwebtoken');
 const app = express();
 const port = process.env.PORT;
 const Article = require('./public/article');
+const Cart = require('./public/cart');
 // Middleware-uri
 app.use(express.static('public'));
 app.use(express.json());
@@ -73,6 +74,7 @@ app.post('/signup', async (req, res) => {
         res.status(400).json({errors});
     }
 });
+
 app.post('/login', async(req, res) => {
   const {email, password} = req.body;
     try{
@@ -115,11 +117,9 @@ app.post('/reset-password', async (req, res) => {
     }
     if(password !== confPassword){
       res.status(400).json({notEqual: 'Passwords are not equal!'});
-    }else{
-      return;
     }
   }catch(error){
-    return error;
+     console.log(error);
   }
 })
 app.post('/add-article', async (req, res) => {
@@ -187,19 +187,31 @@ app.get('/category-results', async (req, res) => {
   }
  
 });
-app.get('/login', (req, res) => res.render('LoginPage'));
-app.get('/signup', (req, res) => res.render('SignUpPage'));
-app.get('/forgot-password', (req, res) => res.render('ForgotPassword'));
+
 app.get('/product', async (req, res) => {
   try {
     const {name, id} = req.query;
     const article = await Article.findById(id);
     res.render('Product', {article});
   } catch (error) {
-    console.error('Eroare:', error);
+    console.error('Eroare:', error);  
   }
- 
+  app.post('/product', async (req, res) => {
+    try {
+        const {name, id} = req.body; // Assuming id and name are in the request body
+        const cart = await Cart.create({idProduct: id, name });
+        cart.save();
+        return res.status(200).json({ message: "Product added successfully!" });
+    } catch (error) {
+        console.error("Error in adding to cart:", error.message);
+        return res.status(500).json({ error: "Internal server error" });
+    }
 });
+
+});
+app.get('/login', (req, res) => res.render('LoginPage'));
+app.get('/signup', (req, res) => res.render('SignUpPage'));
+app.get('/forgot-password', (req, res) => res.render('ForgotPassword'));
 app.get('/myAccount', (req, res) => res.render('MyAccount'));
 app.get('/basket', requireAuth, (req, res) => res.render('Basket'));
 app.get('/favorites', requireAuth, (req, res) => res.render('Favorites'));
