@@ -207,7 +207,9 @@ app.get('/product', async (req, res) => {
         return res.status(500).json({ error: "Internal server error" });
     }
 });
-
+app.get('/edit-product', (req, res) => {
+  res.render('EditProduct');
+});
 });
 app.get('/login', (req, res) => res.render('LoginPage'));
 app.get('/signup', (req, res) => res.render('SignUpPage'));

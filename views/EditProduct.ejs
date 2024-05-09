@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Edit Product</title>
+</head>
+<body>
+<div id="editProduct">
+    <form id="articleForm">
+        <div class="mb-3">
+            <label for="image" class="form-label">Image</label>
+            <input type="text" class="form-control" name="image">
+        </div>
+        <div class="mb-3">
+            <label for="name" class="form-label">Name</label>
+            <input type="text" class="form-control" name="name">
+        </div>
+        <div class="mb-3">
+            <label for="price" class="form-label">Price</label>
+            <input type="text" class="form-control" name="price">
+        </div>
+        <div class="mb-3">
+            <label for="category" class="form-label">Category</label>
+            <input type="text" class="form-control" name="category">
+        </div>
+        <div class="mb-3">
+            <label for="subcategory" class="form-label">Subcategory</label>
+            <input type="text" class="form-control" name="subcategory">
+        </div>
+        <div class="mb-3">
+            <label for="quantity" class="form-label">Quantity</label>
+            <input type="number" class="form-control" name="quantity">
+        </div>
+        <div id="msgError" class="text-danger"></div>
+        <div id="msgOk" class="text-success"></div>
+        <button type="submit" class="btn btn-primary">Save</button>
+        <button type="submit" class="btn btn-primary">Delete article</button>
+    </form>
+</div>
+</body>
+</html>
