@@ -196,6 +196,7 @@ app.get('/product', async (req, res) => {
   } catch (error) {
     console.error('Eroare:', error);  
   }
+});
   app.post('/product', async (req, res) => {
     try {
         const {name, id} = req.body; // Assuming id and name are in the request body
@@ -207,10 +208,41 @@ app.get('/product', async (req, res) => {
         return res.status(500).json({ error: "Internal server error" });
     }
 });
-app.get('/edit-product', (req, res) => {
-  res.render('EditProduct');
+app.get('/edit-product',  async (req, res) => {
+  try {
+    const article = await Article.findById(req.query.id);
+    res.render('EditProduct', {article}); 
+  } catch (error) {
+      console.log(error);
+      res.status(400).json({error});
+  }
 });
+app.put('/edit-product/:id', async (req, res) => {
+  try {
+    const {image, name, price, category, subcategory, cantity } = req.body;
+    const {id} = req.params;
+
+    // Find the article by ID
+    const article = await Article.findById(id);
+    console.log(id);
+      // Update the article properties with the new values
+    article.image = image;
+    article.name = name;
+    article.price = price;
+    article.category = category;
+    article.subcategory = subcategory;
+    article.cantity = cantity;
+
+    // Save the updated article to the database
+    await article.save();
+
+    res.status(201).json({ msg: 'Article modified successfully' });
+  } catch (err) {
+    console.log("Error editing the article:", err);
+    res.status(400).json({ error: "Please enter all the required information!" });
+  }
 });
+
 app.get('/login', (req, res) => res.render('LoginPage'));
 app.get('/signup', (req, res) => res.render('SignUpPage'));
 app.get('/forgot-password', (req, res) => res.render('ForgotPassword'));
