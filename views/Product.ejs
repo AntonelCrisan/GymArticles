@@ -9,6 +9,7 @@
     <!-- Font Awesome CSS -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
     <style>
         body {
             background-color: #f5f5f5;
@@ -34,11 +35,65 @@
         .product-details .btn:hover {
             background-color: #119db0;
         }
+        .navbar {
+        background-color: #ffffff; /* culoarea navbarului */
+        }
+        .navbar-nav .nav-link {
+            color: #dedcdc; /* culoarea textului */
+        }
+        .navbar-nav .nav-link:hover {
+            color: #06b6d4; /* culoarea textului la hover */
+        }
     </style>
 </head>
 <body style="background-color: #f5f5f5;" id="body">
     <!-- Navbar -->
-    <%- include('Navbar') %>
+    <nav class="navbar navbar-expand-lg navbar-light fixed-top">
+        <div class="container">
+            <!-- Logo -->
+            <a class="navbar-brand" href="/">GymArticles</a>
+            <!-- Buton pentru toggle pe dispozitive mobile -->
+            <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation" style="border: none;">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+        
+            <!-- Elemente ale navbarului -->
+            <div class="collapse navbar-collapse" id="navbarSupportedContent">
+                <ul class="navbar-nav mr-auto">
+                    <!-- Elemente la stânga -->
+                    <li class="nav-item">
+                        <a class="nav-link" href="/basket" style="white-space: nowrap;">My Basket</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="/favorites"  style="white-space: nowrap;">Favorite</a>
+                    </li>
+                    
+                </ul>
+                <!-- Input search -->
+                <form class="form-inline my-2 my-lg-0 mx-auto" action="/search"  method="GET">
+                    <div style="display: flex; flex-direction: row; justify-content: center; align-items: center; min-width: 350px;">
+                        <input class="form-control mr-sm-2" type="text" name="q" placeholder="Search" aria-label="Search"  style="border-color: #06b6d4; border-radius: 15px; width: 100%">
+                        <button class="btn my-2 my-sm-0" type="submit" style="color: #06b6d4; border-color: #06b6d4; border-radius: 15px;"><i class="fas fa-search"></i></button>
+                    </div>
+                </form>
+                <ul class="navbar-nav ml-auto">
+                    <% if (user) { %>
+                        <li class="nav-item">
+                            <a class="nav-link" href="/myAccount"  style="white-space: nowrap;" id="myAccountLink">My Account</a>
+                        </li>
+                <% } else { %>
+                    <li class="nav-item">
+                        <a class="nav-link" href="/login"  style="white-space: nowrap;">Log In</a>
+                    </li>
+                    <!-- Butonul Sign Up -->
+                    <li class="nav-item">
+                        <a class="nav-link" href="/signup"  style="white-space: nowrap;">Sign Up</a>
+                    </li>
+                    <% } %>
+                </ul>
+            </div>
+        </div>
+        </nav>
 
     <div class="container mt-5">
         <div class="row justify-content-center align-items-center">
@@ -74,11 +129,13 @@
             </div>
         </div>
     </div>
-
     <!-- Bootstrap JS -->
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.16.0/umd/popper.min.js"></script>
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.4/dist/umd/popper.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
     <script src="product.js"></script>
 </body>
 </html>
