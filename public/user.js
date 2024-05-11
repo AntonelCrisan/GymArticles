@@ -1,5 +1,5 @@
 const mongoose = require('mongoose');
-const bcrypt = require('bcrypt');
+const bcrypt = require('bcryptjs');
 const {isEmail} = require('validator');
 // Definirea schemei pentru utilizatori
 const userSchema = new mongoose.Schema({
