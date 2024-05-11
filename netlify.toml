@@ -1,7 +1,7 @@
+[start]
+  command = "node server.js"
 [build]
   command = "npm install"
   publish = "views"
 
-[start]
-command = "node server.js"
 
