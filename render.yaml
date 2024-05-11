@@ -1,0 +1,18 @@
+# Exported from Render on 2024-05-11T12:54:09Z
+services:
+- type: web
+  name: GymArticles
+  runtime: node
+  repo: https://github.com/AntonelCrisan/GymArticles
+  plan: free
+  envVars:
+  - key: JWT_SECRET
+    sync: false
+  - key: PORT
+    sync: false
+  - key: DB_URL
+    sync: false
+  region: oregon
+  buildCommand: npm install
+  startCommand: node server.js
+version: "1"
