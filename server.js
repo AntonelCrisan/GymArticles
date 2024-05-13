@@ -83,7 +83,7 @@ app.post('/login', async(req, res) => {
       }else{
         const user = await User.login(email, password);
         const token = createToken(user._id);
-        res.cookie('jwt', token, {httpOnly: true, maxAge: maxAge * 1000})
+        res.cookie('jwt', token, {httpOnly: true, maxAge: maxAge * 1000}) 
         console.log(user);
         res.status(201).json({user: user._id, user: user.role});
       }

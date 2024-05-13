@@ -28,7 +28,7 @@ form.addEventListener('submit', async (e) => {
       errorFields.textContent = data.warning;
     }
     if(data.user){
-      location.assign('/login');
+      location.assign('/');
     }
   }catch(err){
     console.log(err);
