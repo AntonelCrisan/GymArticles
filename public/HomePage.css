@@ -44,38 +44,18 @@
 .checked {
   color: orange;
 }
-/* Ascunde subcategoriile în mod implicit */
-/* Ascunde subcategoriile în mod implicit și modifică stilul legăturilor */
-.subcategories {
-    display: none;
-}
 .list-unstyled a{
     text-decoration: none; /* Elimină sublinierea */
     color: #000000; 
+    padding-left: 20px;
 }
-.subcategories li:hover{
-    color: #06b6d4;
-    cursor: pointer;
-    text-decoration:  underline;
-}
-label:hover{
-    cursor: pointer;
+.list-unstyled a:hover{
+    text-decoration: underline; /* Elimină sublinierea */
     color: #06b6d4;
 }
-/* Afiseaza subcategoriile atunci când li se face hover */
-li:hover .subcategories {
-    display: block;
+.list-unstyled summary:hover{
+    color: #06b6d4;
 }
-.subcategories1, .subcategories2 {
-    display: none;
-}
-
-/* Afiseaza subcategoriile1 sau subcategoriile2 atunci cand cursorul este peste categoriile corespunzatoare */
-.subcategories > li:hover .subcategories1,
-.subcategories > li:hover .subcategories2 {
-    display: block;
-}
-
 .btn-addBooks{
     border-radius: 15px;
     border: none;

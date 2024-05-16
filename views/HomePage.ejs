@@ -48,7 +48,7 @@
                 <ul class="navbar-nav mr-auto">
                     <!-- Elemente la stânga -->
                     <li class="nav-item">
-                        <a class="nav-link" href="/basket" style="white-space: nowrap;">My Basket</a>
+                        <a class="nav-link" href="/cart" style="white-space: nowrap;">My Cart</a>
                     </li>
                     <li class="nav-item">
                         <a class="nav-link" href="/favorites"  style="white-space: nowrap;">Favorite</a>
@@ -115,8 +115,8 @@
                 <h5 class="text-center mb-3">Category</h5>
                 <ul class="list-unstyled">
                     <li>
-                        <label class="clothesWomen">Clothes for women</label>
-                        <ul class="subcategories">
+                        <details>
+                            <summary>Clothes for women</summary>
                             <li><a href="/category-results/?subcategory=T-Shirt">T-Shirt</a></li>
                             <li><a href="/category-results/?subcategory=Hoodies">Hoodies</a></li>
                             <li><a href="/category-results/?subcategory=Sport pants">Sport pants</a></li>
@@ -124,11 +124,11 @@
                             <li><a href="/category-results/?subcategory=Tops & sport bras">Tops & sport bras</a></li>
                             <li><a href="/category-results/?subcategory=Swimsuits">Swimsuits</a></li>
                             <li><a href="/category-results/?subcategory=Sports caps and hats">Sports caps and hats</a></li>
-                        </ul>
+                        </details>
                     </li>
                     <li>
-                        <label class="clothesMen">Clothes for men</label>
-                        <ul class="subcategories">
+                        <details>
+                            <summary>Clothes for men</summary>
                             <li><a href="/category-results/?subcategory=T-Shirt">T-Shirt</a></li>
                             <li><a href="/category-results/?subcategory=Fitness tank top">Fitness tank top</a></li>
                             <li><a href="/category-results/?subcategory=Hoodies">Hoodies</a></li>
@@ -137,12 +137,12 @@
                             <li><a href="/category-results/?subcategory=Functional clothes">Functional clothes</a></li>
                             <li><a href="/category-results/?subcategory=Swimsuits">Swimsuits</a></li>
                             <li><a href="/category-results/?subcategory=Sports caps and hats">Sports caps and hats</a></li>
-                        </ul>
+                        </details>
                     </li>
                     
                     <li>
-                        <label class="c-workout_home">Workout home</label>
-                        <ul class="subcategories">
+                        <details>
+                            <summary>Workout home</summary>
                             <li><a href="/category-results/?subcategory=Jump ropes">Jump ropes</a></li>
                             <li><a href="/category-results/?subcategory=Resistance bands and elastic bands">Resistance bands and elastic bands</a></li>
                             <li><a href="/category-results/?subcategory=Fitness balls and balance discs">Fitness balls and balance discs</a></li>
@@ -154,12 +154,11 @@
                             <li><a href="/category-results/?subcategory=Smart fitness accessories">Smart fitness accessories</a></li>
                             <li><a href="/category-results/?subcategory=Home workouts and others">Home workouts and others</a></li>
                             <li><a href="/category-results/?subcategory=Power rack and stands">Power rack and stands</a></li>
-                            <!-- Adăugați alte subcategorii pentru antrenamentul la domiciliu -->
-                        </ul>
+                        </details>
                     </li>
                     <li>
-                        <label class="c-fitness">Fitness accessories</label>
-                        <ul class="subcategories">
+                        <details>
+                            <summary>Fitness accessories</summary>
                             <li><a href="/category-results/?subcategory=Fitness belts">Fitness belts</a></li>
                             <li><a href="/category-results/?subcategory=Fitness gloves">Fitness gloves</a></li>
                             <li><a href="/category-results/?subcategory=Shakers">Shakers</a></li>
@@ -167,29 +166,30 @@
                             <li><a href="/category-results/?subcategory=Classic straps and hooks straps">Classic straps and hooks straps</a></li>
                             <li><a href="/category-results/?subcategory=Training wraps">Training wraps</a></li>
                             <li><a href="/category-results/?subcategory=Towels">Towels</a></li>
-                        </ul>
+                        </details>
                     </li>
                     <li>
-                        <label class="c-bags">Bags & Backpacks</label>
-                        <ul class="subcategories">
+                        <details>
+                            <summary>Bags & Backpacks</summary>
                             <li><a href="/category-results/?subcategory=Bags for gym">Bags for gym</a></li>
                             <li><a href="/category-results/?subcategory=Backpacks">Backpacks</a></li>
                             <li><a href="/category-results/?subcategory=Bags & accessories for food">Bags & accessories for food</a></li>
-                        </ul>
+                        </details>
+                      
                     </li>
                     <li>
-                        <label class="c-accessory">Accessory depending on the activity</label>
-                        <ul class="subcategories">
-                            <li><a href="/category-results/?subcategory=Running">Running</a></li>
-                            <li><a href="/category-results/?subcategory=Contact sports">Contact sports</a></li>
-                            <li><a href="/category-results/?subcategory=Yoga & pilates">Yoga & pilates</a></li>
-                            <li><a href="/category-results/?subcategory=Cold therapy">Cold therapy</a></li>
-                            <li><a href="/category-results/?subcategory=Swimming">Swimming</a></li>
-                        </ul>
+                        <details>
+                            <summary>Accessory depending on the activity</summary>
+                                <li><a href="/category-results/?subcategory=Running">Running</a></li>
+                                    <li><a href="/category-results/?subcategory=Contact sports">Contact sports</a></li>
+                                    <li><a href="/category-results/?subcategory=Yoga & pilates">Yoga & pilates</a></li>
+                                    <li><a href="/category-results/?subcategory=Cold therapy">Cold therapy</a></li>
+                                    <li><a href="/category-results/?subcategory=Swimming">Swimming</a></li>
+                            </details>
+                    </div>
                     </li>
                 </ul>
-                
-            </div>
+               
             <% if (user) { %>
                 <% if (user.role === 'admin') { %>
                     <a href="/add-article" target="_blank" class="card-btn">
