@@ -4,11 +4,18 @@ const form  = document.querySelector('form');
   const errorFields = document.getElementById('errorFields');
   form.addEventListener('submit', async (e) => {
     e.preventDefault();
+    const loginButton = document.getElementById('loginButton');
+    const buttonText = document.getElementById('buttonText');
+    const spinner = document.getElementById('spinner');
+    loginButton.disabled = true;
+    buttonText.classList.add('d-none');
+    spinner.classList.remove('d-none');
     const email = form.email.value;
     const password = form.password.value;
     emailError.textContent = '';
     passwordError.textContent = '';
     errorFields.textContent = '';
+    
     try{
       const res = await fetch('/login', {
         method: 'POST',
@@ -28,8 +35,11 @@ const form  = document.querySelector('form');
         console.log(data.user);
         location.assign('/');
       }
-      
     }catch(err){
       console.error(err);
+    }finally {
+      buttonText.classList.remove('d-none');
+      spinner.classList.add('d-none');
+      loginButton.disabled = false;
     }
   })
