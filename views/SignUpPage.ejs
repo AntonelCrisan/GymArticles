@@ -6,6 +6,7 @@
   <title>Sign Up</title>
   <!-- Bootstrap CSS -->
   <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+  <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
   <!-- Font Awesome CSS -->
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
   <link rel="stylesheet" type="text/css" href="./SignUpPage.css">
@@ -45,7 +46,10 @@
                 Already have an account?
                 </a>
             </label>
-          <button type="submit" class="btn btn-block">Sign up</button>
+            <button type="submit" class="btn btn-block" id="signUpButton">
+              <span id="buttonText">Sign Up</span>
+              <span id="spinner" class="spinner-border spinner-border-sm d-none" role="status" aria-hidden="true"></span>
+            </button>
         </div>
       </form>
     </div>

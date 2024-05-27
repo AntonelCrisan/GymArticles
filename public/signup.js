@@ -12,6 +12,12 @@ form.addEventListener('submit', async (e) => {
   emailError.textContent = '';
   passwordError.textContent = '';
   errorFields.textContent = '';
+  const signUpButton = document.getElementById('signUpButton');
+  const buttonText = document.getElementById('buttonText');
+  const spinner = document.getElementById('spinner');
+  signUpButton.disabled = true;
+  buttonText.classList.add('d-none');
+  spinner.classList.remove('d-none');
   try{
     const res = await fetch('/signup', {
       method: 'POST',
@@ -32,5 +38,9 @@ form.addEventListener('submit', async (e) => {
     }
   }catch(err){
     console.log(err);
+  }finally {
+    buttonText.classList.remove('d-none');
+    spinner.classList.add('d-none');
+    signUpButton.disabled = false;
   }
 })
