@@ -4,6 +4,12 @@ form.addEventListener('submit', async (e) => {
     e.preventDefault();
     const email = form.email.value;
     emailError.textContent = '';
+    const forgotButton = document.getElementById('forgotButton');
+    const buttonText = document.getElementById('buttonText');
+    const spinner = document.getElementById('spinner');
+    forgotButton.disabled = true;
+    buttonText.classList.add('d-none');
+    spinner.classList.remove('d-none');
     try{
         const res = await fetch('/forgot-password', {
             method: 'POST',
@@ -22,5 +28,9 @@ form.addEventListener('submit', async (e) => {
         }
     }catch(err){
         console.log(err);
-    }    
+    }finally {
+        buttonText.classList.remove('d-none');
+        spinner.classList.add('d-none');
+        forgotButton.disabled = false;
+      }  
 })  
