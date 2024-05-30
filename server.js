@@ -10,9 +10,12 @@ const {requireAuth, checkUser} = require('./public/authMiddleWare');
 require("dotenv").config();
 const jwt = require('jsonwebtoken');
 const app = express();
-const port = process.env.PORT;
+const port = process.env.PORT || 3000;
 const Article = require('./public/article');
 const Cart = require('./public/cart');
+const http = require('http');
+const WebSocket = require('ws');
+const path = require('path');
 // Middleware-uri
 app.use(express.static('public'));
 app.use(express.json());
@@ -28,6 +31,44 @@ app.use(passport.initialize());
 app.use(passport.session());
 app.use(bodyParser.json());
 app.set('view engine', 'ejs');
+
+//static files from a 'public' directory
+app.use('/chat', express.static(path.join(__dirname, 'public')));
+
+//Integrate WebSocket with the HTTP server
+const wss = new WebSocket.Server({port: 8181});
+const clients = [];
+
+wss.on('connection', function connection(ws) {
+    console.log("WS connection arrived");
+
+    // Add the new connection to our list of clients
+    clients.push(ws);
+
+    ws.on('message', function incoming(message) {
+        console.log('received: %s', message);
+
+        // Broadcast the message to all clients
+        clients.forEach(client => {
+            if (client.readyState === WebSocket.OPEN) {
+                console.log("message",message.toString())
+                client.send(`${getName()}: ` + message.toString());
+            }
+        });
+    });
+
+    ws.on('close', () => {
+        // Remove the client from the array when it disconnects
+        const index = clients.indexOf(ws);
+        if (index > -1) {
+            clients.splice(index, 1);
+        }
+    });
+
+    // Send a welcome message on new connection
+    ws.send('Welcome to the chat!');
+});
+
 // Connecting to DataBase
 let dbURL = process.env.DB_URL;
 mongoose.connect(dbURL, { useNewUrlParser: true, useUnifiedTopology: true })
@@ -74,7 +115,13 @@ app.post('/signup', async (req, res) => {
         res.status(400).json({errors});
     }
 });
-
+let uName;
+const setName = (name) => {
+  uName = name;
+}
+const getName = () => {
+  return uName;
+}
 app.post('/login', async(req, res) => {
   const {email, password} = req.body;
     try{
@@ -82,6 +129,7 @@ app.post('/login', async(req, res) => {
         res.status(400).json({warning: 'All fields must be filled!'});
       }else{
         const user = await User.login(email, password);
+        setName(user.name);
         const token = createToken(user._id);
         res.cookie('jwt', token, {httpOnly: true, maxAge: maxAge * 1000}) 
         console.log(user);
@@ -251,4 +299,5 @@ app.get('/cart', requireAuth, (req, res) => res.render('Cart'));
 app.get('/favorites', requireAuth, (req, res) => res.render('Favorites'));
 app.get('/reset-password', (req, res) => res.render('ResetPassword'));
 app.get('/add-article', (req, res) => res.render('AddArticle'));
+app.get('/chat', (req, res) => res.render('Chat'));
 app.listen(port, ()=> console.log(`Server is running at http://localhost:${port}`)); 

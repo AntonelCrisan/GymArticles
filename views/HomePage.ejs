@@ -56,16 +56,21 @@
                     
                 </ul>
                 <!-- Input search -->
-                <form class="form-inline my-2 my-lg-0 mx-auto" action="/search"  method="GET">
-                    <div style="display: flex; flex-direction: row; justify-content: center; align-items: center; min-width: 350px;">
-                        <input class="form-control mr-sm-2" type="text" name="q" placeholder="Search" aria-label="Search"  style="border-color: #06b6d4; border-radius: 15px; width: 100%">
-                        <button class="btn my-2 my-sm-0" type="submit" style="color: #06b6d4; border-color: #06b6d4; border-radius: 15px;"><span class="fas fa-search"><span></button>
+                <form class="form-inline my-2 my-lg-0 mx-auto" action="/search" method="GET">
+                    <div style="display: flex; flex-direction: row; justify-content: center; align-items: center; min-width: 350px; position: relative;">
+                        <input id="search-input" class="form-control mr-sm-2" type="text" name="q" placeholder="Search" aria-label="Search" style="border-color: #06b6d4; border-radius: 15px; width: 100%">
+                        <button class="btn my-2 my-sm-0" type="submit" style="color: #06b6d4; border-color: #06b6d4; border-radius: 15px;">
+                            <span class="fas fa-search"></span>
+                        </button>
                     </div>
                 </form>
                 <ul class="navbar-nav ml-auto">
                     <% if (user) { %>
                         <li class="nav-item">
                             <a class="nav-link" href="/myAccount"  style="white-space: nowrap;">My Account</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="/chat"  style="white-space: nowrap;">Chat</a>
                         </li>
                 <% } else { %>
                     <li class="nav-item">
@@ -232,8 +237,9 @@
     </div>
     </div>
 </div>
-
+    
 <%- include('Footer') %>
 
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 </body>
 </html>

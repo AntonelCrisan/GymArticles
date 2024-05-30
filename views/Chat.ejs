@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>My Basket</title>
+    <title>Chat</title>
     <!-- Font Awesome CSS -->
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
 <!-- Font Awesome CSS -->
@@ -21,10 +21,23 @@
         .navbar-nav .nav-link:hover {
             color: #06b6d4; /* culoarea textului la hover */
         }
+        #messages {
+            height: 300px;
+            overflow-y: scroll;
+            border: 1px solid #ccc;
+            padding: 10px;
+            background-color: #fff;
+        }
+        #sendButton{
+    background-color: #06b6d4; 
+    color: #ffffff;
+    border-radius: 15px;
+  }
+  #sendButton{
+      background-color: #119db0;
+  }
+        
     </style>
-    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.4/dist/umd/popper.min.js"></script>
-    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
 </head>
 <body style="background-color: #f5f5f5;">
     <nav class="navbar navbar-expand-lg navbar-light fixed-top">
@@ -60,9 +73,6 @@
                         <li class="nav-item">
                             <a class="nav-link" href="/myAccount"  style="white-space: nowrap;">My Account</a>
                         </li>
-                        <li class="nav-item">
-                            <a class="nav-link" href="/chat"  style="white-space: nowrap;">Chat</a>
-                        </li>
                 <% } else { %>
                     <li class="nav-item">
                         <a class="nav-link" href="/login"  style="white-space: nowrap;">Log In</a>
@@ -76,9 +86,46 @@
             </div>
         </div>
         </nav>
-    <div>
-        You are in basket page
-    </div>
+        <div class="container" style="margin-top: 100px;">
+            <h2 class="mb-4">Chat</h2>
+            <div id="messages" class="mb-3"></div>
+            <input type="text" id="messageInput" class="form-control mb-3" placeholder="Type a message">
+            <button id="sendButton" type="submit" class="btn btn-primary">Send</button>
+        </div>
+        <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+        <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.2/dist/umd/popper.min.js"></script>
+        <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+      
     
+<script>
+    const ws = new WebSocket('ws://localhost:8181/chat');
+    const messages = document.getElementById('messages');
+    const messageInput = document.getElementById('messageInput');
+    const sendButton = document.getElementById('sendButton');
+
+    ws.onopen = () => {
+        console.log('Connected to the server');
+    };
+
+    ws.onmessage = (event) => {
+        const message = document.createElement('div');
+        message.textContent = event.data;
+        messages.appendChild(message);
+    };
+
+    ws.onerror = (error) => {
+        console.error('WebSocket error:', error);
+    };
+
+    ws.onclose = () => {
+        console.log('Disconnected from the server');
+    };
+
+    sendButton.onclick = () => {
+        const message = messageInput.value;
+        ws.send(message);
+        messageInput.value = '';
+    };
+</script>
 </body>
 </html>
