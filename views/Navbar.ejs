@@ -35,14 +35,12 @@
             <ul class="navbar-nav ml-auto">
                 <% if (user) { %>
                     <% if (currentPath === "/myAccount") { %>
-                        <ul class="navbar-nav ml-auto">
                             <li class="nav-item">
                                 <a class="nav-link"  style="white-space: nowrap; color: black;">Welcome, <%= user.name %></a>
                             </li>
                             <li class="nav-item">
                                 <a class="nav-link" href="/logout"  style="white-space: nowrap;">Log Out</a>
                             </li>
-                        </ul>
                     <% } else {%>
                     <li class="nav-item">
                         <a class="nav-link" href="/myAccount"  style="white-space: nowrap;">My Account</a>
