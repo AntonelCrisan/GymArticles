@@ -54,7 +54,7 @@
                 <ul class="navbar-nav mr-auto">
                     <!-- Elemente la stânga -->
                     <li class="nav-item">
-                        <a class="nav-link" href="/basket" style="white-space: nowrap;">My Cart</a>
+                        <a class="nav-link" href="/cart" style="white-space: nowrap;">My Cart</a>
                     </li>
                     <li class="nav-item">
                         <a class="nav-link" href="/favorites"  style="white-space: nowrap;">Favorite</a>
@@ -87,7 +87,7 @@
         </div>
         </nav>
         <div class="container" style="margin-top: 100px;">
-            <h2 class="mb-4">Chat</h2>
+            <h2 class="mb-4">Welcome to chat <%= user.name %></h2>
             <div id="messages" class="mb-3"></div>
             <input type="text" id="messageInput" class="form-control mb-3" placeholder="Type a message">
             <button id="sendButton" type="submit" class="btn btn-primary">Send</button>

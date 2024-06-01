@@ -6,11 +6,11 @@ const User = require('./public/user');
 const flash = require('connect-flash');
 const cookieParser = require('cookie-parser');
 const bodyParser = require("body-parser");   
-const {requireAuth, checkUser} = require('./public/authMiddleWare');
+const {requireAuth, checkUser, getName} = require('./public/authMiddleWare');
 require("dotenv").config();
 const jwt = require('jsonwebtoken');
 const app = express();
-const port = process.env.PORT || 3000;
+const port = process.env.PORT;
 const Article = require('./public/article');
 const Cart = require('./public/cart');
 const http = require('http');
@@ -35,28 +35,27 @@ app.set('view engine', 'ejs');
 //static files from a 'public' directory
 app.use('/chat', express.static(path.join(__dirname, 'public')));
 
+const server = http.createServer((req, res) => {
+  res.writeHead(200);
+  res.end('WebSocket server is running');
+});
 //Integrate WebSocket with the HTTP server
 const wss = new WebSocket.Server({port: 8181});
 const clients = [];
 
 wss.on('connection', function connection(ws) {
     console.log("WS connection arrived");
-
     // Add the new connection to our list of clients
     clients.push(ws);
-
+  
     ws.on('message', function incoming(message) {
-        console.log('received: %s', message);
-
         // Broadcast the message to all clients
         clients.forEach(client => {
             if (client.readyState === WebSocket.OPEN) {
-                console.log("message",message.toString())
-                client.send(`${getName()}: ` + message.toString());
+                client.send(`• ${getName()}: ` + message.toString());
             }
         });
     });
-
     ws.on('close', () => {
         // Remove the client from the array when it disconnects
         const index = clients.indexOf(ws);
@@ -64,10 +63,12 @@ wss.on('connection', function connection(ws) {
             clients.splice(index, 1);
         }
     });
-
-    // Send a welcome message on new connection
-    ws.send('Welcome to the chat!');
 });
+server.on('upgrade', (request, socket, head) => {
+  wss.handleUpgrade(request, socket, head, (ws) => {
+      wss.emit('connection', ws, request);
+  });
+})
 
 // Connecting to DataBase
 let dbURL = process.env.DB_URL;
@@ -115,13 +116,6 @@ app.post('/signup', async (req, res) => {
         res.status(400).json({errors});
     }
 });
-let uName;
-const setName = (name) => {
-  uName = name;
-}
-const getName = () => {
-  return uName;
-}
 app.post('/login', async(req, res) => {
   const {email, password} = req.body;
     try{
@@ -129,8 +123,8 @@ app.post('/login', async(req, res) => {
         res.status(400).json({warning: 'All fields must be filled!'});
       }else{
         const user = await User.login(email, password);
-        setName(user.name);
         const token = createToken(user._id);
+        console.log()
         res.cookie('jwt', token, {httpOnly: true, maxAge: maxAge * 1000}) 
         console.log(user);
         res.status(201).json({user: user._id, user: user.role});
@@ -141,7 +135,7 @@ app.post('/login', async(req, res) => {
       res.status(400).json({errors});
     }
     
-})
+});
 
 app.post('/forgot-password', async(req, res) => {
   const {email} = req.body;
@@ -206,9 +200,9 @@ app.get('/', async (req, res) => {
     } else {
       articles = await Article.find();
     }
-    res.render('HomePage', { articles});
+    res.render('HomePage', {articles});
   } catch (err) {
-    res.status(500).json({ error: err.message });
+    res.status(500).json({error: err.message});
   }
 });
 
