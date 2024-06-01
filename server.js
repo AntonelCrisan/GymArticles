@@ -34,6 +34,11 @@ app.set('view engine', 'ejs');
 
 //static files from a 'public' directory
 app.use('/chat', express.static(path.join(__dirname, 'public')));
+//Get current path
+app.use((req, res, next) => {
+  res.locals.currentPath = req.path;
+  next();
+});
 
 const server = http.createServer((req, res) => {
   res.writeHead(200);
@@ -283,6 +288,12 @@ app.put('/edit-product/:id', async (req, res) => {
     console.log("Error editing the article:", err);
     res.status(400).json({ error: "Please enter all the required information!" });
   }
+});
+app.post('/getArticles', async (req, res) => {
+  let playload = req.body.playload.trim();
+  let search = await Article.find({name: {$regex: new RegExp('^'+playload+'.*','i')}}).exec();
+  search = search.slice(0, 10);
+  res.send({playload: search});
 });
 
 app.get('/login', (req, res) => res.render('LoginPage'));

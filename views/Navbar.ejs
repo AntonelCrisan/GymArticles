@@ -1,0 +1,67 @@
+<nav class="navbar navbar-expand-lg navbar-light fixed-top">
+    <div class="container">
+        <!-- Logo -->
+        <a class="navbar-brand" href="/">GymArticles</a>
+        <!-- Buton pentru toggle pe dispozitive mobile -->
+        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation" style="border: none;">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+    
+        <!-- Elemente ale navbarului -->
+        <div class="collapse navbar-collapse" id="navbarSupportedContent">
+            <ul class="navbar-nav mr-auto">
+                <!-- Elemente la stânga -->
+                <li class="nav-item">
+                    <a class="nav-link" href="/cart" style="white-space: nowrap;">My Cart</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="/favorites"  style="white-space: nowrap;">Favorite</a>
+                </li>
+                
+            </ul>
+            <!-- Input search -->
+            <form class="form-inline my-2 my-lg-0 mx-auto" action="/search" method="GET">
+                <div style="display: flex; flex-direction: column;">
+                    <div style="display: flex; flex-direction: row; justify-content: center; align-items: center; min-width: 350px; position: relative;">
+                        <input id="search-input" class="form-control mr-sm-2" type="text" name="q" placeholder="Search" aria-label="Search" style="border-color: #06b6d4; border-radius: 15px; width: 100%" onkeyup="sendData(this)" autocomplete="off">
+                        <button class="btn my-2 my-sm-0" type="submit" style="color: #06b6d4; border-color: #06b6d4; border-radius: 15px;">
+                            <span class="fas fa-search"></span>
+                        </button>
+                    </div>
+                    <section id="searchResults"></section>
+                </div>
+                
+            </form>
+            <ul class="navbar-nav ml-auto">
+                <% if (user) { %>
+                    <% if (currentPath === "/myAccount") { %>
+                        <ul class="navbar-nav ml-auto">
+                            <li class="nav-item">
+                                <a class="nav-link"  style="white-space: nowrap; color: black;">Welcome, <%= user.name %></a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link" href="/logout"  style="white-space: nowrap;">Log Out</a>
+                            </li>
+                        </ul>
+                    <% } else {%>
+                    <li class="nav-item">
+                        <a class="nav-link" href="/myAccount"  style="white-space: nowrap;">My Account</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="/chat"  style="white-space: nowrap;">Chat</a>
+                    </li>
+                    <% } %>
+            <% } else { %>
+                <li class="nav-item">
+                    <a class="nav-link" href="/login"  style="white-space: nowrap;">Log In</a>
+                </li>
+                <!-- Butonul Sign Up -->
+                <li class="nav-item">
+                    <a class="nav-link" href="/signup"  style="white-space: nowrap;">Sign Up</a>
+                </li>
+                <% } %>
+            </ul>
+        </div>
+    </div>
+    </nav>
+<script src="search_suggestion.js"></script>

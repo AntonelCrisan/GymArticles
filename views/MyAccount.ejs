@@ -21,51 +21,28 @@
   .navbar-nav .nav-link:hover {
       color: #06b6d4; /* culoarea textului la hover */
   }
+  #searchResults {
+            position: absolute;
+            top: 100%;
+            background: white;
+            border: 1px solid #06b6d4;
+            border-top: none;
+            border-radius: 0 0 15px 15px;
+            box-shadow: 0 8px 16px rgba(0, 0, 0, 0.1);
+            max-height: 300px; /* Maxima înălțime a secțiunii */
+            overflow-y: auto; /* Activarea scroll-ului dacă sunt prea multe rezultate */
+            z-index: 1000; /* Asigură-te că secțiunea apare deasupra altor elemente */
+            width: 350px;
+            display: none;
+            padding: 10px;
+        }
 </style>
 <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.4/dist/umd/popper.min.js"></script>
 <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
 </head>
 <body style="background-color: #f5f5f5;">
-<nav class="navbar navbar-expand-lg navbar-light fixed-top">
-<div class="container">
-    <!-- Logo -->
-    <a class="navbar-brand" href="/">GymArticles</a>
-    <!-- Buton pentru toggle pe dispozitive mobile -->
-    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation" style="border: none;">
-        <span class="navbar-toggler-icon"></span>
-    </button>
-
-    <!-- Elemente ale navbarului -->
-    <div class="collapse navbar-collapse" id="navbarSupportedContent">
-        <ul class="navbar-nav mr-auto">
-            <!-- Elemente la stânga -->
-            <li class="nav-item">
-                <a class="nav-link" href="/cart" style="white-space: nowrap;">My Cart</a>
-            </li>
-            <li class="nav-item">
-                <a class="nav-link" href="/favorites"  style="white-space: nowrap;">My Favorite</a>
-            </li>
-           
-        </ul>
-        <!-- Input search -->
-        <form class="form-inline my-2 my-lg-0 mx-auto">
-            <div style="display: flex; flex-direction: row; justify-content: center; align-items: center; min-width: 350px;">
-                <input class="form-control mr-sm-2" type="search" placeholder="Search" aria-label="Search"  style="border-color: #06b6d4; border-radius: 15px; width: 100%">
-                <button class="btn my-2 my-sm-0" type="submit" style="color: #06b6d4; border-color: #06b6d4; border-radius: 15px;"><i class="fas fa-search"></i></button>
-            </div>
-        </form>
-        <ul class="navbar-nav ml-auto">
-          <li class="nav-item">
-              <a class="nav-link"  style="white-space: nowrap; color: black;">Welcome, <%= user.name %></a>
-          </li>
-          <li class="nav-item">
-              <a class="nav-link" href="/logout"  style="white-space: nowrap;">Log Out</a>
-          </li>
-      </ul>
-    </div>
-</div>
-</nav>
+      <%- include('Navbar') %>
         <div class="container">
             <div class="row">
               <div class="col-md-12">

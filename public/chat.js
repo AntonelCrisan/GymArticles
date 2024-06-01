@@ -1,61 +1,28 @@
-(function(){
-    const app = document.querySelector(".app");
-    const socket = io();
-    let uName;
-    app.querySelector(".join-screen #join-user").addEventListener("click", function(){
-        let username = app.querySelector(".join-screen #username").value;
-        if(username.length === 0){
-            return;
-        }
-        socket.emit("newUser", username);
-        uName = username;
-        app.querySelector(".join-screen").classList.remove("active");
-        app.querySelector(".chat-screen").classList.add("active");
-    });
-    app.querySelector(".chat-screen #send-message").addEventListener("click", function(){
-        let message = app.querySelector(".chat-screen #message-input").value;
-        if(message.length === 0){
-            return;
-        }
-        renderMessage("my", {
-            username:uName,
-            text:message
-        });
-        socket.emit("chat", {
-            username:uName,
-            text:message
-        });
-        app.querySelector(".chat-screen #message-input").value = "";
-    });
-    function renderMessage(type, message){
-        let messageContainer = app.querySelector(".chat-screen .messages");
-        if(type === "my"){
-            let el = document.createElement("div");
-            el.setAttribute("class", "message my-message");
-            el.innerHTML = `
-                <div>
-                    <div class="name">You</div>
-                    <div class="text">${message,text}</div>
-                </div>
-            `;
-            messageContainer.appendChild(el);
-        }else if(type === "other"){
-            let el = document.createElement("div");
-            el.setAttribute("class", "message other-message");
-            el.innerHTML = `
-                <div>
-                    <div class="name">${message.username}</div>
-                    <div class="text">${message,text}</div>
-                </div>
-            `;
-            messageContainer.appendChild(el);
+const ws = new WebSocket('ws://localhost:8181/chat');
+const messages = document.getElementById('messages');
+const messageInput = document.getElementById('messageInput');
+const sendButton = document.getElementById('sendButton');
 
-        }else if(type === "update"){
-            let el = document.createElement("div");
-            el.setAttribute("class", "update");
-            el.innerText = message;
-            messageContainer.appendChild(el);
-        }
-        messageContainer.scrollTo = messageContainer.scrollHeight - messageContainer.clientHeight;
-    }
-})();
+ws.onopen = () => {
+    console.log('Connected to the server');
+};
+
+ws.onmessage = (event) => {
+    const message = document.createElement('div');
+    message.textContent = event.data;
+    messages.appendChild(message);
+};
+
+ws.onerror = (error) => {
+    console.error('WebSocket error:', error);
+};
+
+ws.onclose = () => {
+    console.log('Disconnected from the server');
+};
+
+sendButton.onclick = () => {
+    const message = messageInput.value;
+    ws.send(message);
+    messageInput.value = '';
+};
