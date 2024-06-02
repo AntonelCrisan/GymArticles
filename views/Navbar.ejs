@@ -1,3 +1,10 @@
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" />
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" />
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" />
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" />
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" />
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" />
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" />
 <nav class="navbar navbar-expand-lg navbar-light fixed-top">
     <div class="container">
         <!-- Logo -->
@@ -12,10 +19,20 @@
             <ul class="navbar-nav mr-auto">
                 <!-- Elemente la stânga -->
                 <li class="nav-item">
-                    <a class="nav-link" href="/cart" style="white-space: nowrap;">My Cart</a>
+                        <a class="nav-link" href="/cart" style="white-space: nowrap; display: flex">
+                            <span class="material-symbols-outlined">
+                                shopping_cart
+                            </span>
+                            <span>My Cart</span>
+                        </a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link" href="/favorites"  style="white-space: nowrap;">Favorite</a>
+                    <a class="nav-link" href="/favorites"  style="white-space: nowrap; display: flex;">
+                        <span class="material-symbols-outlined">
+                        favorite
+                        </span>
+                        <span>Favorite</span>
+                    </a>
                 </li>
                 
             </ul>
@@ -39,23 +56,48 @@
                                 <a class="nav-link"  style="white-space: nowrap; color: black;">Welcome, <%= user.name %></a>
                             </li>
                             <li class="nav-item">
-                                <a class="nav-link" href="/logout"  style="white-space: nowrap;">Log Out</a>
+                                <a class="nav-link" href="/logout"  style="white-space: nowrap; display: flex;">
+                                    <span class="material-symbols-outlined">
+                                        logout
+                                    </span>
+                                    <span>Log Out</span>
+                                </a>
                             </li>
                     <% } else {%>
                     <li class="nav-item">
-                        <a class="nav-link" href="/myAccount"  style="white-space: nowrap;">My Account</a>
+                        <a class="nav-link" href="/myAccount"  style="white-space: nowrap; display: flex;">
+                            <span class="material-symbols-outlined">
+                                person
+                            </span>
+                            <span>My Account</span>
+                        </a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" href="/chat"  style="white-space: nowrap;">Chat</a>
+                        <a class="nav-link" href="/chat"  style="white-space: nowrap; display: flex;">
+                            <span class="material-symbols-outlined">
+                                chat
+                            </span>
+                            <span>Chats</span>
+                        </a>
                     </li>
                     <% } %>
             <% } else { %>
                 <li class="nav-item">
-                    <a class="nav-link" href="/login"  style="white-space: nowrap;">Log In</a>
+                    <a class="nav-link" href="/login"  style="white-space: nowrap; display: flex;">
+                        <span class="material-symbols-outlined">
+                            login
+                        </span>
+                        <span>Log In</span>
+                    </a>
                 </li>
                 <!-- Butonul Sign Up -->
                 <li class="nav-item">
-                    <a class="nav-link" href="/signup"  style="white-space: nowrap;">Sign Up</a>
+                    <a class="nav-link" href="/signup"  style="white-space: nowrap; display: flex;">
+                        <span class="material-symbols-outlined">
+                            app_registration
+                        </span>
+                        <span>Sign Up</span>
+                    </a>
                 </li>
                 <% } %>
             </ul>
