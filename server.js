@@ -84,16 +84,15 @@ mongoose.connect(dbURL, { useNewUrlParser: true, useUnifiedTopology: true })
 const handleErros = (err) => {
   console.log(err.message, err.code);
   let errors = {name: '',email: '', password: ''};
-
-  if(err.code === 11000){
+  if(err.code === 11000){ //if error code is 11000 from user.js return the error bellow
     errors.email = 'This email is already used!';
     return errors;
   }
-  if(err.message === 'Incorect email!'){
+  if(err.message === 'Incorect email!'){ //'Incorect email from user.js -> checkEmail function
     errors.email = 'This email is not registered!';
     return errors;
   }
-  if(err.message === 'Incorect password!'){
+  if(err.message === 'Incorect password!'){ //Incorect password from user.js -> login function
     errors.password = 'Incorect password!';
     return errors;
   }
@@ -105,34 +104,35 @@ const handleErros = (err) => {
   }
   return errors;
 }
+//Sign Up post method
 app.post('/signup', async (req, res) => {
     const { name, email, password } = req.body;
     try {
-      if(name === '' || email === '' || password === ''){
+      if(name === '' || email === '' || password === ''){ //Checking if all fileds are empty
         res.status(400).json({warning: 'All fields must be filled!'});
       }else{
-        const user = await User.create({name, email, password});
-        const token = createToken(user._id);
-        res.cookie('jwt', token, {httpOnly: true, maxAge: maxAge * 1000})
-        res.status(201).json({user: user._id});
+        const user = await User.create({name, email, password}); //Create new user
+        const token = createToken(user._id); //Creat token for user
+        res.cookie('jwt', token, {httpOnly: true, maxAge: maxAge * 1000}) //Set age and httpOnly for token
+        res.status(201).json({user: user._id}); //Send user's ID for frontend
       }
       } catch (error) {
         const errors = handleErros(error);
         res.status(400).json({errors});
     }
 });
+//Log in post method
 app.post('/login', async(req, res) => {
   const {email, password} = req.body;
     try{
-      if(email === '' || password === ''){
+      if(email === '' || password === ''){ //Checking if all fields are empty
         res.status(400).json({warning: 'All fields must be filled!'});
       }else{
-        const user = await User.login(email, password);
-        const token = createToken(user._id);
-        console.log()
-        res.cookie('jwt', token, {httpOnly: true, maxAge: maxAge * 1000}) 
+        const user = await User.login(email, password);//Checking if email and password are valids using login function from user.js file
+        const token = createToken(user._id);//Create token when the user is login
+        res.cookie('jwt', token, {httpOnly: true, maxAge: maxAge * 1000})//Set age and httpOnly for token
         console.log(user);
-        res.status(201).json({user: user._id, user: user.role});
+        res.status(201).json({user: user._id, user: user.role});//Send user's ID and user's role to frontend
       }
     }catch(error){
       const errors = handleErros(error);
@@ -141,48 +141,51 @@ app.post('/login', async(req, res) => {
     }
     
 });
-
+//Forgot password post method
 app.post('/forgot-password', async(req, res) => {
   const {email} = req.body;
   try{
-    if(email === ''){
+    if(email === ''){//Checking if the email field is empty or not
       res.status(400).json({warning: 'Plase enter your email!'});
     }else{
-      const user = await User.checkEmail(email);
-      res.status(201).json({user: user.email});
+      const user = await User.checkEmail(email); //Checking email from database
+      res.status(201).json({user: user.email});//Send user's email to frontend
     }
   }catch(err){
     const error = handleErros(err);
     res.status(400).json({error});
   }
 })
+//Reset password post method
 app.post('/reset-password', async (req, res) => {
   const {password, confPassword} = req.body;
   try{
-    if(password === '' || confPassword === ''){
+    if(password === '' || confPassword === ''){ //Checking if password and confirm password fields are empty or not
       res.status(400).json({warning: 'All fields must be filled!'});
     }
-    if(password !== confPassword){
+    if(password !== confPassword){//Checking if password and confirm password are identically
       res.status(400).json({notEqual: 'Passwords are not equal!'});
     }
   }catch(error){
      console.log(error);
   }
 })
+//Add article post method 
 app.post('/add-article', async (req, res) => {
   const {image, name, price, category, subcategory, cantity} = req.body;
   try{
-      const article = await Article.create({image, name, price, category, subcategory, cantity});
+      const article = await Article.create({image, name, price, category, subcategory, cantity});//Adding new article in database by admin
       article.save();
-      res.status(201).json({msg:'Article added successfully'});
+      res.status(201).json({msg:'Article added successfully'});//Handle successfully message for admin
   }catch(err){
-    console.log("eroare la adaugarea articolului: ", err);
+    console.log("Error adding article: ", err);
     res.status(400).json({error: "Please enter all the required information!"});
   }
 })
+//Log out get method
 app.get('/logout', (req, res) => {
-  res.cookie('jwt', '', {maxAge: 1});
-  res.redirect('/');
+  res.cookie('jwt', '', {maxAge: 1}); //Set token maxmim age with 1
+  res.redirect('/'); //Redirect user to home page
 })
 //Token age
 const maxAge = 3 * 24 * 60 * 60;
@@ -193,67 +196,69 @@ const createToken = (id) => {
     expiresIn: maxAge
   })
 }
-app.get('*', checkUser);
+app.get('*', checkUser); //Apply globally checkUser function from user.js file, for checking user for the entire application
+//Home page get method
 app.get('/', async (req, res) => {
   try {
     const { subcategory, category } = req.query;
     let articles;
     if (category) {
-      articles = await Article.find({ category: category });
+      articles = await Article.find({ category: category }); //Showing category
     } else if (subcategory) {
-      articles = await Article.find({ subcategory: subcategory });
+      articles = await Article.find({ subcategory: subcategory });//Showing subcategory
     } else {
-      articles = await Article.find();
+      articles = await Article.find(); //Showing all products
     }
     res.render('HomePage', {articles});
   } catch (err) {
     res.status(500).json({error: err.message});
   }
 });
-
+//Search get method
 app.get('/search', async (req, res) => {
   try {
-    let nrArticle = 0;
+    let nrArticle = 0; //Number of results found
     const query = req.query.q; 
-    const article = await Article.find({ $text: { $search: query } }); 
-    nrArticle = article.length;
-    res.render('SearchResults', { article, query, nrArticle });
+    const article = await Article.find({ $text: { $search: query } });  //Search by text in database
+    nrArticle = article.length; //Passing the number of results to 'nrArticle' variable
+    res.render('SearchResults', { article, query, nrArticle }); //Passing the variables to frontend and render the SearchResults page
   } catch (err) {
-    console.error('Eroare la căutarea produselor:', err);
+    console.error('Error for searching the product:', err);
   }
 });
+//Category results get method
 app.get('/category-results', async (req, res) => {
   const {subcategory} = req.query;
   try {
-    let results = 0;
-    const articles = await Article.find({subcategory: subcategory});
-    results = articles.length;
-    res.render( 'CategoryResults', {articles, subcategory, results})   
+    let results = 0; //Storing the results found
+    const articles = await Article.find({subcategory: subcategory});//Finding the articles by subcategory name from database
+    results = articles.length;//Counting the results found
+    res.render( 'CategoryResults', {articles, subcategory, results}); //Render the 'CategoryResults' page and passing all variables to frontend
   } catch (error) {
-    console.error('Eroare la căutarea produselor:', error);
+    console.error('Error for searching the product:', error);
   }
  
 });
-
+//Product get method
 app.get('/product', async (req, res) => {
   try {
-    const {name, id} = req.query;
-    const article = await Article.findById(id);
-    res.render('Product', {article});
+    const {id} = req.query; //Get product id from query
+    const article = await Article.findById(id); //Searching the article from database by product id
+    res.render('Product', {article});//Display the product result and render the 'Product' page
   } catch (error) {
-    console.error('Eroare:', error);  
+    console.error('Error for getting the product:', error);  
   }
 });
-  app.post('/product', async (req, res) => {
-    try {
-        const {name, id} = req.body; // Assuming id and name are in the request body
-        const cart = await Cart.create({idProduct: id, name });
-        cart.save();
-        return res.status(200).json({ message: "Product added successfully!" });
-    } catch (error) {
-        console.error("Error in adding to cart:", error.message);
-        return res.status(500).json({ error: "Internal server error" });
-    }
+app.post('/product', async (req, res) => {
+  try {
+      const {name, id} = req.body; // Assuming id and name are in the request body
+      const cart = await Cart.create({idProduct: id, name });
+      cart.save();
+      return res.status(200).json({ message: "Product added successfully!" });
+  } catch (error) {
+      console.error("Error in adding to cart:", error.message);
+      return res.status(500).json({ error: "Internal server error" });
+  }
 });
 app.get('/edit-product',  async (req, res) => {
   try {
@@ -289,6 +294,7 @@ app.put('/edit-product/:id', async (req, res) => {
     res.status(400).json({ error: "Please enter all the required information!" });
   }
 });
+
 app.post('/getArticles', async (req, res) => {
   let playload = req.body.playload.trim();
   let search = await Article.find({name: {$regex: new RegExp('^'+playload+'.*','i')}}).exec();
@@ -305,4 +311,13 @@ app.get('/favorites', requireAuth, (req, res) => res.render('Favorites'));
 app.get('/reset-password', (req, res) => res.render('ResetPassword'));
 app.get('/add-article', (req, res) => res.render('AddArticle'));
 app.get('/chat', (req, res) => res.render('Chat'));
+app.get('/showUsersAdmin', async (req, res) => {
+  try {
+    const users = await User.find({}, 'name email role');
+    res.render('Users', {users});
+  } catch (error) {
+    res.send("Eroare: ", error);
+  }
+}
+);
 app.listen(port, ()=> console.log(`Server is running at http://localhost:${port}`)); 
