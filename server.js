@@ -6,15 +6,13 @@ const User = require('./public/user');
 const flash = require('connect-flash');
 const cookieParser = require('cookie-parser');
 const bodyParser = require("body-parser");   
-const {requireAuth, checkUser, getName} = require('./public/authMiddleWare');
+const {requireAuth, checkUser} = require('./public/authMiddleWare');
 require("dotenv").config();
 const jwt = require('jsonwebtoken');
 const app = express();
 const port = process.env.PORT;
 const Article = require('./public/article');
 const Cart = require('./public/cart');
-const http = require('http');
-const WebSocket = require('ws');
 const path = require('path');
 // Middleware-uri
 app.use(express.static('public'));
@@ -33,48 +31,12 @@ app.use(bodyParser.json());
 app.set('view engine', 'ejs');
 
 //static files from a 'public' directory
-app.use('/chat', express.static(path.join(__dirname, 'public')));
+app.use(express.static(path.join(__dirname, 'public')));
 //Get current path
 app.use((req, res, next) => {
   res.locals.currentPath = req.path;
   next();
 });
-
-const server = http.createServer((req, res) => {
-  res.writeHead(200);
-  res.end('WebSocket server is running');
-});
-//Integrate WebSocket with the HTTP server
-const wss = new WebSocket.Server({port: 8181});
-const clients = [];
-
-wss.on('connection', function connection(ws) {
-    console.log("WS connection arrived");
-    // Add the new connection to our list of clients
-    clients.push(ws);
-  
-    ws.on('message', function incoming(message) {
-        // Broadcast the message to all clients
-        clients.forEach(client => {
-            if (client.readyState === WebSocket.OPEN) {
-                client.send(`• ${getName()}: ` + message.toString());
-            }
-        });
-    });
-    ws.on('close', () => {
-        // Remove the client from the array when it disconnects
-        const index = clients.indexOf(ws);
-        if (index > -1) {
-            clients.splice(index, 1);
-        }
-    });
-});
-server.on('upgrade', (request, socket, head) => {
-  wss.handleUpgrade(request, socket, head, (ws) => {
-      wss.emit('connection', ws, request);
-  });
-})
-
 // Connecting to DataBase
 let dbURL = process.env.DB_URL;
 mongoose.connect(dbURL, { useNewUrlParser: true, useUnifiedTopology: true })

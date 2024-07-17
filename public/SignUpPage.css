@@ -10,7 +10,13 @@
     border: none; /* eliminarea marginii cartelei */
   }
   .form-control {
-    border-radius: 15px; /* border-radius pentru input-uri */
+    border-radius: 15px;
+    width: 100%;
+    padding: 0.5rem;
+    font-size: 1rem;
+    border-radius: 15px;
+    border: 1px solid #ccc;
+    box-sizing: border-box;
   }
   .card-body .btn{
     background-color: #06b6d4; 
@@ -24,3 +30,22 @@
   #nameError, #emailError, #passwordError {
      color : red;
   }
+  .input-group {
+    position: relative;
+    width: 100%;
+}
+.change-visibility {
+    position: absolute;
+    right: 10px;
+    top: 50%;
+    transform: translateY(-125%);
+    cursor: pointer;
+    background-color: #ffffff;
+}
+.change-visibility:hover{
+  background-color: #e5eaf1;
+  border-radius: 50%;
+}
+#hidePassword{
+  display: none;
+}
