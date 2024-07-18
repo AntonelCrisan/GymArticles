@@ -5,8 +5,15 @@ e.preventDefault();
 const password = form.password.value;
 const confPassword = form.confPassword.value;
 errorFields.textContent = '';
+const resetButton = document.getElementById('resetButton');
+const buttonText = document.getElementById('buttonText');
+const spinner = document.getElementById('spinner');
+const token = '<%= token %>';
+resetButton.disabled = true;
+buttonText.classList.add('d-none');
+spinner.classList.remove('d-none');
 try{
-    const res = await fetch('/reset-password', {
+    const res = await fetch(`/reset-password/${token}`, {
     method: 'POST',
     body: JSON.stringify({password, confPassword}),
     headers: {'Content-Type': 'application/json'}
@@ -20,5 +27,9 @@ try{
     }
 }catch(err){
     console.error(err);
-}
+}finally {
+    buttonText.classList.remove('d-none');
+    spinner.classList.add('d-none');
+    forgotButton.disabled = false;
+  } 
 })

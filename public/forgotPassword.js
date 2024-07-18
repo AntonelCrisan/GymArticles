@@ -23,8 +23,9 @@ form.addEventListener('submit', async (e) => {
         if(data.warning){
             emailError.textContent = data.warning;
         }
-        if(data.user){
-        location.assign('/reset-password');
+        if(data.message){
+            emailError.style.color = '#06c906';
+            emailError.textContent = data.message;
         }
     }catch(err){
         console.log(err);

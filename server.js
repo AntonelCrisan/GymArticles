@@ -14,6 +14,8 @@ const port = process.env.PORT;
 const Article = require('./public/article');
 const Cart = require('./public/cart');
 const path = require('path');
+const nodemailer = require('nodemailer');
+const bcrypt = require('bcryptjs');
 // Middleware-uri
 app.use(express.static('public'));
 app.use(express.json());
@@ -110,17 +112,99 @@ app.post('/forgot-password', async(req, res) => {
     if(email === ''){//Checking if the email field is empty or not
       res.status(400).json({warning: 'Plase enter your email!'});
     }else{
-      const user = await User.checkEmail(email); //Checking email from database
-      res.status(201).json({user: user.email});//Send user's email to frontend
+      await User.checkEmail(email); //Checking email from database
+      const token = jwt.sign({email}, process.env.JWT_SECRET, {
+        expiresIn: "1h",
+      });
+      const transporter = nodemailer.createTransport({
+        service: "gmail",
+        secure:true,
+        auth:{
+          user: process.env.GMAIL_USER,
+          pass: process.env.GMAIL_PASS,
+        },
+      });
+      const reciver = {
+        from:"gymarticles9@gmail.com",
+        to:email,
+        subject:"Password Reset Request",
+        html: `
+        <!DOCTYPE html>
+        <html>
+        <head>
+            <style>
+                .container {
+                    width: 100%;
+                    max-width: 600px;
+                    margin: 0 auto;
+                    padding: 20px;
+                    font-family: Arial, sans-serif;
+                    background-color: #f4f4f4;
+                }
+                .header {
+                    text-align: center;
+                    padding: 10px 0;
+                }
+                .content {
+                    background-color: #ffffff;
+                    padding: 20px;
+                    border-radius: 10px;
+                    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+                }
+                .button {
+                    display: block;
+                    width: 200px;
+                    margin: 20px auto;
+                    padding: 10px 15px;
+                    text-align: center;
+                    color: #ffffff;
+                    background-color: #06b6d4;
+                    border-radius: 15px;
+                    text-decoration: none;
+                    font-size: 16px;
+                }
+                .footer {
+                    text-align: center;
+                    margin-top: 20px;
+                    font-size: 12px;
+                    color: #666666;
+                }
+            </style>
+        </head>
+        <body>
+            <div class="container">
+                <div class="header">
+                    <h2>Password Reset Request</h2>
+                </div>
+                <div class="content">
+                    <p>Hello,</p>
+                    <p>We received a request to reset your password. Click the button below to reset your password:</p>
+                    <a href="${process.env.CLIENT_URL}/reset-password/${token}" class="button">Reset Password</a>
+                    <p>If you did not request a password reset, please ignore this email.</p>
+                    <p>Thank you,<br>The Gym Articles Team</p>
+                </div>
+                <div class="footer">
+                    <p>If you're having trouble clicking the "Reset Password" button, copy and paste the URL below into your web browser:</p>
+                    <p><a href="${process.env.CLIENT_URL}/reset-password/${token}">RESET_LINK</a></p>
+                </div>
+            </div>
+        </body>
+        </html>
+    `
+      };
+      await transporter.sendMail(reciver);
+      res.status(200).json({message: "Password rest link send successfully on your gmail account, you can close this page!"});
     }
+
   }catch(err){
     const error = handleErros(err);
     res.status(400).json({error});
   }
 })
 //Reset password post method
-app.post('/reset-password', async (req, res) => {
+app.post('/reset-password/:token', async (req, res) => {
   const {password, confPassword} = req.body;
+  const {token} = req.params;
   try{
     if(password === '' || confPassword === ''){ //Checking if password and confirm password fields are empty or not
       res.status(400).json({warning: 'All fields must be filled!'});
@@ -128,6 +212,16 @@ app.post('/reset-password', async (req, res) => {
     if(password !== confPassword){//Checking if password and confirm password are identically
       res.status(400).json({notEqual: 'Passwords are not equal!'});
     }
+    const decode = jwt.verify(token, process.env.JWT_SECRET);
+    const user = await User.findOne({email: decode.email});
+    if(!user){
+      res.status(400).json({notFound: 'User not found!'});
+    }
+    const salt = await bcrypt.genSalt(10);
+    const hashedPassword = await bcrypt.hash(password, salt);
+    user.password = hashedPassword;
+    await user.save();
+    res.status(200).json({ message: 'Password has been reset successfully!' });
   }catch(error){
      console.log(error);
   }
@@ -270,7 +364,10 @@ app.get('/forgot-password', (req, res) => res.render('ForgotPassword'));
 app.get('/myAccount', (req, res) => res.render('MyAccount'));
 app.get('/cart', requireAuth, (req, res) => res.render('Cart'));
 app.get('/favorites', requireAuth, (req, res) => res.render('Favorites'));
-app.get('/reset-password', (req, res) => res.render('ResetPassword'));
+app.get('/reset-password/:token', (req, res) => {
+  const {token} = req.params;
+  res.render('ResetPassword', {token});
+});
 app.get('/add-article', (req, res) => res.render('AddArticle'));
 app.get('/chat', (req, res) => res.render('Chat'));
 app.get('/showUsersAdmin', async (req, res) => {
