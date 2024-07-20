@@ -9,7 +9,7 @@
   <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
   <!-- Font Awesome CSS -->
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
-  <link rel="stylesheet" type="text/css" href="./LoginPage.css">
+  <link rel="stylesheet" href="style/LoginPage.css">
 </head>
 <body>
   <div class="container">
@@ -22,7 +22,7 @@
       <form method="POST" action="/login">
         <div class="form-group">
             <label>Email</label>
-          <input type="email" class="form-control" id="email" name="email">
+          <input type="email" class="form-control" id="email" name="email" autofocus>
           <div id="emailError">
           </div>
         </div>
@@ -37,12 +37,12 @@
         </div>
         <div style="display: flex; align-items: center; justify-content: space-between;">
           <label>
-              <a href="/signup" style="text-decoration: none; color: #000000;">
+              <a href="/signup" class="need-account">
               Need account?
               </a>
           </label>
           <label>
-              <a href="/forgot-password" style="text-decoration: none; color: #000000;">
+              <a href="/forgot-password" class="forgot-password">
               Forgot password?
               </a>
           </label>
@@ -61,6 +61,6 @@
 <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
 <script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
 <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
-<script src="login.js"></script>
+<script src="scripts/login.js"></script>
 </body>
 </html>

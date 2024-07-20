@@ -10,7 +10,7 @@ const {requireAuth, checkUser} = require('./public/authMiddleWare');
 require("dotenv").config();
 const jwt = require('jsonwebtoken');
 const app = express();
-const port = process.env.PORT;
+const port = process.env.PORT || 3012;
 const Article = require('./public/article');
 const Cart = require('./public/cart');
 const path = require('path');
@@ -32,6 +32,8 @@ app.use(passport.session());
 app.use(bodyParser.json());
 app.set('view engine', 'ejs');
 
+//Set the view directory
+app.set('views', path.join(__dirname, 'views'));
 //static files from a 'public' directory
 app.use(express.static(path.join(__dirname, 'public')));
 //Get current path
@@ -212,18 +214,19 @@ app.post('/reset-password/:token', async (req, res) => {
     if(password !== confPassword){//Checking if password and confirm password are identically
       res.status(400).json({notEqual: 'Passwords are not equal!'});
     }
-    const decode = jwt.verify(token, process.env.JWT_SECRET);
-    const user = await User.findOne({email: decode.email});
-    if(!user){
-      res.status(400).json({notFound: 'User not found!'});
-    }
-    const salt = await bcrypt.genSalt(10);
-    const hashedPassword = await bcrypt.hash(password, salt);
-    user.password = hashedPassword;
-    await user.save();
-    res.status(200).json({ message: 'Password has been reset successfully!' });
+    jwt.verify(token, process.env.JWT_SECRET, async (err, decoded) => {
+      if(err){
+        res.status(400).json({warning: 'This URL is expired!'});
+      }
+      const email = decoded.email;
+      const salt = await bcrypt.genSalt();
+      const hashedPassword = await bcrypt.hash(password, salt);
+      await User.findOneAndUpdate({ email }, { password: hashedPassword });
+      res.status(200).json({ message: 'Success' });
+    })
   }catch(error){
-     console.log(error);
+     res.status(400).json({warning: 'Something went wrong, please try again later!'});
+     console.log("Error at rest password post: ", error);
   }
 })
 //Add article post method 
@@ -365,8 +368,7 @@ app.get('/myAccount', (req, res) => res.render('MyAccount'));
 app.get('/cart', requireAuth, (req, res) => res.render('Cart'));
 app.get('/favorites', requireAuth, (req, res) => res.render('Favorites'));
 app.get('/reset-password/:token', (req, res) => {
-  const {token} = req.params;
-  res.render('ResetPassword', {token});
+  res.render('ResetPassword');
 });
 app.get('/add-article', (req, res) => res.render('AddArticle'));
 app.get('/chat', (req, res) => res.render('Chat'));
