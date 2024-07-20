@@ -193,7 +193,7 @@ app.post('/forgot-password', async(req, res) => {
     `
       };
       await transporter.sendMail(reciver);
-      res.status(200).json({message: "Password rest link send successfully on your gmail account, you can close this page!"});
+      res.status(200).json({message: "Success"});
     }
 
   }catch(err){

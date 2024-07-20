@@ -1,5 +1,7 @@
 const form = document.querySelector('form');
 const emailError = document.getElementById('emailError');
+const emailSuccess = document.getElementById('emailSuccess');
+emailSuccess.style.display = 'none';
 form.addEventListener('submit', async (e) => {
     e.preventDefault();
     const email = form.email.value;
@@ -23,9 +25,12 @@ form.addEventListener('submit', async (e) => {
         if(data.warning){
             emailError.textContent = data.warning;
         }
-        if(data.message){
-            emailError.style.color = '#06c906';
-            emailError.textContent = data.message;
+        if(data.message === "Success"){
+            emailSuccess.style.display = 'block';
+            document.getElementById('emailLabel').remove();
+            document.getElementById('email').remove();
+            document.getElementById('emailError').remove();
+            document.getElementById('forgotButton').remove();
         }
     }catch(err){
         console.log(err);
