@@ -21,7 +21,8 @@ const userSchema = new mongoose.Schema({
   role: {
     type: String,
     default: "user"
-  }
+  },
+  passwordResetTokenUsed: { type: Boolean, default: false }
 });
 userSchema.pre('save', async function(next) {
   const salt = await bcrypt.genSalt();

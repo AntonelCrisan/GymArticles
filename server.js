@@ -92,18 +92,18 @@ app.post('/login', async(req, res) => {
   const {email, password} = req.body;
     try{
       if(email === '' || password === ''){ //Checking if all fields are empty
-        res.status(400).json({warning: 'All fields must be filled!'});
+        return res.status(400).json({warning: 'All fields must be filled!'});
       }else{
         const user = await User.login(email, password);//Checking if email and password are valids using login function from user.js file
         const token = createToken(user._id);//Create token when the user is login
         res.cookie('jwt', token, {httpOnly: true, maxAge: maxAge * 1000})//Set age and httpOnly for token
         console.log(user);
-        res.status(201).json({user: user._id, user: user.role});//Send user's ID and user's role to frontend
+        return res.status(201).json({user: user._id, user: user.role});//Send user's ID and user's role to frontend
       }
     }catch(error){
       const errors = handleErros(error);
       console.log(errors)
-      res.status(400).json({errors});
+      return res.status(400).json({errors});
     }
     
 });
@@ -112,10 +112,10 @@ app.post('/forgot-password', async(req, res) => {
   const {email} = req.body;
   try{
     if(email === ''){//Checking if the email field is empty or not
-      res.status(400).json({warning: 'Plase enter your email!'});
+      return res.status(400).json({warning: 'Plase enter your email!'});
     }else{
       await User.checkEmail(email); //Checking email from database
-      const token = jwt.sign({email}, process.env.JWT_SECRET, {
+      const token = jwt.sign({email}, process.env.JWT_SECRET, { //Create token for email wich expires in 1 hour
         expiresIn: "1h",
       });
       const transporter = nodemailer.createTransport({
@@ -194,13 +194,15 @@ app.post('/forgot-password', async(req, res) => {
         </html>
     `
       };
-      await transporter.sendMail(reciver);
-      res.status(200).json({message: "Success"});
+      await transporter.sendMail(reciver); //Sending email
+      await User.findOneAndUpdate({ email }, {passwordResetTokenUsed: false}); //Changes "passwordResetTokenUsed" to false to letting the user resets his password again
+      return res.status(200).json({message: "Success"}); //Sending success message to frontend
+
     }
 
   }catch(err){
     const error = handleErros(err);
-    res.status(400).json({error});
+    return res.status(500).json({error});
   }
 })
 //Reset password post method
@@ -208,25 +210,34 @@ app.post('/reset-password/:token', async (req, res) => {
   const {password, confPassword} = req.body;
   const {token} = req.params;
   try{
-    if(password === '' || confPassword === ''){ //Checking if password and confirm password fields are empty or not
-      res.status(400).json({warning: 'All fields must be filled!'});
-    }
-    if(password !== confPassword){//Checking if password and confirm password are identically
-      res.status(400).json({notEqual: 'Passwords are not equal!'});
-    }
-    jwt.verify(token, process.env.JWT_SECRET, async (err, decoded) => {
+    jwt.verify(token, process.env.JWT_SECRET, async (err, decoded) => { //Created an arrow function for decode token
       if(err){
-        res.status(400).json({warning: 'This URL is expired!'});
+        return res.status(400).json({warning: 'This URL is expired!'});//If token reach over 1 hour shows the warning to user
       }
-      const email = decoded.email;
-      const salt = await bcrypt.genSalt();
-      const hashedPassword = await bcrypt.hash(password, salt);
-      await User.findOneAndUpdate({ email }, { password: hashedPassword });
-      res.status(200).json({ message: 'Success' });
+      if(password === '' || confPassword === ''){ //Checking if password and confirm password fields are empty or not
+        return res.status(400).json({warning: 'All fields must be filled!'});
+      }
+      if(password !== confPassword){//Checking if password and confirm password are identically
+        return res.status(400).json({notEqual: 'Passwords are not equal!'});
+      }
+      if(password.length < 8){ //Checking the password is smaller then 8 characters
+        return res.status(400).json({warning: 'Minimun length for the password is 8 characters!'});
+      }
+      const email = decoded.email; //Decode email
+      const user = await User.findOne({email});//After email's decode search user by email
+      if(user.passwordResetTokenUsed){//Check if 'passwordRessetTokenUsed' is true and shows the warning to user
+        return res.status(400).json({warning: 'Sorry, looks like the reset password link has expired.'})
+      }
+      const salt = await bcrypt.genSalt();//Creat a salt
+      const hashedPassword = await bcrypt.hash(password, salt);//Hashing password
+      await User.findOneAndUpdate({ email }, { password: hashedPassword, passwordResetTokenUsed: true});//Update the new password
+      //and update the passwordResetTokenUsed variable with true boolean for blocking the user to reset his password again in
+      //the same page and the same token
+      return res.status(200).json({ message: 'Success' });//Passing the message to frontend
     })
   }catch(error){
-     res.status(400).json({warning: 'Something went wrong, please try again later!'});
-     console.log("Error at rest password post: ", error);
+    console.log("Error at reset password post: ", error);
+    return res.status(500).json({warning: 'Something went wrong, please try again later!'});
   }
 })
 //Add article post method 
@@ -270,7 +281,7 @@ app.get('/', async (req, res) => {
     }
     res.render('HomePage', {articles});
   } catch (err) {
-    res.status(500).json({error: err.message});
+    return res.status(500).json({error: err.message});
   }
 });
 //Search get method
@@ -325,7 +336,7 @@ app.get('/edit-product',  async (req, res) => {
     res.render('EditProduct', {article}); 
   } catch (error) {
       console.log(error);
-      res.status(400).json({error});
+      return res.status(400).json({error});
   }
 });
 app.put('/edit-product/:id', async (req, res) => {
@@ -347,10 +358,10 @@ app.put('/edit-product/:id', async (req, res) => {
     // Save the updated article to the database
     await article.save();
 
-    res.status(201).json({ msg: 'Article modified successfully' });
+    return res.status(201).json({ msg: 'Article modified successfully' });
   } catch (err) {
     console.log("Error editing the article:", err);
-    res.status(400).json({ error: "Please enter all the required information!" });
+    return res.status(400).json({ error: "Please enter all the required information!" });
   }
 });
 

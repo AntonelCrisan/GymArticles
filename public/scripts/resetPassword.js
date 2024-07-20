@@ -1,6 +1,7 @@
 const form  = document.querySelector('form');
 const errorFields = document.getElementById('errorFields');
 const resetSucces = document.getElementById('resetSuccess');
+const formGroup = document.getElementById('formGroup');
 resetSucces.style.display = 'none';
 form.addEventListener('submit', async (e) => {
 e.preventDefault();
@@ -28,13 +29,29 @@ try{
         errorFields.textContent = data.notEqual;
     }
     if(data.message === "Success"){
-      resetSucces.style.display = 'block';
+        formGroup.remove();
+        resetButton.remove();
+        resetSucces.style.display = 'block';
     }
 }catch(err){
-    console.error(err);
+    console.error("Error at reseting password!");
 }finally {
     buttonText.classList.remove('d-none');
     spinner.classList.add('d-none');
     resetButton.disabled = false;
   } 
 })
+
+//Show passwords
+const showPassword = document.getElementById('showPassword');
+const password = document.getElementById('password');
+const confPassword = document.getElementById('confPassword');
+showPassword.addEventListener('click', () => {
+    if(password.type === 'password'){
+        password.type = 'text';
+        confPassword.type = 'text';
+    }else{
+        password.type = 'password';
+        confPassword.type = 'password';
+    }
+});
