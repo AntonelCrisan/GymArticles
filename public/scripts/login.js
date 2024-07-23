@@ -43,3 +43,20 @@ const form  = document.querySelector('form');
       loginButton.disabled = false;
     }
   })
+
+
+  document.getElementById('togglePassword').addEventListener('click', () => {
+    const passwordField = document.getElementById('password');
+    const passwordType = passwordField.getAttribute('type');
+    const showPassword = document.getElementById('showPassword');
+    const hidePassword = document.getElementById('hidePassword');
+    if(passwordType === 'password') {
+      passwordField.setAttribute('type', 'text');
+      showPassword.style.display = 'none';
+      hidePassword.style.display = 'block';
+      } else {
+        passwordField.setAttribute('type', 'password');
+        showPassword.style.display = 'block';
+      hidePassword.style.display = 'none';
+        }
+  });

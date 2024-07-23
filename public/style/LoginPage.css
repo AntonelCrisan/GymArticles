@@ -26,6 +26,21 @@
 #emailError, #passwordError {
   color : red;
 }
+.change-visibility {
+  position: absolute;
+  right: 10px;
+  top: 50%;
+  transform: translateY(-125%);
+  cursor: pointer;
+  background-color: #ffffff;
+}
+.change-visibility:hover{
+background-color: #e5eaf1;
+border-radius: 50%;
+}
+#hidePassword{
+display: none;
+}
 .forgot-password, .need-account{
   text-decoration: none;
   color: #6c757d;

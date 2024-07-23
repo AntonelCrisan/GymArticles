@@ -8,7 +8,7 @@ function sendData(e){
         return;
     }
     if(match[0] === e.value){
-        fetch('getArticles', {
+        fetch('/getArticles', {
             method: 'POST',
             headers: {'Content-Type': 'application/json'},
             body: JSON.stringify({playload: e.value})
