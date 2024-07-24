@@ -62,3 +62,71 @@ padding: 10px;
   flex-direction: row;
   justify-content: space-between;
 }
+.profile-information{
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+}
+.profile-picture{
+  width: 80px;
+  height: 80px;
+  border-radius: 50%;
+  background-color: #06b6d4;
+  color: #ffffff;
+  font-size: 50px;
+  text-transform: uppercase;
+}
+#manage-information{
+  background-color: #06b6d4;
+  color: #ffffff;
+  border-radius: 15px;
+  height: 35px;
+  border-width: 0px;
+}
+#manage-information:hover{
+  background-color: #00c8eb;
+}
+
+.container-information{
+  max-width: 400px;
+  background-color: #ffffff;
+  padding: 30px;
+  border-radius: 8px;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+  z-index: 100;
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  opacity: 1;
+  transition: opacity 0.5s ease;
+  display: none;
+}
+.card {
+  border: none; 
+}
+.form-control {
+  border-radius: 15px;
+}
+
+.card-body .btn{
+  background-color: #06b6d4;
+  color: #ffffff;
+  width: 100%;
+  border-radius: 15px;
+  height: 35px;
+  border-width: 0px;
+}
+.card-body .btn:hover{
+background-color: #00c8eb;
+  
+}
+#close-information{
+  position: absolute;
+  top: 10px;
+  right: 10px;
+}
+#close-information:hover{
+  cursor: pointer;
+}

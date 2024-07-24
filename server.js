@@ -375,7 +375,9 @@ app.post('/getArticles', async (req, res) => {
 app.get('/login', (req, res) => res.render('LoginPage'));
 app.get('/signup', (req, res) => res.render('SignUpPage'));
 app.get('/forgot-password', (req, res) => res.render('ForgotPassword'));
-app.get('/myAccount', (req, res) => res.render('MyAccount'));
+app.get('/myAccount', async (req, res) =>  {
+  res.render('MyAccount');
+});
 app.get('/cart', requireAuth, (req, res) => res.render('Cart'));
 app.get('/favorites', requireAuth, (req, res) => res.render('Favorites'));
 app.get('/reset-password/:token', (req, res) => {

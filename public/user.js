@@ -22,7 +22,17 @@ const userSchema = new mongoose.Schema({
     type: String,
     default: "user"
   },
-  passwordResetTokenUsed: { type: Boolean, default: false }
+  passwordResetTokenUsed: { type: Boolean, default: false },
+  dateOfBirth: {
+    type: Date,
+    default: new Date()
+  },
+  phoneNumber: {
+    type: String,
+    required: [true, 'Please enter a phone number'],
+    minLength: [10, 'Minimun length for the phone number is 10 characters']
+  }
+
 });
 userSchema.pre('save', async function(next) {
   const salt = await bcrypt.genSalt();
