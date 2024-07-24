@@ -88,26 +88,29 @@ padding: 10px;
   background-color: #00c8eb;
 }
 
-.container-information{
-  max-width: 400px;
+.container-information {
+  width: 400px;
   background-color: #ffffff;
   padding: 30px;
+  margin: 10px;
   border-radius: 8px;
   box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-  z-index: 100;
+  opacity: 1;
   position: absolute;
   top: 50%;
   left: 50%;
   transform: translate(-50%, -50%);
-  opacity: 1;
+  z-index: 100;
   transition: opacity 0.5s ease;
   display: none;
 }
+
 .card {
-  border: none; 
+  border: none;
 }
 .form-control {
   border-radius: 15px;
+  width: 100%;
 }
 
 .card-body .btn{
