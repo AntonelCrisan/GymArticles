@@ -2,7 +2,9 @@
     <div class="container-fluid">
         <!-- Logo -->
         <a class="navbar-brand" href="/">
-            <span><img src="logo_png.png" alt="Logo" style="width: 30px;"></span>
+            <span>
+                <img src="/images/logo.png" alt="Logo" style="width: 30px;">
+            </span>
             <span style="color: #5f6368;">GymArticles</span>    
         </a>
         <!-- Buton pentru toggle pe dispozitive mobile -->
@@ -30,20 +32,19 @@
                         <span>Favorite</span>
                     </a>
                 </li>
-                
-            </ul>
-            <!-- Input search -->
-            <form class="form-inline my-2 my-lg-0 mx-auto" action="/search" method="GET">
-                <div style="display: flex; flex-direction: column; width: 100%;">
-                    <div style="display: flex; flex-direction: row; justify-content: center; align-items: center; min-width: 450px; position: relative;">
-                        <input id="search-input" class="form-control mr-sm-2" type="text" name="q" placeholder="Search" aria-label="Search" style="border-color: #06b6d4; border-radius: 15px; width: 100%" onkeyup="sendData(this)" autocomplete="off">
+                  <!-- Input search -->
+            <form class="form-inline" action="/search" method="GET">
+                <div class="container-fluid d-flex flex-column w-100">
+                    <div class="d-flex flex-row align-items-center w-100">
+                        <input id="search-input" class="form-control mr-2 flex-grow-1" type="text" name="q" placeholder="Search" aria-label="Search" style="border-color: #06b6d4; border-radius: 15px; padding: 10px;" onkeyup="sendData(this)" autocomplete="off">
                         <button class="btn my-2 my-sm-0" type="submit" style="color: #06b6d4; border-color: #06b6d4; border-radius: 15px;">
                             <span class="fas fa-search"></span>
                         </button>
                     </div>
-                    <section id="searchResults"></section>
+                    <section id="searchResults" class="w-100"></section>
                 </div>
             </form>
+            </ul>
             <ul class="navbar-nav ml-auto">
                 <% if (user) { %>
                     <% if (currentPath === "/myAccount") { %>

@@ -11,7 +11,7 @@
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
 <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
 <link rel="stylesheet" href="style/MyAccount.css">
-<link rel="icon" type="image/jpg" href="logo.jpg">
+<link rel="icon" type="image/png" href="images/logo.png">
 </head>
 <body>
      <div class="navbar">
@@ -104,52 +104,56 @@
                   </div>
                     <p><%= user.phoneNumber %></p>
                 </div>
-                <a href="#edit-personal-information">
                   <button id="manage-information">Manage information</button>
-                </a>
             </div>
         </div>
+    </div>
+    <div id="success-message" class="success-message d-none">
+      <span>
+        <svg xmlns="http://www.w3.org/2000/svg" height="35px" viewBox="0 -960 960 960" width="35px" fill="#06c906"><path d="M382-232.35 146.35-468l64.89-64.89L382-362.13l366.76-366.76L813.65-664 382-232.35Z"/></svg>
+      </span>
+      <span>
+        Your personal data was successfully modified!
+      </span>
     </div>
       <div class="container-information">
         <svg xmlns="http://www.w3.org/2000/svg" id="close-information" height="24px" viewBox="0 -960 960 960" width="24px" fill="#5f6368"><path d="m256-200-56-56 224-224-224-224 56-56 224 224 224-224 56 56-224 224 224 224-56 56-224-224-224 224Z"/></svg>
       <div class="card">
         <div class="card-body">
           <h4 class="card-title text-center">Manage information</h4>
-          <form action="/manage-information" method="POST">
+          <form action="/myAccount" method="POST">
             <div class="form-group">
               <label>Name</label>
-            <input type="text" class="form-control" id="name" name="name">
-            <div id="nameError">
-            </div>
+            <input type="text" class="form-control" id="name" name="name" value="<%= user.name %>">
           </div>
           <div class="form-group">
           <label>Phone number</label>
-          <input type="text" class="form-control" id="phone" name="phone">
-          <div id="phoneError">
-          </div>
+          <input type="text" class="form-control" id="phone" name="phone" value="<%= user.phoneNumber %>">
         </div>
         <div class="form-group">
-          <label for="dateOfBirth">Date of Birth</label>
+          <label>Date of Birth</label>
           <div style="display: flex; justify-content: space-between;">
             <div>
+              <label>Year</label>
               <select class="form-control" id="year" name="year">
-                  <option>Year</option>
-                  
+                  <option><%= user.dateOfBirth.getFullYear() %></option>
               </select>
           </div>
           <div>
+            <label>Month</label>
               <select class="form-control" id="month" name="month" style="width: 100%;">
-                  <option>Month</option>
+                  <option><%=user.dateOfBirth.getMonth() + 1%></option>
               </select>
           </div>
           <div>
+            <label>Day</label>
             <select class="form-control" id="day" name="day">
-                <option>Day</option>
+                <option><%=user.dateOfBirth.getDate()%></option>
             </select>
         </div>
           </div>
       </div>
-      <div id="dobError">
+      <div id="warningMessage" style="color: red;">
       </div>
             <button type="submit" class="btn btn-block" id="saveButton">
               <span id="buttonText">Save</span>
@@ -159,6 +163,7 @@
         </div>
       </div>
     </div>
+    <%- include('Footer') %>
     <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.4/dist/umd/popper.min.js"></script>
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>

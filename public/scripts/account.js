@@ -60,3 +60,56 @@ for(let i = 2014; i >= 1920; i--){
     option.textContent = i;
     yearSelect.appendChild(option);
 }
+function showSuccessMessage() {
+    const message = document.getElementById('success-message');
+    message.classList.remove('d-none');
+    //Close message
+    setTimeout(() => {
+        message.classList.add('hide');
+        setTimeout(() => {
+            message.classList.add('d-none');
+            message.classList.remove('hide');
+        }, 500);
+    }, 3000);
+}
+
+const form  = document.querySelector('form');
+const warningMessage = document.getElementById('warningMessage');
+form.addEventListener('submit', async (e) => {
+  e.preventDefault();
+  const name = form.name.value;
+  const phone = form.phone.value;
+  const year = form.year.value;
+  const month = form.month.value;
+  const day = form.day.value;
+  warning.textContent = '';
+  const saveButton = document.getElementById('saveButton');
+  const buttonText = document.getElementById('buttonText');
+  const spinner = document.getElementById('spinner');
+  saveButton.disabled = true;
+  buttonText.classList.add('d-none');
+  spinner.classList.remove('d-none');
+  try{
+    const res = await fetch('/myAccount', {
+      method: 'POST',
+      body: JSON.stringify({name, phone, year, month, day}),
+      headers: {'Content-Type': 'application/json'}
+    });
+    const data = await res.json();
+    if(data.warning){
+        warningMessage.textContent = data.warning;
+    }
+    if(data.message === 'Success'){
+        showSuccessMessage();
+    }
+  }catch(err){
+    console.log(err);
+  }finally {
+    buttonText.classList.remove('d-none');
+    spinner.classList.add('d-none');
+    signUpButton.disabled = false;
+  }
+});
+showSuccessMessage();
+
+

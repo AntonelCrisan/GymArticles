@@ -6,7 +6,7 @@ const User = require('./public/user');
 const flash = require('connect-flash');
 const cookieParser = require('cookie-parser');
 const bodyParser = require("body-parser");   
-const {requireAuth, checkUser, getId, setId} = require('./public/authMiddleWare');
+const {requireAuth, checkUser, getId} = require('./public/authMiddleWare');
 require("dotenv").config();
 const jwt = require('jsonwebtoken');
 const app = express();
@@ -241,30 +241,31 @@ app.post('/reset-password/:token', async (req, res) => {
   }
 });
 //Manage information post method from user account
-app.post('/manage-information', async (req, res) => {
+app.post('/myAccount', async (req, res) => {
+  const userId = getId(); //Useing getter method for geting the id from token
   const {name, phone, year, day} = req.body;
+  //Change the months into number for inserting corectlly in database
   let {month} = req.body;
   const months = ["Ianuary", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
-  for(let i = 0; i < 12; i++){
-    if(months[i] === month){
-      month = i + 1;
+  for(let i = 0; i < 12; i++){//I go through the moths vector
+    if(months[i] === month){//Checking the right index for right month reqested from frontend
+      month = i + 1;//Increments by 1 because vectors starts with 0
       break;
     }
   }
-  let dateOfBirth = `${year}-${month}-${day}`;
+  let dateOfBirth = `${year}-${month}-${day}`;//Merges the year, the mont and the day into a date
   try{
-    if(name === '' || phone === '' || year === 'Year' || month === 'Month' || day === 'Day'){
-      return res.send('All fields must be filled!');
+    if(!name || !phone){//Checks if name and phone are not empty
+      return res.status(400).json({warning: 'All fields must be filled!'});
     }
-    if(phone.length < 10 || phone.length > 10){
-      return res.send('Minimum length of phone number is 10 characters')
+    if(phone.length !== 10){//Checks the lenght of phone number, have to be 10 characters
+      return res.status(400).json({warning: 'Minimum length of phone number is 10 characters'});
     }
-    const userId = getId();
-    await User.findByIdAndUpdate(userId, {name:name, phoneNumber: phone, dateOfBirth: dateOfBirth});
-    res.redirect("/myAccount");
-  }catch(error){
-    const errors = handleErros(error);
-    res.send(errors);
+    await User.findByIdAndUpdate(userId, {name:name, phoneNumber: phone, dateOfBirth: dateOfBirth});//Updateding the data by userID
+    return res.status(200).json({message: 'Success'});//Sending success message to frontend for displaying the message
+  }catch(error){//Catchs the error
+    console.log(error);
+    return res.status(500).json({error: "Something went wrong, try again later!"});
   }
 });
 
