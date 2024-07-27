@@ -25,6 +25,8 @@ body {
 }
 .navbar {
 background-color: #ffffff; /* culoarea navbarului */
+box-shadow: 0 0 20px rgba(0, 0, 0, 0.1);
+
 }
 .navbar-nav .nav-link {
     color: #dedcdc; /* culoarea textului */

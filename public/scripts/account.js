@@ -19,3 +19,15 @@ manageInformation.addEventListener('click', () => {
         container.style.opacity = '1';
     }, 10); 
 });
+
+
+const links = document.querySelectorAll('.sidebar-link');
+links.forEach(link => {
+    link.addEventListener('click', (e) => {
+        e.preventDefault();
+        links.forEach(link => {
+            link.classList.remove('active');
+        });
+        link.classList.add('active');
+    });
+});
