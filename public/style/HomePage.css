@@ -1,4 +1,7 @@
-
+body {
+    padding: 0;
+    margin: 0;
+}
 /* Sidebar fixat pe stânga */
 .sidebar {
     background-color: #ffffff;
@@ -84,10 +87,10 @@
 
     }
     .navbar-nav .nav-link {
-        color: #dedcdc; /* culoarea textului */
+        color: #5f6368; /* culoarea textului */
     }
     .navbar-nav .nav-link:hover {
-        color: #06b6d4; /* culoarea textului la hover */
+        color: #333333; /* culoarea textului la hover */
     }
     #searchResults {
     position: absolute;
@@ -100,7 +103,7 @@
     max-height: 300px; /* Maxima înălțime a secțiunii */
     overflow-y: auto; /* Activarea scroll-ului dacă sunt prea multe rezultate */
     z-index: 1000; /* Asigură-te că secțiunea apare deasupra altor elemente */
-    width: 350px;
+    width: 600px;
     display: none;
     padding: 10px;
 }

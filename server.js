@@ -6,7 +6,7 @@ const User = require('./public/user');
 const flash = require('connect-flash');
 const cookieParser = require('cookie-parser');
 const bodyParser = require("body-parser");   
-const {requireAuth, checkUser} = require('./public/authMiddleWare');
+const {requireAuth, checkUser, getId, setId} = require('./public/authMiddleWare');
 require("dotenv").config();
 const jwt = require('jsonwebtoken');
 const app = express();
@@ -239,7 +239,35 @@ app.post('/reset-password/:token', async (req, res) => {
     console.log("Error at reset password post: ", error);
     return res.status(500).json({warning: 'Something went wrong, please try again later!'});
   }
-})
+});
+//Manage information post method from user account
+app.post('/manage-information', async (req, res) => {
+  const {name, phone, year, day} = req.body;
+  let {month} = req.body;
+  const months = ["Ianuary", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
+  for(let i = 0; i < 12; i++){
+    if(months[i] === month){
+      month = i + 1;
+      break;
+    }
+  }
+  let dateOfBirth = `${year}-${month}-${day}`;
+  try{
+    if(name === '' || phone === '' || year === 'Year' || month === 'Month' || day === 'Day'){
+      return res.send('All fields must be filled!');
+    }
+    if(phone.length < 10 || phone.length > 10){
+      return res.send('Minimum length of phone number is 10 characters')
+    }
+    const userId = getId();
+    await User.findByIdAndUpdate(userId, {name:name, phoneNumber: phone, dateOfBirth: dateOfBirth});
+    res.redirect("/myAccount");
+  }catch(error){
+    const errors = handleErros(error);
+    res.send(errors);
+  }
+});
+
 //Add article post method 
 app.post('/add-article', async (req, res) => {
   const {image, name, price, category, subcategory, cantity} = req.body;

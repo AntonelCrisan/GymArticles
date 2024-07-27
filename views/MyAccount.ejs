@@ -17,7 +17,7 @@
      <div class="navbar">
       <%- include('Navbar') %>
      </div>
-      <div class="container-account">
+      <div class="container-account container-fluid">
         <div class="row">
             <div class="col-md-4 sidebar">
                 <div class="profile-information text-center">
@@ -88,7 +88,7 @@
                     <h5>Date of Birth</h5>
                     <svg xmlns="http://www.w3.org/2000/svg" height="30px" viewBox="0 -960 960 960" width="30px" fill="#06b6d4"><path d="M200-80q-33 0-56.5-23.5T120-160v-560q0-33 23.5-56.5T200-800h40v-80h80v80h320v-80h80v80h40q33 0 56.5 23.5T840-720v560q0 33-23.5 56.5T760-80H200Zm0-80h560v-400H200v400Zm0-480h560v-80H200v80Zm0 0v-80 80Zm280 240q-17 0-28.5-11.5T440-440q0-17 11.5-28.5T480-480q17 0 28.5 11.5T520-440q0 17-11.5 28.5T480-400Zm-160 0q-17 0-28.5-11.5T280-440q0-17 11.5-28.5T320-480q17 0 28.5 11.5T360-440q0 17-11.5 28.5T320-400Zm320 0q-17 0-28.5-11.5T600-440q0-17 11.5-28.5T640-480q17 0 28.5 11.5T680-440q0 17-11.5 28.5T640-400ZM480-240q-17 0-28.5-11.5T440-280q0-17 11.5-28.5T480-320q17 0 28.5 11.5T520-280q0 17-11.5 28.5T480-240Zm-160 0q-17 0-28.5-11.5T280-280q0-17 11.5-28.5T320-320q17 0 28.5 11.5T360-280q0 17-11.5 28.5T320-240Zm320 0q-17 0-28.5-11.5T600-280q0-17 11.5-28.5T640-320q17 0 28.5 11.5T680-280q0 17-11.5 28.5T640-240Z"/></svg>
                   </div>
-                    <p><%= user.dateOfBirth %></p>
+                    <p><%=user.dateOfBirth.getFullYear()%>/<%=user.dateOfBirth.getMonth() + 1%>/<%=user.dateOfBirth.getDate()%></p>
                 </div>
                 <div class="info-card">
                   <div class="title-card">
@@ -115,10 +115,10 @@
       <div class="card">
         <div class="card-body">
           <h4 class="card-title text-center">Manage information</h4>
-          <form>
+          <form action="/manage-information" method="POST">
             <div class="form-group">
               <label>Name</label>
-            <input type="text" class="form-control" id="name" name="name" autofocus>
+            <input type="text" class="form-control" id="name" name="name">
             <div id="nameError">
             </div>
           </div>
@@ -129,10 +129,27 @@
           </div>
         </div>
         <div class="form-group">
-          <label>Date of Birth</label>
-          <input type="date" id="dob" name="dob">
-        <div id="dobError">
+          <label for="dateOfBirth">Date of Birth</label>
+          <div style="display: flex; justify-content: space-between;">
+            <div>
+              <select class="form-control" id="year" name="year">
+                  <option>Year</option>
+                  
+              </select>
+          </div>
+          <div>
+              <select class="form-control" id="month" name="month" style="width: 100%;">
+                  <option>Month</option>
+              </select>
+          </div>
+          <div>
+            <select class="form-control" id="day" name="day">
+                <option>Day</option>
+            </select>
         </div>
+          </div>
+      </div>
+      <div id="dobError">
       </div>
             <button type="submit" class="btn btn-block" id="saveButton">
               <span id="buttonText">Save</span>

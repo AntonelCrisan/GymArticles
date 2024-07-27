@@ -17,6 +17,13 @@ const requireAuth = (req, res, next) => {
         res.redirect('/login');
     }
 }
+const state = {
+    id: null
+};
+const getId = () => {return state.id};
+const setId = (id) => {
+    state.id = id;
+};
 const checkUser = (req, res, next) => {
     const token = req.cookies.jwt;
     if (token) {
@@ -24,22 +31,26 @@ const checkUser = (req, res, next) => {
             if (err) {
                 console.log(err.message);
                 res.locals.user = null;
+                setId(null);
                 next();
             } else {
                 try {
                     let user = await User.findById(decodedToken.id);
                     res.locals.user = user;
+                    setId(decodedToken.id);
                     next();
                 } catch (error) {
                     console.log(error);
                     res.locals.user = null;
+                    setId(null);
                     next();
                 }
             }
         });
     } else {
         res.locals.user = null;
+        setId(null);
         next();
     }
 };
-module.exports = {requireAuth, checkUser};
+module.exports = {requireAuth, checkUser, getId, setId};
