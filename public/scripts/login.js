@@ -15,7 +15,6 @@ const form  = document.querySelector('form');
     emailError.textContent = '';
     passwordError.textContent = '';
     errorFields.textContent = '';
-    
     try{
       const res = await fetch('/login', {
         method: 'POST',
@@ -32,7 +31,6 @@ const form  = document.querySelector('form');
         errorFields.textContent = data.warning;
       }
       if(data.user){
-        console.log(data.user);
         location.assign('/');
       }
     }catch(err){

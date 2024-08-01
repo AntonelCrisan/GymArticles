@@ -20,19 +20,6 @@ manageInformation.addEventListener('click', () => {
         container.style.opacity = '1';
     }, 10); 
 });
-
-//Changes color of links from sidebar when user click on of them 
-const links = document.querySelectorAll('.sidebar-link');
-links.forEach(link => {
-    link.addEventListener('click', (e) => {
-        e.preventDefault();
-        links.forEach(link => {
-            link.classList.remove('active');
-        });
-        link.classList.add('active');
-    });
-});
-
 //Populate Date of Birth
 //Populate day option
 const daySelect = document.getElementById('day');
@@ -69,47 +56,51 @@ function showSuccessMessage() {
         setTimeout(() => {
             message.classList.add('d-none');
             message.classList.remove('hide');
+            location.reload();
         }, 500);
     }, 3000);
 }
-
-const form  = document.querySelector('form');
+document.addEventListener('DOMContentLoaded', () => {
+const form  = document.getElementById('form');
 const warningMessage = document.getElementById('warningMessage');
 form.addEventListener('submit', async (e) => {
   e.preventDefault();
-  const name = form.name.value;
-  const phone = form.phone.value;
-  const year = form.year.value;
-  const month = form.month.value;
-  const day = form.day.value;
-  warning.textContent = '';
   const saveButton = document.getElementById('saveButton');
   const buttonText = document.getElementById('buttonText');
   const spinner = document.getElementById('spinner');
   saveButton.disabled = true;
   buttonText.classList.add('d-none');
   spinner.classList.remove('d-none');
+  const nameUser = form.nameUser.value;
+  const phoneNumber = form.phoneNumber.value;
+  const year = form.year.value;
+  const month = form.month.value;
+  const day = form.day.value;
+  warningMessage.textContent = '';
   try{
-    const res = await fetch('/myAccount', {
+    const res = await fetch('/manage-information', {
       method: 'POST',
-      body: JSON.stringify({name, phone, year, month, day}),
+      body: JSON.stringify({nameUser, phoneNumber, year, month, day}),
       headers: {'Content-Type': 'application/json'}
     });
     const data = await res.json();
     if(data.warning){
         warningMessage.textContent = data.warning;
     }
-    if(data.message === 'Success'){
-        showSuccessMessage();
+    if(data.message){   
+        setTimeout(() => {
+            containerAccount.style.opacity = '1';
+            navbar.style.opacity = '1';
+            container.style.display = 'none';
+            showSuccessMessage();
+        }, 50); 
     }
   }catch(err){
     console.log(err);
   }finally {
     buttonText.classList.remove('d-none');
     spinner.classList.add('d-none');
-    signUpButton.disabled = false;
+    saveButton.disabled = false;
   }
 });
-showSuccessMessage();
-
-
+});

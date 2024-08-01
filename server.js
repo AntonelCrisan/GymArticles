@@ -13,6 +13,7 @@ const app = express();
 const port = process.env.PORT || 3012;
 const Article = require('./public/article');
 const Cart = require('./public/cart');
+const Addresses = require('./public/addresses');
 const path = require('path');
 const nodemailer = require('nodemailer');
 const bcrypt = require('bcryptjs');
@@ -241,9 +242,9 @@ app.post('/reset-password/:token', async (req, res) => {
   }
 });
 //Manage information post method from user account
-app.post('/myAccount', async (req, res) => {
+app.post('/manage-information', async (req, res) => {
   const userId = getId(); //Useing getter method for geting the id from token
-  const {name, phone, year, day} = req.body;
+  const {nameUser, phoneNumber, year, day} = req.body;
   //Change the months into number for inserting corectlly in database
   let {month} = req.body;
   const months = ["Ianuary", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
@@ -255,20 +256,77 @@ app.post('/myAccount', async (req, res) => {
   }
   let dateOfBirth = `${year}-${month}-${day}`;//Merges the year, the mont and the day into a date
   try{
-    if(!name || !phone){//Checks if name and phone are not empty
+    if(!nameUser || !phoneNumber){//Checks if name and phone are not empty
       return res.status(400).json({warning: 'All fields must be filled!'});
     }
-    if(phone.length !== 10){//Checks the lenght of phone number, have to be 10 characters
+    if(phoneNumber.length !== 10){//Checks the lenght of phone number, have to be 10 characters
       return res.status(400).json({warning: 'Minimum length of phone number is 10 characters'});
     }
-    await User.findByIdAndUpdate(userId, {name:name, phoneNumber: phone, dateOfBirth: dateOfBirth});//Updateding the data by userID
-    return res.status(200).json({message: 'Success'});//Sending success message to frontend for displaying the message
+    await User.findByIdAndUpdate(userId, {name:nameUser, phoneNumber: phoneNumber, dateOfBirth: dateOfBirth});//Updateding the data by userID
+    res.status(200).json({message: 'Your personal data was successfully modified!'});//Sending success message to frontend for displaying the message
   }catch(error){//Catchs the error
     console.log(error);
     return res.status(500).json({error: "Something went wrong, try again later!"});
   }
 });
+//Add addresses post method
+app.post('/add-address', async(req, res) => {
+  const {name, phoneNumber, street, city, country} = req.body;
+  const idUser = getId();
+  try{
+    if(!idUser){
+      return res.status(400).json({warning: 'Something went wrong, please try again later!'});
+    }
+    if(!name || !phoneNumber || !street || !city || !country){//Checking if all fields are filled up
+      return res.status(400).json({warning: 'All fields must be filled!'});
+      }
+      if(phoneNumber.length !== 10){//Checking the length of phone number
+        return res.status(400).json({warning: 'Minimum length of phone number is 10'});
+      }
+      const address = await Addresses.create({idUser, name, phoneNumber, street, city, country});
+      address.save();
+      res.status(201).json({msg: "Address added succesfully"});
+  }catch(error){
+    res.send(error);
+  }
 
+});
+//Update address post method
+app.post('/update-address/:id', async (req, res) => {
+  const {name, phoneNumber, street, city, country} = req.body;
+  const id = req.params.id;
+  try {
+    const idAddress = await Addresses.findOne({_id:id});
+    if(!idAddress){
+      return res.status(400).json({warning: 'Address not found!'});
+    }
+    if(!name || !phoneNumber || !street || !city || !country){
+      return res.status(400).json({warning: 'All fields must be filled!'});
+    }
+    if(phoneNumber.length !== 10){
+      return res.status(400).json({warning: 'Minimum length of phone number is 10'});
+    }
+    await Addresses.findByIdAndUpdate(id, req.body, {new:true});
+    return res.status(200).json({message: 'Address updated succesfully'});
+  } catch (error) {
+      return res.status(500).json({error: "Internal server error!"});
+  }
+});
+
+//Delete address post method
+app.post('/delete-address/:id', async(req, res) => {
+  const id = req.params.id;
+  try {
+    const idAddress = await Addresses.findOne({_id:id});
+    if(!idAddress){
+      return res.status(400).json({warning: 'Address not found!'});
+    }
+    await Addresses.findByIdAndDelete(id);
+    return res.status(200).json({message: 'Address deleted succesfully'});
+  } catch (error) {
+    return res.status(500).json({error: 'Internal server error!'});
+  }
+});
 //Add article post method 
 app.post('/add-article', async (req, res) => {
   const {image, name, price, category, subcategory, cantity} = req.body;
@@ -359,34 +417,24 @@ app.post('/product', async (req, res) => {
       return res.status(500).json({ error: "Internal server error" });
   }
 });
-app.get('/edit-product',  async (req, res) => {
+app.get('/edit-product/:id',  async (req, res) => {
   try {
-    const article = await Article.findById(req.query.id);
+    const article = await Article.findById(req.params.id);
     res.render('EditProduct', {article}); 
   } catch (error) {
       console.log(error);
       return res.status(400).json({error});
   }
 });
-app.put('/edit-product/:id', async (req, res) => {
+app.post('/edit-product/:id', async (req, res) => {
   try {
     const {image, name, price, category, subcategory, cantity } = req.body;
-    const {id} = req.params;
-
-    // Find the article by ID
-    const article = await Article.findById(id);
-    console.log(id);
-      // Update the article properties with the new values
-    article.image = image;
-    article.name = name;
-    article.price = price;
-    article.category = category;
-    article.subcategory = subcategory;
-    article.cantity = cantity;
-
-    // Save the updated article to the database
-    await article.save();
-
+    const {id} = req.params.id;
+    const articleID = await Article.findById(id);
+    if(!articleID){
+      return res.status(404).json({error: "Product not found"});
+    }
+    await Article.findByIdAndUpdate(id, {image: image, name: name, price:price, category:category, subcategory:category, cantity:cantity});
     return res.status(201).json({ msg: 'Article modified successfully' });
   } catch (err) {
     console.log("Error editing the article:", err);
@@ -423,4 +471,12 @@ app.get('/showUsersAdmin', async (req, res) => {
   }
 }
 );
+app.get('/addresses', async (req, res) => {
+  const userID = getId();
+  const addresses = await Addresses.find({idUser: userID});
+  if(!addresses){
+    res.status(404).json({noAddress: "You don't have any address!"});
+  }
+  res.render('Addresses', {addresses});
+});
 app.listen(port, ()=> console.log(`Server is running at http://localhost:${port}`)); 
