@@ -78,11 +78,17 @@ body {
   }
   .name-phone, .street, .buttons{
     display: flex;
+    flex-wrap: wrap;
     justify-content: start;
     align-items: center;
     gap: 10px;
   }
-
+  .buttons button:last-child{
+    background-color: #ec1a1a;
+  }
+  .buttons button:last-child:hover{
+    background-color: #ff1f1f;
+  }
   .buttons button{
     background-color: #06b6d4;
     color: #ffffff;
@@ -95,6 +101,7 @@ body {
   }
   .add-address{
     display: flex;
+    flex-wrap: wrap;
     align-items: center;
     justify-content: space-between;
   }
@@ -107,4 +114,62 @@ body {
   }
   .add-address button:hover{
     background-color: #00c8eb;
+  }
+
+  .delete-address{
+    padding: 16px;
+    max-width: 400px;
+    width: 100%;
+    box-sizing: border-box;
+    background-color: #ffffff;
+    padding: 30px;
+    border-radius: 8px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    opacity: 1;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    z-index: 100;
+    transition: opacity 0.5s ease;
+    display: none;
+  }
+  .card {
+    border: none;
+  }
+  .info-address{
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+  }
+  .info-question {
+    display: flex;
+    flex-wrap: wrap;
+  }
+  .name-phone-delete, .street-delete{
+    color: #444;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 5px;
+  }
+  #deleteButton{
+    background-color: #06b6d4;
+    color: #ffffff;
+    width: 100%;
+    border-radius: 15px;
+    height: 35px;
+    border-width: 0px;
+    margin-top: 30px;
+  }
+  #deleteButton:hover{
+    background-color: #00c8eb;
+  }
+  #cancelButton{
+    background-color: #ffffff;
+    color: #06b6d4;
+    border: 1px solid #06b6d4;
+    width: 100%;
+    border-radius: 15px;
+    height: 35px;
   }
