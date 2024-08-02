@@ -1,3 +1,4 @@
+//Open and close delete address container
 const cancelButton = document.getElementById('cancelButton');
 const deleteAddressButton = document.querySelectorAll('.deleteAddressButton');
 const delete_address = document.getElementsByClassName('delete-address')[0];
@@ -20,3 +21,26 @@ deleteAddressButton.forEach(button => {
         }, 10); 
     });
 });
+
+deleteAddressButton.forEach(button => {
+    button.addEventListener('click', () => {
+        const id = button.getAttribute('data-id');
+        const deleteAddress = document.getElementById('deleteButton');
+        deleteAddress.addEventListener('click', async()=> {
+            try {
+                const response = await fetch(`/delete-address/${id}`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    }
+                });
+                const result = await response.json();
+                if(result.message === 'Address deleted succesfully'){
+                    window.location.reload();
+                }
+            } catch (error) {
+                console.log(error);
+            }
+        }) 
+    });
+    });
