@@ -1,0 +1,45 @@
+.add-address-container{
+    padding: 16px;
+    max-width: 400px;
+    width: 100%;
+    box-sizing: border-box;
+    background-color: #ffffff;
+    padding: 30px;
+    border-radius: 8px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    opacity: 1;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    z-index: 100;
+    transition: opacity 0.5s ease;
+    display: none;
+  }
+.card {
+    border: none;
+  }
+  .form-control {
+    border-radius: 15px;
+    width: 100%;
+  }
+  
+  .card-body .btn{
+    background-color: #06b6d4;
+    color: #ffffff;
+    width: 100%;
+    border-radius: 15px;
+    height: 35px;
+    border-width: 0px;
+  }
+  .card-body .btn:hover{
+  background-color: #00c8eb;
+  }
+  #close-button{
+    position: absolute;
+    top: 10px;
+    right: 10px;
+  }
+  #close-button:hover{
+    cursor: pointer;
+  }

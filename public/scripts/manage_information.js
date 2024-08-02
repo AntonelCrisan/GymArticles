@@ -4,11 +4,13 @@ const manageInformation = document.getElementById('manage-information');
 const container = document.getElementsByClassName('container-information')[0];
 const navbar = document.getElementsByClassName('navbar')[0];
 const containerAccount = document.getElementsByClassName('container-account')[0];
+const footer = document.getElementsByClassName('footer')[0];
 closeInformation.addEventListener('click', () => {
     setTimeout(() => {
         containerAccount.style.opacity = '1';
         navbar.style.opacity = '1';
         container.style.display = 'none';
+        footer.style.opacity = '1';
     }, 50); 
 });
 
@@ -18,6 +20,7 @@ manageInformation.addEventListener('click', () => {
         containerAccount.style.opacity = '0.2';
         navbar.style.opacity = '0.2';
         container.style.opacity = '1';
+        footer.style.opacity = '0.2';
     }, 10); 
 });
 //Populate Date of Birth

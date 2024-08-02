@@ -12,6 +12,7 @@
 <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
 <link rel="icon" type="image/png" href="images/logo.png">
 <link rel="stylesheet" href="style/Addresses.css">
+<link rel="stylesheet" href="style/Add-Addresses.css">
 </head>
 <body>
     <div class="navbar">
@@ -21,7 +22,7 @@
         <div class="col-md-8 addresses">
             <div class="add-address">
                 <h2>My addresses</h2>
-                <button>
+                <button id="add-address-btn">
                     <span>
                         <svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="24px" fill="#ffffff"><path d="M434.5-434.5H191.87v-91H434.5v-242.63h91v242.63h242.63v91H525.5v242.63h-91V-434.5Z"/></svg>
                     </span>
@@ -59,13 +60,13 @@
                     </span>
                     <h2>You don't have any addresses</h2>
                     <p>Use the button below to add a new address</p>
-                    <a href="#" class="add-address-btn">Add address</a>
+                    <p id="add-address-btn" style="color: #06b6d4; cursor: pointer;">Add address</p>
                 </div>
             <% } %>
         </div>
     </div>
 </div>
-    <!-- Delete address form -->
+    <!-- Delete address functionality -->
     <div class="delete-address">
       <div class="card">
         <div class="card-body">
@@ -87,7 +88,46 @@
         </div>
       </div>
     </div>
-    <%- include('Footer') %>
+    <!-- Add address functionality -->
+     <div class="add-address-container">
+        <svg xmlns="http://www.w3.org/2000/svg" id="close-button" height="24px" viewBox="0 -960 960 960" width="24px" fill="#5f6368"><path d="m256-200-56-56 224-224-224-224 56-56 224 224 224-224 56 56-224 224 224 224-56 56-224-224-224 224Z"/></svg>
+        <div class="card">
+          <div class="card-body">
+            <h4 class="card-title text-center">Add address</h4>
+        <form method="POST" action="/add-address" id="add-address-form">
+            <div class="form-group">
+              <label>Name</label>
+            <input type="text" class="form-control" id="name" name="name" placeholder="ex: John Wick">
+          </div>
+          <div class="form-group">
+          <label>Phone number</label>
+          <input type="text" class="form-control" id="phone" name="phoneNumber" placeholder="0xxxxxxxxx">
+        </div>
+        <div class="form-group">
+            <label>Street</label>
+            <input type="text" class="form-control" id="street" name="street" placeholder="ex: Str. Wall, nr. 23">
+          </div>
+          <div class="form-group"> 
+            <label>City</label>
+            <input type="text" class="form-control" id="city" name="city" placeholder="ex: New York">
+          </div>
+          <div class="form-group">
+            <label>Country</label>
+            <input type="text" class="form-control" id="country" name="country" placeholder="ex: SUA">
+          </div>
+      <div id="warningMessage" style="color: red; padding-bottom: 5px;" class="text-center">
+      </div>
+            <button type="submit" class="btn btn-block" id="saveButton">
+              <span id="buttonText">Save</span>
+              <span id="spinner" class="spinner-border spinner-border-sm d-none" role="status" aria-hidden="true"></span>
+            </button>
+          </form>
+        </div>
+        </div>
+     </div>
+     <div class="footer">
+        <%- include('Footer') %>
+     </div>
         <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
         <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.4/dist/umd/popper.min.js"></script>
         <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
