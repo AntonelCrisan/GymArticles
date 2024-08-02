@@ -474,9 +474,6 @@ app.get('/showUsersAdmin', async (req, res) => {
 app.get('/addresses', async (req, res) => {
   const userID = getId();
   const addresses = await Addresses.find({idUser: userID});
-  if(!addresses){
-    res.status(404).json({noAddress: "You don't have any address!"});
-  }
   res.render('Addresses', {addresses});
 });
 app.listen(port, ()=> console.log(`Server is running at http://localhost:${port}`)); 
