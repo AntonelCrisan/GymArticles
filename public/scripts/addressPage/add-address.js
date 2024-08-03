@@ -1,10 +1,11 @@
+//Opens and close the adding address form
 const closeButton = document.getElementById('close-button');
 const addAddressButton = document.querySelectorAll('#add-address-btn');
 const addAddressContainer = document.getElementsByClassName('add-address-container')[0];
 const navbar = document.getElementsByClassName('navbar')[0];
 const footer = document.getElementsByClassName('footer')[0];
 const containerAccount = document.getElementsByClassName('container-account')[0];
-const warningMessage = document.getElementById('warningMessage');
+const warningMessage = document.getElementById('warningMessageAdd');
 closeButton.addEventListener('click', () => {
     setTimeout(() => {
         containerAccount.style.opacity = '1';
@@ -25,6 +26,7 @@ addAddressButton.forEach(button => {
         }, 10); 
     });
 });
+//Adds address method
 const addAddress = document.getElementById('add-address-form');
 addAddress.addEventListener('submit', async(e) => {
     e.preventDefault();

@@ -256,6 +256,9 @@ app.post('/manage-information', async (req, res) => {
   }
   let dateOfBirth = `${year}-${month}-${day}`;//Merges the year, the mont and the day into a date
   try{
+    if(isNaN(phoneNumber)){
+      return res.status(400).json({warning: 'Phone number must be a number!'});
+    }
     if(!nameUser || !phoneNumber){//Checks if name and phone are not empty
       return res.status(400).json({warning: 'All fields must be filled!'});
     }
@@ -276,6 +279,9 @@ app.post('/add-address', async(req, res) => {
   try{
     if(!idUser){
       return res.status(400).json({warning: 'Something went wrong, please try again later!'});
+    }
+    if(isNaN(phoneNumber)){
+      return res.status(400).json({warning: 'Phone number must be a number!'});
     }
     if(!name || !phoneNumber || !street || !city || !country){//Checking if all fields are filled up
       return res.status(400).json({warning: 'All fields must be filled!'});
@@ -299,6 +305,9 @@ app.post('/update-address/:id', async (req, res) => {
     const idAddress = await Addresses.findOne({_id:id});
     if(!idAddress){
       return res.status(400).json({warning: 'Address not found!'});
+    }
+    if(isNaN(phoneNumber)){
+      return res.status(400).json({warning: 'Phone number must be a number!'});
     }
     if(!name || !phoneNumber || !street || !city || !country){
       return res.status(400).json({warning: 'All fields must be filled!'});

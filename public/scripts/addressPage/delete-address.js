@@ -1,3 +1,4 @@
+//Opens and close popup for deleting an address
 const cancelButton = document.getElementById('cancelButton');
 const deleteAddressButton = document.querySelectorAll('.deleteAddressButton');
 const delete_address = document.getElementsByClassName('delete-address')[0];
@@ -20,6 +21,7 @@ deleteAddressButton.forEach(button => {
         }, 10); 
     });
 });
+//Deletes address method
 deleteAddressButton.forEach(button => {
     button.addEventListener('click', () => {
         const id = button.getAttribute('data-id');
