@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Settings</title>
+    <title>GymArticles</title>
 <!-- Font Awesome CSS -->
 <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
@@ -29,7 +29,9 @@
                             <p style="word-wrap: break-word; margin-left: 40px;">Your current account email address is <%= user.email %></p>
                     </div>
                     <div>
-                        <button id="modify-email">Modify</button>
+                        <a href="#">
+                            <button id="modify-email">Modify</button>
+                        </a>
                     </div>
                 </div>
                 <div class="info-card">
@@ -41,7 +43,9 @@
                           <p style="word-wrap: break-word; margin-left: 40px;">It's a good idea to use a strong password wich one you don't use elsewhere.</p>
                     </div>
                     <div>
-                        <button id="modify-password">Modify</button>
+                        <a href="#">
+                            <button id="modify-password">Modify</button>
+                        </a>
                     </div>
                   </div>
                 <div class="info-card">
@@ -53,7 +57,9 @@
                             <p style="word-wrap: break-word; margin-left: 40px;">The phone number is <%= user.phoneNumber %></p>
                     </div>
                   <div>
-                    <button id="modify-phoneNumber">Modify</button>
+                    <a href="#">
+                        <button id="modify-phoneNumber">Modify</button>
+                    </a>
                   </div>
                 </div>
             </div>
