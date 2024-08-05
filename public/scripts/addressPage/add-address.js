@@ -37,8 +37,8 @@ addAddress.addEventListener('submit', async(e) => {
     const country = addAddress.country.value;
     warningMessage.textContent = '';
     const saveButton = document.getElementById('saveButton');
-    const buttonText = document.getElementById('buttonText');
-    const spinner = document.getElementById('spinner');
+    const buttonText = document.getElementById('buttonText-add');
+    const spinner = document.getElementById('spinner-add');
     saveButton.disabled = true;
     buttonText.classList.add('d-none');
     spinner.classList.remove('d-none');

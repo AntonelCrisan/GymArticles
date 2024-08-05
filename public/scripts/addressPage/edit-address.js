@@ -52,8 +52,8 @@ editAddressButton.forEach(button => {
     editAddressForm.addEventListener('submit', async(e) => {
         e.preventDefault();
         const saveButton = document.getElementById('saveButton');
-        const buttonText = document.getElementById('buttonText');
-        const spinner = document.getElementById('spinner');
+        const buttonText = document.getElementById('buttonText-edit');
+        const spinner = document.getElementById('spinner-edit');
         saveButton.disabled = true;
         buttonText.classList.add('d-none');
         spinner.classList.remove('d-none');
