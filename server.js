@@ -485,4 +485,7 @@ app.get('/addresses', async (req, res) => {
   const addresses = await Addresses.find({idUser: userID});
   res.render('Addresses', {addresses});
 });
+app.get('/settings', (req, res) => {
+  res.render('Settings');
+});
 app.listen(port, ()=> console.log(`Server is running at http://localhost:${port}`)); 

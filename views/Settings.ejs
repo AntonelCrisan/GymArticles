@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Settings</title>
+<!-- Font Awesome CSS -->
+<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+<link rel="stylesheet" href="style/Settings.css">
+<link rel="icon" type="image/png" href="images/logo.png">
+</head>
+<body>
+     <div class="navbar">
+      <%- include('Navbar') %>
+     </div>
+     <%- include('Sidebar') %>
+            <div class="col-md-8 personal-info">
+                <h2>Settings</h2>
+                <div class="info-card">
+                    <div>
+                        <div class="title-card">
+                            <svg xmlns="http://www.w3.org/2000/svg" height="30px" viewBox="0 -960 960 960" width="30px" fill="#06b6d4"><path d="M160-160q-33 0-56.5-23.5T80-240v-480q0-33 23.5-56.5T160-800h640q33 0 56.5 23.5T880-720v480q0 33-23.5 56.5T800-160H160Zm320-280L160-640v400h640v-400L480-440Zm0-80 320-200H160l320 200ZM160-640v-80 480-400Z"/></svg>
+                            <h5>Email</h5>
+                        </div>
+                            <p style="word-wrap: break-word; margin-left: 40px;">Your current account email address is <%= user.email %></p>
+                    </div>
+                    <div>
+                        <button id="modify-email">Modify</button>
+                    </div>
+                </div>
+                <div class="info-card">
+                    <div>
+                        <div class="title-card">
+                            <svg xmlns="http://www.w3.org/2000/svg" height="30px" viewBox="0 -960 960 960" width="30px" fill="#06b6d4"><path d="M240-80q-33 0-56.5-23.5T160-160v-400q0-33 23.5-56.5T240-640h40v-80q0-83 58.5-141.5T480-920q83 0 141.5 58.5T680-720v80h40q33 0 56.5 23.5T800-560v400q0 33-23.5 56.5T720-80H240Zm0-80h480v-400H240v400Zm240-120q33 0 56.5-23.5T560-360q0-33-23.5-56.5T480-440q-33 0-56.5 23.5T400-360q0 33 23.5 56.5T480-280ZM360-640h240v-80q0-50-35-85t-85-35q-50 0-85 35t-35 85v80ZM240-160v-400 400Z"/></svg>
+                          <h5>Password</h5>
+                        </div>
+                          <p style="word-wrap: break-word; margin-left: 40px;">It's a good idea to use a strong password wich one you don't use elsewhere.</p>
+                    </div>
+                    <div>
+                        <button id="modify-password">Modify</button>
+                    </div>
+                  </div>
+                <div class="info-card">
+                    <div>
+                        <div class="title-card">
+                            <svg xmlns="http://www.w3.org/2000/svg" height="30px" viewBox="0 -960 960 960" width="30px" fill="#06b6d4"><path d="M280-40q-33 0-56.5-23.5T200-120v-720q0-33 23.5-56.5T280-920h400q33 0 56.5 23.5T760-840v720q0 33-23.5 56.5T680-40H280Zm0-200v120h400v-120H280Zm200 100q17 0 28.5-11.5T520-180q0-17-11.5-28.5T480-220q-17 0-28.5 11.5T440-180q0 17 11.5 28.5T480-140ZM280-320h400v-400H280v400Zm0-480h400v-40H280v40Zm0 560v120-120Zm0-560v-40 40Z"/></svg>
+                            <h5>Phone number</h5>
+                          </div>
+                            <p style="word-wrap: break-word; margin-left: 40px;">The phone number is <%= user.phoneNumber %></p>
+                    </div>
+                  <div>
+                    <button id="modify-phoneNumber">Modify</button>
+                  </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div id="success-message" class="success-message d-none">
+      <span>
+        <svg xmlns="http://www.w3.org/2000/svg" height="35px" viewBox="0 -960 960 960" width="35px" fill="#06c906"><path d="M382-232.35 146.35-468l64.89-64.89L382-362.13l366.76-366.76L813.65-664 382-232.35Z"/></svg>
+      </span>
+      <span>
+        Your personal data was successfully modified!
+      </span>
+    </div>
+    <div class="footer">
+      <%- include('Footer') %>
+    </div>
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.4/dist/umd/popper.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+</body>
+</html>
