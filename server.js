@@ -283,20 +283,21 @@ app.post('/manage-information', async (req, res) => {
     return res.status(500).json({error: "Something went wrong, try again later!"});
   }
 });
+//GET method for address page
 app.get('/addresses', async (req, res) => {
-  const userID = getId();
-  const addresses = await Addresses.find({idUser: userID});
-  res.render('Addresses', {addresses});
+  const userID = getId(); //Gets id from middleware when user is loged in for displaing his addresses
+  const addresses = await Addresses.find({idUser: userID}); //Finds all addresses by idUser
+  res.render('Addresses', {addresses});//Pass the addresses to frontend
 });
 //Add addresses post method
 app.post('/add-address', async(req, res) => {
-  const {name, phoneNumber, street, city, country} = req.body;
-  const idUser = getId();
+  const {name, phoneNumber, street, city, country} = req.body;//Reqests all inputs
+  const idUser = getId();//Gets id from middleware for adding addresses
   try{
-    if(!idUser){
+    if(!idUser){//Checks the user id and display a warning message
       return res.status(400).json({warning: 'Something went wrong, please try again later!'});
     }
-    if(isNaN(phoneNumber)){
+    if(isNaN(phoneNumber)){//Checks the input phone number is a number
       return res.status(400).json({warning: 'Phone number must be a number!'});
     }
     if(!name || !phoneNumber || !street || !city || !country){//Checking if all fields are filled up
@@ -305,33 +306,32 @@ app.post('/add-address', async(req, res) => {
       if(phoneNumber.length !== 10){//Checking the length of phone number
         return res.status(400).json({warning: 'Minimum length of phone number is 10'});
       }
-      const address = await Addresses.create({idUser, name, phoneNumber, street, city, country});
-      address.save();
-      res.status(201).json({msg: "Address added succesfully"});
+      const address = await Addresses.create({idUser, name, phoneNumber, street, city, country}); //Adds new address
+      address.save();//Saves the address
+      return res.status(201).json({msg: "Address added succesfully"});
   }catch(error){
-    res.send(error);
+    return res.status(500).json({error: 'Internal server error'});
   }
-
 });
 //Update address post method
 app.post('/update-address/:id', async (req, res) => {
-  const {name, phoneNumber, street, city, country} = req.body;
-  const id = req.params.id;
+  const {name, phoneNumber, street, city, country} = req.body;//Gets values from inputs
+  const id = req.params.id;//Gets id from URL
   try {
-    const idAddress = await Addresses.findOne({_id:id});
-    if(!idAddress){
+    const idAddress = await Addresses.findOne({_id:id});//Finds the id
+    if(!idAddress){//Checks the address
       return res.status(400).json({warning: 'Address not found!'});
     }
-    if(isNaN(phoneNumber)){
+    if(isNaN(phoneNumber)){//Checks the input phone number is a number
       return res.status(400).json({warning: 'Phone number must be a number!'});
     }
-    if(!name || !phoneNumber || !street || !city || !country){
+    if(!name || !phoneNumber || !street || !city || !country){//Checking if all fields are filled up
       return res.status(400).json({warning: 'All fields must be filled!'});
     }
-    if(phoneNumber.length !== 10){
+    if(phoneNumber.length !== 10){//Checks the phone number has 10 characters
       return res.status(400).json({warning: 'Minimum length of phone number is 10'});
     }
-    await Addresses.findByIdAndUpdate(id, req.body, {new:true});
+    await Addresses.findByIdAndUpdate(id, req.body, {new:true});//Update the address
     return res.status(200).json({message: 'Address updated succesfully'});
   } catch (error) {
       return res.status(500).json({error: "Internal server error!"});
@@ -340,44 +340,95 @@ app.post('/update-address/:id', async (req, res) => {
 
 //Delete address post method
 app.post('/delete-address/:id', async(req, res) => {
-  const id = req.params.id;
+  const id = req.params.id;//Gets id from URL
   try {
-    const idAddress = await Addresses.findOne({_id:id});
-    if(!idAddress){
+    const idAddress = await Addresses.findOne({_id:id});//Finds the address
+    if(!idAddress){//Checks the address is exists or not
       return res.status(400).json({warning: 'Address not found!'});
     }
-    await Addresses.findByIdAndDelete(id);
+    await Addresses.findByIdAndDelete(id);//Delete the address by id
     return res.status(200).json({message: 'Address deleted succesfully'});
   } catch (error) {
     return res.status(500).json({error: 'Internal server error!'});
   }
 });
-
+//GET method for change email page
 app.get('/change-email/:id', (req, res) => {
   res.render('ChangeEmail');
 });
 app.post('/change-email/:id', async(req, res) => {
-  const {email, confEmail} = req.body;
-  const id = req.params.id;
+  const {email, confEmail} = req.body;//Gets email and confirm email
+  const id = req.params.id;//Gets id from URL
   try {
-    if(!email || !confEmail){
+    if(!email || !confEmail){//Checks the email and confirm email inputs are empty
       return res.status(400).json({warning: 'All fields must be filled!'});
     }
-    if(email !== confEmail){
+    if(email !== confEmail){//Verifies if email and confirm email are matching
       return res.status(400).json({warning: 'Emails do not match!'});
     }
-    await User.findByIdAndUpdate(id, req.body, {new:true});
-    req.session.message = 'Email updated succesfully!';
+    await User.findByIdAndUpdate(id, req.body, {new:true});//Updates the email
+    req.session.message = 'Email updated succesfully!';//Set a session message for desplaying in settings page
     return res.status(200).json({success: 'success'});
   } catch (error) {
-    const errors = handleErros(error);
+    const errors = handleErros(error);//Handles the errors
       console.log(errors)
       return res.status(400).json({errors});
   }
 });
+//GET method for changing the password page
+app.get('/change-password', (req, res) => {
+  res.render('ChangePassword');
+});
+//POST method for change password
+app.post('/change-password', async(req, res) => {
+  const {password, confPassword} = req.body;//Gets the values of password and confirm password
+  const id = getId();//Gets id from authMiddleWare
+  try {
+    if(!password || !confPassword){//Checks the input password and confirm password are empty
+      return res.status(400).json({warning: 'All fields must be filled!'});
+    }
+    if(password !== confPassword){//Checks if password and confirm password are the same
+      return res.status(400).json({warning: 'Passwords do not match!'});
+    }
+    if(password.length < 8){//Checks the length of the password
+      return res.status(400).json({warning: 'Minimun length for the password is 8 characters!'});
+    }
+    const salt = await bcrypt.genSalt();//Creat a salt
+    const hashedPassword = await bcrypt.hash(password, salt);//Hashing password
+    await User.findByIdAndUpdate(id, {password:hashedPassword}, {new:true});//Update password by id
+    req.session.message = 'Password updated succesfully!';//Set a session message for desplaying in settings page
+    return res.status(200).json({success: 'Success'});
+  } catch (error) {
+    const errors = handleErros(error);
+    console.log(errors);
+    return res.status(500).json({errors});
+  }
+});
+//GET method for validate password page
+app.get('/validate-password', (req, res) => {
+  res.render('ValidatePassword');
+});
+//POST method for validate password
+app.post('/validate-password', async(req, res) => {
+  const {password} = req.body;//Gets the value of password
+  const id = getId();//Gets the id for checking the password by user id
+  try {
+    if(!password){//Checks the input password is empty
+      return res.status(400).json({warning: 'Please enter the password!'});
+    }else{
+      await User.validate(id, password);//From user.js call the validate function and compare the input password with password from database by id
+      return res.status(200).json({valid: "Valid"});
+    }
+  } catch (error) {
+    const errors = handleErros(error);
+    console.log(errors);
+    return res.status(500).json({errors});
+  }
+});
+//GET method for settings page
 app.get('/settings', (req, res) => {
-  const message = req.session.message;
-  delete req.session.message;
+  const message = req.session.message;//Gets the messages from session
+  delete req.session.message;//After displaying the message deletes the message from session
   res.render('Settings', {message});
 });
 app.get('/add-article', (req, res) => res.render('AddArticle'));

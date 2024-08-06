@@ -29,7 +29,6 @@ const userSchema = new mongoose.Schema({
   },
   phoneNumber: {
     type: String,
-    required: [true, 'Please enter a phone number'],
     minLength: [10, 'Minimun length for the phone number is 10 characters']
   }
 
