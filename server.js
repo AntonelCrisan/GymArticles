@@ -22,6 +22,7 @@ app.use(express.static('public'));
 app.use(express.json());
 app.use(cookieParser());
 app.use(express.urlencoded({ extended: true }));
+app.use(bodyParser.urlencoded({ extended: true }));
 app.use(flash());
 app.use(session({
     secret: 'secret',
@@ -71,6 +72,8 @@ const handleErros = (err) => {
   }
   return errors;
 }
+app.get('*', checkUser); //Apply globally checkUser function from user.js file, for checking user for the entire application
+app.get('/signup', (req, res) => res.render('SignUpPage'));
 //Sign Up post method
 app.post('/signup', async (req, res) => {
     const { name, email, password } = req.body;
@@ -88,6 +91,7 @@ app.post('/signup', async (req, res) => {
         res.status(400).json({errors});
     }
 });
+app.get('/login', (req, res) => res.render('LoginPage'));
 //Log in post method
 app.post('/login', async(req, res) => {
   const {email, password} = req.body;
@@ -108,6 +112,7 @@ app.post('/login', async(req, res) => {
     }
     
 });
+app.get('/forgot-password', (req, res) => res.render('ForgotPassword'));
 //Forgot password post method
 app.post('/forgot-password', async(req, res) => {
   const {email} = req.body;
@@ -206,6 +211,9 @@ app.post('/forgot-password', async(req, res) => {
     return res.status(500).json({error});
   }
 })
+app.get('/reset-password/:token', (req, res) => {
+  res.render('ResetPassword');
+});
 //Reset password post method
 app.post('/reset-password/:token', async (req, res) => {
   const {password, confPassword} = req.body;
@@ -241,6 +249,9 @@ app.post('/reset-password/:token', async (req, res) => {
     return res.status(500).json({warning: 'Something went wrong, please try again later!'});
   }
 });
+app.get('/myAccount', async (req, res) =>  {
+  res.render('MyAccount');
+});
 //Manage information post method from user account
 app.post('/manage-information', async (req, res) => {
   const userId = getId(); //Useing getter method for geting the id from token
@@ -271,6 +282,11 @@ app.post('/manage-information', async (req, res) => {
     console.log(error);
     return res.status(500).json({error: "Something went wrong, try again later!"});
   }
+});
+app.get('/addresses', async (req, res) => {
+  const userID = getId();
+  const addresses = await Addresses.find({idUser: userID});
+  res.render('Addresses', {addresses});
 });
 //Add addresses post method
 app.post('/add-address', async(req, res) => {
@@ -336,6 +352,35 @@ app.post('/delete-address/:id', async(req, res) => {
     return res.status(500).json({error: 'Internal server error!'});
   }
 });
+
+app.get('/change-email/:id', (req, res) => {
+  res.render('ChangeEmail');
+});
+app.post('/change-email/:id', async(req, res) => {
+  const {email, confEmail} = req.body;
+  const id = req.params.id;
+  try {
+    if(!email || !confEmail){
+      return res.status(400).json({warning: 'All fields must be filled!'});
+    }
+    if(email !== confEmail){
+      return res.status(400).json({warning: 'Emails do not match!'});
+    }
+    await User.findByIdAndUpdate(id, req.body, {new:true});
+    req.session.message = 'Email updated succesfully!';
+    return res.status(200).json({success: 'success'});
+  } catch (error) {
+    const errors = handleErros(error);
+      console.log(errors)
+      return res.status(400).json({errors});
+  }
+});
+app.get('/settings', (req, res) => {
+  const message = req.session.message;
+  delete req.session.message;
+  res.render('Settings', {message});
+});
+app.get('/add-article', (req, res) => res.render('AddArticle'));
 //Add article post method 
 app.post('/add-article', async (req, res) => {
   const {image, name, price, category, subcategory, cantity} = req.body;
@@ -362,7 +407,6 @@ const createToken = (id) => {
     expiresIn: maxAge
   })
 }
-app.get('*', checkUser); //Apply globally checkUser function from user.js file, for checking user for the entire application
 //Home page get method
 app.get('/', async (req, res) => {
   try {
@@ -450,27 +494,14 @@ app.post('/edit-product/:id', async (req, res) => {
     return res.status(400).json({ error: "Please enter all the required information!" });
   }
 });
-
 app.post('/getArticles', async (req, res) => {
   let playload = req.body.playload.trim();
   let search = await Article.find({name: {$regex: new RegExp('^'+playload+'.*','i')}}).exec();
   search = search.slice(0, 10);
   res.send({playload: search});
 });
-
-app.get('/login', (req, res) => res.render('LoginPage'));
-app.get('/signup', (req, res) => res.render('SignUpPage'));
-app.get('/forgot-password', (req, res) => res.render('ForgotPassword'));
-app.get('/myAccount', async (req, res) =>  {
-  res.render('MyAccount');
-});
 app.get('/cart', requireAuth, (req, res) => res.render('Cart'));
 app.get('/favorites', requireAuth, (req, res) => res.render('Favorites'));
-app.get('/reset-password/:token', (req, res) => {
-  res.render('ResetPassword');
-});
-app.get('/add-article', (req, res) => res.render('AddArticle'));
-app.get('/chat', (req, res) => res.render('Chat'));
 app.get('/showUsersAdmin', async (req, res) => {
   try {
     const users = await User.find({}, 'name email role');
@@ -480,12 +511,5 @@ app.get('/showUsersAdmin', async (req, res) => {
   }
 }
 );
-app.get('/addresses', async (req, res) => {
-  const userID = getId();
-  const addresses = await Addresses.find({idUser: userID});
-  res.render('Addresses', {addresses});
-});
-app.get('/settings', (req, res) => {
-  res.render('Settings');
-});
+
 app.listen(port, ()=> console.log(`Server is running at http://localhost:${port}`)); 

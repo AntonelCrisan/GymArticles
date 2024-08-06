@@ -112,14 +112,23 @@ body {
     position: fixed;
     top: 70px;
     right: 1px;
+    max-width: 400px;
     background-color: #d4edda;
     border: 1px solid #c3e6cb;
     border-radius: 5px;
-    padding: 15px;
+    padding: 10px;
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
     z-index: 1050; /* Ensures it appears above other content */
     opacity: 1;
     transition: opacity 0.5s ease-out, transform 0.5s ease-out;
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
+    gap: 10px;
+  }
+  .success-message div{
+    font-size: 14px;
   }
   
   /* Hide the success message with animation */

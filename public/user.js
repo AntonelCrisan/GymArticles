@@ -52,6 +52,17 @@ userSchema.statics.login = async function(email, password){
   throw Error('Incorect email!');
 }
 
+userSchema.statics.validate = async function(id, password){
+  const user = await this.findById(id);
+  if(user){
+    const validate = await bcrypt.compare(password, user.password);
+    if(validate){
+      return user;
+    }
+    throw Error('Incorect password!');
+  }
+  throw Error('User not found!');
+};
 userSchema.statics.checkEmail = async function(email){
   const checkEmail = await this.findOne({email});
   if(checkEmail){
