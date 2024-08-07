@@ -6,7 +6,7 @@ const User = require('./public/user');
 const flash = require('connect-flash');
 const cookieParser = require('cookie-parser');
 const bodyParser = require("body-parser");   
-const {requireAuth, checkUser, getId} = require('./public/authMiddleWare');
+const {requireAuth,requirePasswordValidation, checkUser, getId} = require('./public/authMiddleWare');
 require("dotenv").config();
 const jwt = require('jsonwebtoken');
 const app = express();
@@ -83,7 +83,7 @@ app.post('/signup', async (req, res) => {
       }else{
         const user = await User.create({name, email, password}); //Create new user
         const token = createToken(user._id); //Creat token for user
-        res.cookie('jwt', token, {httpOnly: true, maxAge: maxAge * 1000}) //Set age and httpOnly for token
+        res.cookie('user_token', token, {httpOnly: true, maxAge: maxAge * 1000}) //Set age and httpOnly for token
         res.status(201).json({user: user._id}); //Send user's ID for frontend
       }
       } catch (error) {
@@ -101,7 +101,7 @@ app.post('/login', async(req, res) => {
       }else{
         const user = await User.login(email, password);//Checking if email and password are valids using login function from user.js file
         const token = createToken(user._id);//Create token when the user is login
-        res.cookie('jwt', token, {httpOnly: true, maxAge: maxAge * 1000})//Set age and httpOnly for token
+        res.cookie('user_token', token, {httpOnly: true, maxAge: maxAge * 1000})//Set age and httpOnly for token
         console.log(user);
         return res.status(201).json({user: user._id, user: user.role});//Send user's ID and user's role to frontend
       }
@@ -353,7 +353,7 @@ app.post('/delete-address/:id', async(req, res) => {
   }
 });
 //GET method for change email page
-app.get('/change-email/:id', (req, res) => {
+app.get('/change-email/:id', requirePasswordValidation, (req, res) => {
   res.render('ChangeEmail');
 });
 app.post('/change-email/:id', async(req, res) => {
@@ -368,6 +368,7 @@ app.post('/change-email/:id', async(req, res) => {
     }
     await User.findByIdAndUpdate(id, req.body, {new:true});//Updates the email
     req.session.message = 'Email updated succesfully!';//Set a session message for desplaying in settings page
+    res.cookie('validate_pass', '', {maxAge: 1}); //Set token maxmim age with 1
     return res.status(200).json({success: 'success'});
   } catch (error) {
     const errors = handleErros(error);//Handles the errors
@@ -376,7 +377,7 @@ app.post('/change-email/:id', async(req, res) => {
   }
 });
 //GET method for changing the password page
-app.get('/change-password', (req, res) => {
+app.get('/change-password', requirePasswordValidation, (req, res) => {
   res.render('ChangePassword');
 });
 //POST method for change password
@@ -397,6 +398,7 @@ app.post('/change-password', async(req, res) => {
     const hashedPassword = await bcrypt.hash(password, salt);//Hashing password
     await User.findByIdAndUpdate(id, {password:hashedPassword}, {new:true});//Update password by id
     req.session.message = 'Password updated succesfully!';//Set a session message for desplaying in settings page
+    res.cookie('validate_pass', '', {maxAge: 1}); //Set token maxmim age with 1
     return res.status(200).json({success: 'Success'});
   } catch (error) {
     const errors = handleErros(error);
@@ -404,20 +406,27 @@ app.post('/change-password', async(req, res) => {
     return res.status(500).json({errors});
   }
 });
+app.get('/change-phone', requirePasswordValidation, (req, res) => {
+  res.render('ChangePhoneNumber');
+})
 //GET method for validate password page
 app.get('/validate-password', (req, res) => {
-  res.render('ValidatePassword');
+  const intendedUrl = req.query.next || req.session.intendedUrl;
+  res.render('ValidatePassword', {intendedUrl});
 });
 //POST method for validate password
 app.post('/validate-password', async(req, res) => {
-  const {password} = req.body;//Gets the value of password
+  const {password, intendedUrl} = req.body;//Gets the value of password
   const id = getId();//Gets the id for checking the password by user id
   try {
     if(!password){//Checks the input password is empty
       return res.status(400).json({warning: 'Please enter the password!'});
     }else{
       await User.validate(id, password);//From user.js call the validate function and compare the input password with password from database by id
-      return res.status(200).json({valid: "Valid"});
+      const token = createToken(id);//Creates token when user navigate to settings to restricted him for changing his phone number and password until he enter his password
+      res.cookie('validate_pass', token, {httpOnly: true, maxAge: 1800000})//Set age for 30min and httpOnly for token
+      return res.status(200).json({valid:true, intendedUrl});
+      
     }
   } catch (error) {
     const errors = handleErros(error);
@@ -446,7 +455,8 @@ app.post('/add-article', async (req, res) => {
 })
 //Log out get method
 app.get('/logout', (req, res) => {
-  res.cookie('jwt', '', {maxAge: 1}); //Set token maxmim age with 1
+  res.cookie('user_token', '', {maxAge: 1}); //Set token maxmim age with 1
+  res.cookie('validate_pass', '', {maxAge: 1}); //Set token maxmim age with 1
   res.redirect('/'); //Redirect user to home page
 })
 //Token age
