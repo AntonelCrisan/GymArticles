@@ -426,13 +426,15 @@ app.post('/validate-password', async(req, res) => {
       const token = createToken(id);//Creates token when user navigate to settings to restricted him for changing his phone number and password until he enter his password
       res.cookie('validate_pass', token, {httpOnly: true, maxAge: 1800000})//Set age for 30min and httpOnly for token
       return res.status(200).json({valid:true, intendedUrl});
-      
     }
   } catch (error) {
     const errors = handleErros(error);
     console.log(errors);
     return res.status(500).json({errors});
   }
+});
+app.get('/reviews', (req, res) => {
+  res.render('Reviews');
 });
 //GET method for settings page
 app.get('/settings', (req, res) => {

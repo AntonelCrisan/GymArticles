@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>GymArticles</title>
+<!-- Font Awesome CSS -->
+<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+<link rel="stylesheet" href="style/Reviews.css">
+<link rel="icon" type="image/png" href="images/logo.png">
+</head>
+<body>
+     <div class="navbar">
+      <%- include('Navbar') %>
+     </div>
+     <%- include('Sidebar') %>
+            <div class="col-md-8 personal-info">
+                <h2>My reviews</h2>
+                <div class="noReviews">
+                    <span>
+                        <svg xmlns="http://www.w3.org/2000/svg" height="100px" viewBox="0 -960 960 960" width="100px" fill="#06b6d4"><path d="m633.65-248.78-41.28-173.94L727.5-540.33l-178.17-15.52L480-720.02v378.39l153.65 92.85Zm-409.5 141.22 67.39-291.29L65.41-594.78l298.52-25.72L480-895.3l116.07 274.8 298.52 25.72-226.13 195.93 67.63 291.29L480-262.3 224.15-107.56Z"/></svg>
+                    </span>
+                    <h2>You don't have any reviews</h2>
+                    <p>Use the button below and choose an article you like</p>
+                    <a href="/" style="color: #06b6d4; cursor: pointer; text-decoration: none;">GymArticles</a>
+                </div>
+            </div>
+    </div>
+    </div>
+    </div>
+    <div class="footer">
+      <%- include('Footer') %>
+    </div>
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.4/dist/umd/popper.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+</body>
+</html>
