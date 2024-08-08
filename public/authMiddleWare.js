@@ -70,4 +70,20 @@ const checkUser = (req, res, next) => {
         next();
     }
 };
-module.exports = {requireAuth, requirePasswordValidation, checkUser, getId};
+const countFavoriteProduct = async(req, res, next) => {
+    try {
+        const id = getId(); // Ensure this returns the correct user ID
+        const user = await User.findById(id); // Use findById for simplicity
+
+        if (user) {
+            req.nrFavorites = user.favorites.length;
+        } else {
+            req.nrFavorites = 0; // Default value if user is not found
+        }
+    } catch (error) {
+        console.log(error);
+        req.nrFavorites = 0; // Default value in case of error
+    }
+    next();
+};
+module.exports = {requireAuth, requirePasswordValidation, checkUser, getId, countFavoriteProduct};

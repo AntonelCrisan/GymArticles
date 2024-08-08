@@ -150,31 +150,51 @@
                 <div class="col-lg-3 col-md-4 mb-4 col-sm-6 filtrable-card">
                     <div class="card" id="card">
                         <div class="card-body"> 
-                            <span class="fa fa-heart heartIcon"></span>
-                            <img src="<%= element.image %>" alt="img" style="max-width: 100%; height: auto;">
-                            <h5 class="card-title" id="name" style="white-space: nowrap; overflow: hidden; text-overflow: ellipsis; padding-top: 10px;"><%=  element.name %></h5>
-                            <ul class="rating">
-                                <span class="fa fa-star checked"></span>
-                                <span class="fa fa-star checked"></span>
-                                <span class="fa fa-star checked"></span>
-                                <span class="fa fa-star checked"></span>
-                                <span class="fa fa-star"></span>
-                            </ul>
-                            <p id="price"><strong><%= element.price %>$</strong></p>
-                            <div>
-                                <a href="/product?name=<%= element.name %>&id=<%= element._id %>" class="btn btn-primary" id="btn-buy">Buy</a>
-                            </div>
+                            <span class="fa fa-heart heartIcon" id="addFavorite"></span>
+                            <a href="/product?name=<%= element.name %>&id=<%= element._id %>" class="article">
+                                <div>
+                                    <img src="<%= element.image %>" alt="img" style="max-width: 100%; height: auto;">
+                                    <h5 class="card-title" id="name" style="white-space: nowrap; overflow: hidden; text-overflow: ellipsis; padding-top: 10px;"><%=  element.name %></h5>
+                                    <ul class="rating">
+                                        <span class="fa fa-star checked"></span>
+                                        <span class="fa fa-star checked"></span>
+                                        <span class="fa fa-star checked"></span>
+                                        <span class="fa fa-star checked"></span>
+                                        <span class="fa fa-star"></span>
+                                    </ul>
+                                    <p id="price"><strong><%= element.price %>$</strong></p>
+                                </div>
+                            </a>
+                            <button class="btn btn-primary" id="btn-buy">
+                                <span>
+                                    <svg xmlns="http://www.w3.org/2000/svg" height="25px" viewBox="0 -960 960 960" width="25px" fill="#ffffff"><path d="M466.43-615.63v-123h-124v-60h124v-123h60v123h123v60h-123v123h-60ZM289.79-77.37Q260-77.37 239-98.58t-21-51q0-29.79 21.21-50.79t51-21q29.79 0 50.79 21.21 21 21.22 21 51 0 29.79-21.21 50.79t-51 21Zm404 0Q664-77.37 643-98.58t-21-51q0-29.79 21.21-50.79t51-21q29.79 0 50.79 21.21 21 21.22 21 51 0 29.79-21.21 50.79t-51 21Zm-634.42-740v-65.26h120.54L348.48-521.5h286.99l158.86-277.13h73.45l-162.95 304.2q-11.48 19.47-29.51 31.45Q657.3-451 635.4-451H334.11l-54.33 101.37h488.85v65.26H284q-39.34 0-59.72-31.31-20.39-31.32-2.67-63.75L284.89-496 138.33-817.37H59.37Z"/></svg>
+                                </span>
+                            </button>
                         </div>
                     </div>
                 </div>
                 <% }) %>
         </div>
     </div>
+    <div>
+        <div id="added-favorite" class="added-favorite d-none">
+            <span>
+                <svg xmlns="http://www.w3.org/2000/svg" height="48px" viewBox="0 -960 960 960" width="48px" fill="#ff0000"><path d="m480-121-41-37q-106-97-175-167.5t-110-126Q113-507 96.5-552T80-643q0-90 60.5-150.5T290-854q57 0 105.5 27t84.5 78q42-54 89-79.5T670-854q89 0 149.5 60.5T880-643q0 46-16.5 91T806-451.5q-41 55.5-110 126T521-158l-41 37Z"/></svg>
+            </span>
+               <div>The product was added to Favorites</div>
+          </div>
+          <div id="removed-favorite" class="removed-favorite d-none">
+            <span>
+                <svg xmlns="http://www.w3.org/2000/svg" height="48px" viewBox="0 -960 960 960" width="48px" fill="#06b6d4"><path d="m480-121-41-37q-105.77-97.12-174.88-167.56Q195-396 154-451.5T96.5-552Q80-597 80-643q0-90.15 60.5-150.58Q201-854 290-854q57 0 105.5 27t84.5 78q42-54 89-79.5T670-854q89 0 149.5 60.42Q880-733.15 880-643q0 46-16.5 91T806-451.5Q765-396 695.88-325.56 626.77-255.12 521-158l-41 37Zm0-79q101.24-93 166.62-159.5Q712-426 750.5-476t54-89.14q15.5-39.13 15.5-77.72 0-66.14-42-108.64T670.22-794q-51.52 0-95.37 31.5T504-674h-49q-26-56-69.85-88-43.85-32-95.37-32Q224-794 182-751.5t-42 108.82q0 38.68 15.5 78.18 15.5 39.5 54 90T314-358q66 66 166 158Zm0-297Z"/></svg>
+            </span>
+               <div>The product was removed to Favorites</div>
+          </div>
+    </div>
     </div>
 </div>
     
 <%- include('Footer') %>
-
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script src="scripts/toggleFavorites.js"></script>
 </body>
 </html>

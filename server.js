@@ -6,7 +6,7 @@ const User = require('./public/user');
 const flash = require('connect-flash');
 const cookieParser = require('cookie-parser');
 const bodyParser = require("body-parser");   
-const {requireAuth,requirePasswordValidation, checkUser, getId} = require('./public/authMiddleWare');
+const {requireAuth,requirePasswordValidation, checkUser, getId, countFavoriteProduct} = require('./public/authMiddleWare');
 require("dotenv").config();
 const jwt = require('jsonwebtoken');
 const app = express();
@@ -249,8 +249,8 @@ app.post('/reset-password/:token', async (req, res) => {
     return res.status(500).json({warning: 'Something went wrong, please try again later!'});
   }
 });
-app.get('/myAccount', async (req, res) =>  {
-  res.render('MyAccount');
+app.get('/myAccount',countFavoriteProduct, (req, res) =>  {
+  res.render('MyAccount', {nrFavorites: req.nrFavorites});
 });
 //Manage information post method from user account
 app.post('/manage-information', async (req, res) => {
@@ -284,10 +284,10 @@ app.post('/manage-information', async (req, res) => {
   }
 });
 //GET method for address page
-app.get('/addresses', async (req, res) => {
+app.get('/addresses', countFavoriteProduct, async (req, res) => {
   const userID = getId(); //Gets id from middleware when user is loged in for displaing his addresses
   const addresses = await Addresses.find({idUser: userID}); //Finds all addresses by idUser
-  res.render('Addresses', {addresses});//Pass the addresses to frontend
+  res.render('Addresses', {addresses, nrFavorites: req.nrFavorites});//Pass the addresses to frontend
 });
 //Add addresses post method
 app.post('/add-address', async(req, res) => {
@@ -433,14 +433,14 @@ app.post('/validate-password', async(req, res) => {
     return res.status(500).json({errors});
   }
 });
-app.get('/reviews', (req, res) => {
-  res.render('Reviews');
+app.get('/reviews', countFavoriteProduct, (req, res) => {
+  res.render('Reviews',{nrFavorites: req.nrFavorites});
 });
 //GET method for settings page
-app.get('/settings', (req, res) => {
+app.get('/settings', countFavoriteProduct, (req, res) => {
   const message = req.session.message;//Gets the messages from session
   delete req.session.message;//After displaying the message deletes the message from session
-  res.render('Settings', {message});
+  res.render('Settings', {message, nrFavorites: req.nrFavorites});
 });
 app.get('/add-article', (req, res) => res.render('AddArticle'));
 //Add article post method 
@@ -471,7 +471,7 @@ const createToken = (id) => {
   })
 }
 //Home page get method
-app.get('/', async (req, res) => {
+app.get('/', countFavoriteProduct, async (req, res) => {
   try {
     const { subcategory, category } = req.query;
     let articles;
@@ -482,42 +482,42 @@ app.get('/', async (req, res) => {
     } else {
       articles = await Article.find(); //Showing all products
     }
-    res.render('HomePage', {articles});
+    res.render('HomePage', {articles,  nrFavorites: req.nrFavorites});
   } catch (err) {
     return res.status(500).json({error: err.message});
   }
 });
 //Search get method
-app.get('/search', async (req, res) => {
+app.get('/search', countFavoriteProduct, async (req, res) => {
   try {
     let nrArticle = 0; //Number of results found
     const query = req.query.q; 
     const article = await Article.find({ $text: { $search: query } });  //Search by text in database
     nrArticle = article.length; //Passing the number of results to 'nrArticle' variable
-    res.render('SearchResults', { article, query, nrArticle }); //Passing the variables to frontend and render the SearchResults page
+    res.render('SearchResults', { article, query, nrArticle, nrFavorites: req.nrFavorites }); //Passing the variables to frontend and render the SearchResults page
   } catch (err) {
     console.error('Error for searching the product:', err);
   }
 });
 //Category results get method
-app.get('/category-results', async (req, res) => {
+app.get('/category-results', countFavoriteProduct, async (req, res) => {
   const {subcategory} = req.query;
   try {
     let results = 0; //Storing the results found
     const articles = await Article.find({subcategory: subcategory});//Finding the articles by subcategory name from database
     results = articles.length;//Counting the results found
-    res.render( 'CategoryResults', {articles, subcategory, results}); //Render the 'CategoryResults' page and passing all variables to frontend
+    res.render( 'CategoryResults', {articles, subcategory, results, nrFavorites: req.nrFavorites}); //Render the 'CategoryResults' page and passing all variables to frontend
   } catch (error) {
     console.error('Error for searching the product:', error);
   }
  
 });
 //Product get method
-app.get('/product', async (req, res) => {
+app.get('/product', countFavoriteProduct, async (req, res) => {
   try {
     const {id} = req.query; //Get product id from query
     const article = await Article.findById(id); //Searching the article from database by product id
-    res.render('Product', {article});//Display the product result and render the 'Product' page
+    res.render('Product', {article, nrFavorites: req.nrFavorites});//Display the product result and render the 'Product' page
   } catch (error) {
     console.error('Error for getting the product:', error);  
   }
@@ -563,8 +563,8 @@ app.post('/getArticles', async (req, res) => {
   search = search.slice(0, 10);
   res.send({playload: search});
 });
-app.get('/cart', requireAuth, (req, res) => res.render('Cart'));
-app.get('/favorites', requireAuth, (req, res) => res.render('Favorites'));
+app.get('/cart', requireAuth, countFavoriteProduct, (req, res) => res.render('Cart', {nrFavorites: req.nrFavorites}));
+app.get('/favorites', requireAuth, countFavoriteProduct, (req, res) => res.render('Favorites', {nrFavorites: req.nrFavorites}));
 app.get('/showUsersAdmin', async (req, res) => {
   try {
     const users = await User.find({}, 'name email role');

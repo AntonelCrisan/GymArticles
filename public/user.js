@@ -30,7 +30,10 @@ const userSchema = new mongoose.Schema({
   phoneNumber: {
     type: String,
     minLength: [10, 'Minimun length for the phone number is 10 characters']
-  }
+  },
+  favorites:[{
+    type: mongoose.Schema.Types.ObjectId,
+  }]
 
 });
 userSchema.pre('save', async function(next) {
