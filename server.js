@@ -442,6 +442,23 @@ app.get('/settings', countFavoriteProduct, (req, res) => {
   delete req.session.message;//After displaying the message deletes the message from session
   res.render('Settings', {message, nrFavorites: req.nrFavorites});
 });
+//POST method for updating favorite product
+app.post('/updateFavorite', async(req, res) => {
+  const {productId, isAdding} = req.body;
+  const userId = getId();
+  try {
+    if (isAdding) { 
+      // Add productId to user's favorites
+      await User.findByIdAndUpdate(userId, { $addToSet: { favorites: productId } });
+  } else {
+      // Remove productId from user's favorites
+      await User.findByIdAndUpdate(userId, { $pull: { favorites: productId } });
+  }
+  res.json({ success: true });
+  } catch (error) {
+    console.error('Error updating favorites:', error);
+  }
+});
 app.get('/add-article', (req, res) => res.render('AddArticle'));
 //Add article post method 
 app.post('/add-article', async (req, res) => {
@@ -475,6 +492,9 @@ app.get('/', countFavoriteProduct, async (req, res) => {
   try {
     const { subcategory, category } = req.query;
     let articles;
+    const userId = getId();
+    const user = await User.findById(userId);
+    const favoriteProductsID = user ? user.favorites : [];
     if (category) {
       articles = await Article.find({ category: category }); //Showing category
     } else if (subcategory) {
@@ -482,7 +502,7 @@ app.get('/', countFavoriteProduct, async (req, res) => {
     } else {
       articles = await Article.find(); //Showing all products
     }
-    res.render('HomePage', {articles,  nrFavorites: req.nrFavorites});
+    res.render('HomePage', {articles,  nrFavorites: req.nrFavorites, favoriteProductsID});
   } catch (err) {
     return res.status(500).json({error: err.message});
   }
@@ -564,7 +584,14 @@ app.post('/getArticles', async (req, res) => {
   res.send({playload: search});
 });
 app.get('/cart', requireAuth, countFavoriteProduct, (req, res) => res.render('Cart', {nrFavorites: req.nrFavorites}));
-app.get('/favorites', requireAuth, countFavoriteProduct, (req, res) => res.render('Favorites', {nrFavorites: req.nrFavorites}));
+app.get('/favorites', requireAuth, countFavoriteProduct, async (req, res) => {
+  const userId = getId();
+    const user = await User.findById(userId);
+    const favoriteProductsID = user ? user.favorites : [];
+    console.log(favoriteProductsID);
+    const article = await Article.findById(favoriteProductsID);
+  res.render('Favorites', {nrFavorites: req.nrFavorites, article})
+});
 app.get('/showUsersAdmin', async (req, res) => {
   try {
     const users = await User.find({}, 'name email role');

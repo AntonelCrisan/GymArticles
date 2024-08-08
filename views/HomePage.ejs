@@ -150,7 +150,7 @@
                 <div class="col-lg-3 col-md-4 mb-4 col-sm-6 filtrable-card">
                     <div class="card" id="card">
                         <div class="card-body"> 
-                            <span class="fa fa-heart heartIcon" id="addFavorite"></span>
+                            <span class="fa fa-heart heartIcon <%= favoriteProductsID.includes(element._id.toString()) ? 'clicked' : '' %>" id="addFavorite" data-product-id="<%= element._id %>"></span>
                             <a href="/product?name=<%= element.name %>&id=<%= element._id %>" class="article">
                                 <div>
                                     <img src="<%= element.image %>" alt="img" style="max-width: 100%; height: auto;">
