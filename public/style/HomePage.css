@@ -62,15 +62,6 @@ body {
 .list-unstyled summary:hover{
     color: #06b6d4;
 }
-.btn-addBooks{
-    border-radius: 15px;
-    border: none;
-    height: 40px;
-    margin-top: 10px;
-}
-.btn-addBooks:hover{
-    background-color: #02879e;
-}
 .heartIcon{
     position: absolute; 
     top: 20px; 

@@ -587,12 +587,15 @@ app.post('/getArticles', async (req, res) => {
 });
 app.get('/cart', requireAuth, countFavoriteProduct, (req, res) => res.render('Cart', {nrFavorites: req.nrFavorites}));
 app.get('/favorites', requireAuth, countFavoriteProduct, async (req, res) => {
-  const userId = getId();
-    const user = await User.findById(userId);
-    const favoriteProductsID = user ? user.favorites : [];
-    console.log(favoriteProductsID);
-    const article = await Article.findById(favoriteProductsID);
-  res.render('Favorites', {nrFavorites: req.nrFavorites, article})
+  try {
+    const userId = getId();
+    const user = await User.findById(userId).populate('favorites');
+    const favoriteProductIds = user.favorites;
+    const favorites = await Article.find({ _id: { $in: favoriteProductIds } });
+    res.render('Favorites', {nrFavorites: req.nrFavorites, favorites})
+  } catch (error) {
+    res.status(500).json({error: 'Server error'});
+  }
 });
 app.get('/showUsersAdmin', async (req, res) => {
   try {

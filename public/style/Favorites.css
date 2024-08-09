@@ -84,4 +84,43 @@ body {
     padding-top: 10px;
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
   }
-  
+  .favorite-card {
+    background-color: #f7f7f7;
+    padding: 20px;
+    border-radius: 8px;
+    margin-bottom: 15px;
+  }
+  .rating {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+.checked {
+  color: orange;
+}
+
+.buyButton, .deleteFavoriteButton{
+  background-color: #06b6d4;
+  color: white;
+  border-radius: 15px;
+  border: 0px solid  transparent;
+}
+.buyButton:hover, .deleteFavoriteButton:hover{
+  background-color: #00c8eb;
+}
+
+.article{
+  text-decoration: none;
+  color: inherit;
+}
+.article:hover{
+  text-decoration: none;
+  color: inherit;
+}
+.product{
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  align-items: center;
+  flex-wrap: wrap;
+}
