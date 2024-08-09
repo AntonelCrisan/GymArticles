@@ -443,22 +443,24 @@ app.get('/settings', countFavoriteProduct, (req, res) => {
   res.render('Settings', {message, nrFavorites: req.nrFavorites});
 });
 //POST method for updating favorite product
-app.post('/updateFavorite', async(req, res) => {
-  const {productId, isAdding} = req.body;
+app.post('/updateFavorite', async (req, res) => {
+  const { productId, isAdding } = req.body;
   const userId = getId();
   try {
-    if (isAdding) { 
-      // Add productId to user's favorites
-      await User.findByIdAndUpdate(userId, { $addToSet: { favorites: productId } });
-  } else {
-      // Remove productId from user's favorites
-      await User.findByIdAndUpdate(userId, { $pull: { favorites: productId } });
-  }
-  res.json({ success: true });
+      if (isAdding) {
+          await User.findByIdAndUpdate(userId, { $addToSet: { favorites: productId } });
+      } else {
+          await User.findByIdAndUpdate(userId, { $pull: { favorites: productId } });
+      }
+      const updatedUser = await User.findById(userId);
+      const newFavoriteCount = updatedUser.favorites.length;
+      res.json({ success: true, newFavoriteCount });
   } catch (error) {
-    console.error('Error updating favorites:', error);
+      console.error('Error updating favorites:', error);
+      res.status(500).json({ success: false, message: 'Error updating favorites' });
   }
 });
+
 app.get('/add-article', (req, res) => res.render('AddArticle'));
 //Add article post method 
 app.post('/add-article', async (req, res) => {
