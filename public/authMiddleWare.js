@@ -74,7 +74,6 @@ const countFavoriteProduct = async(req, res, next) => {
     try {
         const id = getId(); // Ensure this returns the correct user ID
         const user = await User.findById(id); // Use findById for simplicity
-
         if (user) {
             req.nrFavorites = user.favorites.length;
         } else {

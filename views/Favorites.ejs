@@ -27,6 +27,7 @@
     <%- include('Sidebar') %>
     <div class="col-md-8 favorites">
         <h2 class="mb-4">Favorites</h2>
+        <div style="display: flex; align-items: center; gap: 10px; margin-bottom: 10px; margin-left: 15px;"> <b><%= nrFavorites %></b> products in your list</div>
         <% if (nrFavorites && nrFavorites > 0) { %>
             <div class="container">
                 <div class="row">
@@ -87,6 +88,5 @@
         <%- include('Footer') %>
     </div>
     <script src="scripts/deleteFavorite.js"></script>
-    <script src="scripts/toggleFavorites.js"></script>
 </body>
 </html>

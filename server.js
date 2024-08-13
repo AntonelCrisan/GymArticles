@@ -444,26 +444,32 @@ app.get('/settings', countFavoriteProduct, (req, res) => {
 });
 //POST method for adding favorite product
 app.post('/addFavorite', async (req, res) => {
-  const { productId, isAdding } = req.body;
-  const userId = getId();
   try {
-    const updatedUser = await User.findById(userId);
-    const newFavoriteCount = updatedUser.favorites.length;
-    if(!updatedUser){
-      res.redirect('/login');
-    }
-      if (isAdding) {
-          await User.findByIdAndUpdate(userId, { $addToSet: { favorites: productId } });
-      } else {
-          await User.findByIdAndUpdate(userId, { $pull: { favorites: productId } });
+      const { productId, isAdding } = req.body;
+      const userId = getId(); // Ensure this function returns the correct user ID
+      const user = await User.findById(userId);
+      if (!user) {
+          res.redirect('/login');
       }
-     
+      if (isAdding) {
+          // Add productId to favorites if it's not already present
+          if (!user.favorites.includes(productId)) {
+              user.favorites.push(productId);
+              await user.save();
+          }
+      } else {
+          // Remove productId from favorites if it's present
+          user.favorites = user.favorites.filter(id => !id.equals(productId));
+          await user.save();
+      }
+      const newFavoriteCount = user.favorites.length;
       res.json({ success: true, newFavoriteCount });
   } catch (error) {
-      console.error('Error updating favorites:', error);
-      res.status(500).json({ success: false, message: 'Error updating favorites' });
+      console.error('Error in /addFavorite:', error);
+      res.status(500).json({ success: false, message: 'Server error' });
   }
 });
+
 //POST method for deleting favorite product
 app.post('/deleteFavorite/:id', async(req, res) => {
   const userId = getId();

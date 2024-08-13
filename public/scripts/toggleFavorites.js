@@ -46,7 +46,6 @@ document.addEventListener('DOMContentLoaded', () => {
 
             const result = await response.json();
             if (result.success) {
-                console.log('Favorite status updated successfully.');
                 return result.newFavoriteCount; // Return the new favorite count
             } else {
                 console.error('Failed to update favorite status.');
@@ -63,6 +62,8 @@ document.addEventListener('DOMContentLoaded', () => {
     const currentCount = parseInt(favoriteCountElement.textContent, 10);
     if (currentCount === 0) {
         favoriteCountElement.style.display = 'none'; // Hide if count is zero
+    }else{
+        favoriteCountElement.style.display = 'flex'; // Hide if count is zero
     }
     addFavorite.forEach(favorite => {
         favorite.addEventListener('click', async () => {
@@ -74,17 +75,18 @@ document.addEventListener('DOMContentLoaded', () => {
                 favorite.classList.remove('clicked');
                 showRemovedMessage();
             }
-            const newFavoriteCount = await updateFavoriteStatus(favorite, isAdding);
-            if(favoriteCountElement){
-                favoriteCountElement.textContent = newFavoriteCount;
 
+            const newFavoriteCount = await updateFavoriteStatus(favorite, isAdding);
+            if (favoriteCountElement) {
                 if (newFavoriteCount > 0) {
+                    favoriteCountElement.textContent = newFavoriteCount;
                     favoriteCountElement.style.display = 'flex'; // Ensure it's visible
                 } else {
                     favoriteCountElement.style.display = 'none'; // Hide if count is zero
                 }
+            } else {
+                console.error('Favorite count element not found.');
             }
-                
         });
     });
 });
