@@ -448,9 +448,6 @@ app.post('/addFavorite', async (req, res) => {
       const { productId, isAdding } = req.body;
       const userId = getId(); // Ensure this function returns the correct user ID
       const user = await User.findById(userId);
-      if (!user) {
-          res.redirect('/login');
-      }
       if (isAdding) {
           // Add productId to favorites if it's not already present
           if (!user.favorites.includes(productId)) {
@@ -463,7 +460,7 @@ app.post('/addFavorite', async (req, res) => {
           await user.save();
       }
       const newFavoriteCount = user.favorites.length;
-      res.json({ success: true, newFavoriteCount });
+      res.json({ success: true, newFavoriteCount, user });
   } catch (error) {
       console.error('Error in /addFavorite:', error);
       res.status(500).json({ success: false, message: 'Server error' });
