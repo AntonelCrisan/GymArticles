@@ -70,26 +70,6 @@ body {
     font-size: 50px;
     text-transform: uppercase;
   }
-  .noFavorites{
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    text-align: center;
-    padding: 50px;
-    margin-top: 20px;
-}
-.favorites{
-    border-radius: 10px;
-    padding-bottom: 10px;
-    padding-top: 10px;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-  }
-  .favorite-card {
-    background-color: #f7f7f7;
-    padding: 20px;
-    border-radius: 8px;
-    margin-bottom: 15px;
-  }
   .rating {
     list-style: none;
     padding: 0;
@@ -98,29 +78,75 @@ body {
 .checked {
   color: orange;
 }
-
-.buyButton, .deleteFavoriteButton{
-  background-color: #06b6d4;
-  color: white;
-  border-radius: 15px;
-  border: 0px solid  transparent;
+  .noFavorites{
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  padding: 50px;
+  margin-top: 20px;
 }
-.buyButton:hover, .deleteFavoriteButton:hover{
+.favorites{
+  border-radius: 10px;
+  padding-bottom: 10px;
+  padding-top: 10px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+}
+.favorite-card {
+  background-color: #f7f7f7;
+  padding: 20px;
+  border-radius: 8px;
+  margin-bottom: 15px;
+}
+.deleteFavoriteButton{
+  background-color: #ec1a1a;
+  color: #ffffff;
+  border-radius: 15px;
+  height: 35px;
+  border-width: 0px;
+
+}
+.deleteFavoriteButton:hover{
+  background-color: #ff1f1f;
+}
+.addToCartButton{
+  background-color: #06b6d4;
+  border-radius: 15px;
+  height: 35px;
+  border-width: 0px;
+}
+.addToCartButton:hover{
   background-color: #00c8eb;
 }
-
-.article{
-  text-decoration: none;
-  color: inherit;
+.seeProductsButton{
+  margin-top: 10px;
+  color: #06b6d4;
 }
-.article:hover{
-  text-decoration: none;
-  color: inherit;
+.seeProductsButton:hover{
+  color: #06b6d4;
 }
-.product{
+.product-container{
   display: flex;
-  flex-direction: row;
-  justify-content: center;
   align-items: center;
+  gap: 10px;
   flex-wrap: wrap;
+}
+.article-container{
+  display: flex;
+  flex: row;
+  align-items: center;
+}
+.article-info{
+  display: flex;
+  flex-direction: column;
+  flex-wrap: wrap;
+}
+.buttons{
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  margin-top: 10px;
 }

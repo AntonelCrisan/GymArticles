@@ -29,7 +29,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
     async function updateFavoriteStatus(heart, isAdding) {
         try {
-            const response = await fetch('/updateFavorite', {
+            const response = await fetch('/addFavorite', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json'
@@ -76,9 +76,10 @@ document.addEventListener('DOMContentLoaded', () => {
             }
             const newFavoriteCount = await updateFavoriteStatus(favorite, isAdding);
             if(favoriteCountElement){
+                favoriteCountElement.textContent = newFavoriteCount;
+
                 if (newFavoriteCount > 0) {
                     favoriteCountElement.style.display = 'flex'; // Ensure it's visible
-                    favoriteCountElement.textContent = newFavoriteCount;
                 } else {
                     favoriteCountElement.style.display = 'none'; // Hide if count is zero
                 }

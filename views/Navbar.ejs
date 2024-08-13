@@ -17,15 +17,13 @@
             <ul class="navbar-nav mr-auto">
                 <!-- Elemente la stânga -->
                 <li class="nav-item">
-                        <a class="nav-link" href="/cart" style="white-space: nowrap; display: flex; gap: 7px;">
-                            <span>
+                        <a class="nav-link" href="/cart"  style="display: flex; align-items: center; gap: 5px;">
                                 <svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="24px" fill="#5f6368"><path d="M292.31-115.38q-25.31 0-42.66-17.35-17.34-17.35-17.34-42.65 0-25.31 17.34-42.66 17.35-17.34 42.66-17.34 25.31 0 42.65 17.34 17.35 17.35 17.35 42.66 0 25.3-17.35 42.65-17.34 17.35-42.65 17.35Zm375.38 0q-25.31 0-42.65-17.35-17.35-17.35-17.35-42.65 0-25.31 17.35-42.66 17.34-17.34 42.65-17.34t42.66 17.34q17.34 17.35 17.34 42.66 0 25.3-17.34 42.65-17.35 17.35-42.66 17.35ZM235.23-740 342-515.38h265.38q6.93 0 12.31-3.47 5.39-3.46 9.23-9.61l104.62-190q4.61-8.46.77-15-3.85-6.54-13.08-6.54h-486Zm-19.54-40h520.77q26.08 0 39.23 21.27 13.16 21.27 1.39 43.81l-114.31 208.3q-8.69 14.62-22.58 22.93-13.88 8.31-30.5 8.31H324l-48.62 89.23q-6.15 9.23-.38 20 5.77 10.77 17.31 10.77h435.38v40H292.31q-35 0-52.23-29.5-17.23-29.5-.85-59.27l60.15-107.23L152.31-820H80v-40h97.69l38 80ZM342-515.38h280-280Z"/></svg>
-                            </span>
-                            <span>My Cart</span>
+                                My Cart
                         </a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link" href="/favorites" style="white-space: nowrap; display: flex; gap: 7px; position: relative;">
+                    <a class="nav-link" href="/favorites"  style="display: flex; align-items: center; gap: 5px; position: relative;">
                         <span style="position: relative;">
                                 <div class="notification-badge" id="favorite-count" style="
                                 position: absolute;
@@ -48,7 +46,7 @@
                                 <path d="m480-173.85-30.31-27.38q-97.92-89.46-162-153.15-64.07-63.7-101.15-112.35-37.08-48.65-51.81-88.04Q120-594.15 120-634q0-76.31 51.85-128.15Q223.69-814 300-814q52.77 0 99 27t81 78.54Q514.77-760 561-787q46.23-27 99-27 76.31 0 128.15 51.85Q840-710.31 840-634q0 39.85-14.73 79.23-14.73 39.39-51.81 88.04-37.08 48.65-100.77 112.35Q609-290.69 510.31-201.23L480-173.85Zm0-54.15q96-86.77 158-148.65 62-61.89 98-107.39t50-80.61q14-35.12 14-69.35 0-60-40-100t-100-40q-47.77 0-88.15 27.27-40.39 27.27-72.31 82.11h-39.08q-32.69-55.61-72.69-82.5Q347.77-774 300-774q-59.23 0-99.62 40Q160-694 160-634q0 34.23 14 69.35 14 35.11 50 80.61t98 107q62 61.5 158 149.04Zm0-273Z"/>
                             </svg>
                         </span>
-                        <span>Favorite</span>
+                        Favorite
                     </a>
                 </li>
                   <!-- Input search -->
@@ -71,30 +69,24 @@
                                 <a class="nav-link"  style="white-space: nowrap; color: black;">Welcome, <%= user.name %></a>
                             </li>
                             <li class="nav-item">
-                                <a class="nav-link" href="/logout"  style="white-space: nowrap; display: flex; gap: 7px;">
-                                    <span>
+                                <a class="nav-link" href="/logout"   style="display: flex; align-items: center; gap: 5px;">
                                         <svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="24px" fill="#5f6368"><path d="M224.62-160q-27.62 0-46.12-18.5Q160-197 160-224.62v-510.76q0-27.62 18.5-46.12Q197-800 224.62-800h256.15v40H224.62q-9.24 0-16.93 7.69-7.69 7.69-7.69 16.93v510.76q0 9.24 7.69 16.93 7.69 7.69 16.93 7.69h256.15v40H224.62Zm433.84-178.46-28.08-28.77L723.15-460H367.69v-40h355.46l-92.77-92.77 28.08-28.77L800-480 658.46-338.46Z"/></svg>
-                                    </span>
-                                    <span>Log Out</span>
+                                    Log Out
                                 </a>
                             </li>
                     <% } else {%>
                     <li class="nav-item">
-                        <a class="nav-link" href="/myAccount"  style="white-space: nowrap; display: flex; gap: 7px;">
-                            <span>
+                        <a class="nav-link" href="/myAccount"  style="display: flex; align-items: center; gap: 5px;">
                                 <svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="24px" fill="#5f6368"><path d="M480-504.62q-49.5 0-84.75-35.25T360-624.62q0-49.5 35.25-84.75T480-744.62q49.5 0 84.75 35.25T600-624.62q0 49.5-35.25 84.75T480-504.62ZM200-215.38v-65.85q0-24.77 14.42-46.35 14.43-21.57 38.81-33.5 56.62-27.15 113.31-40.73 56.69-13.57 113.46-13.57 56.77 0 113.46 13.57 56.69 13.58 113.31 40.73 24.38 11.93 38.81 33.5Q760-306 760-281.23v65.85H200Zm40-40h480v-25.85q0-13.31-8.58-25-8.57-11.69-23.73-19.77-49.38-23.92-101.83-36.65-52.45-12.73-105.86-12.73t-105.86 12.73Q321.69-349.92 272.31-326q-15.16 8.08-23.73 19.77-8.58 11.69-8.58 25v25.85Zm240-289.24q33 0 56.5-23.5t23.5-56.5q0-33-23.5-56.5t-56.5-23.5q-33 0-56.5 23.5t-23.5 56.5q0 33 23.5 56.5t56.5 23.5Zm0-80Zm0 369.24Z"/></svg>
-                            </span>
-                            <span>My Account</span>
+                            My Account
                         </a>
                     </li>
                     <% } %>
             <% } else { %>
                 <li class="nav-item">
-                    <a class="nav-link" href="/login"  style="white-space: nowrap; display: flex; gap: 7px;">
-                        <span>
+                    <a class="nav-link" href="/login"   style="display: flex; align-items: center; gap: 5px;">
                             <svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="24px" fill="#5f6368"><path d="M479.23-160v-40h256.15q9.24 0 16.93-7.69 7.69-7.69 7.69-16.93v-510.76q0-9.24-7.69-16.93-7.69-7.69-16.93-7.69H479.23v-40h256.15q27.62 0 46.12 18.5Q800-763 800-735.38v510.76q0 27.62-18.5 46.12Q763-160 735.38-160H479.23Zm-28.46-178.46-28.08-28.77L515.46-460H160v-40h355.46l-92.77-92.77 28.08-28.77L592.31-480 450.77-338.46Z"/></svg>
-                        </span>
-                        <span>Log In</span>
+                        Log In
                     </a>
                 </li>
                 <!-- Butonul Sign Up -->
