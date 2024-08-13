@@ -28,7 +28,7 @@ async function updateFavoriteStatus(cart) {
     }
 }
 
-const addToCart = document.querySelectorAll('#btn-buy');
+const addToCart = document.querySelectorAll('#addToCartButton');
 const cartCountElement = document.getElementById('cart-count');
 const currentCount = parseInt(cartCountElement.textContent, 10);
 if (currentCount === 0) {

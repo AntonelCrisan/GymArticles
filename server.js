@@ -477,7 +477,7 @@ app.post('/deleteFavorite/:id', async(req, res) => {
   } catch (error) {
     res.status(500).json({error});
   }
-})
+});
 
 //POST method for adding products to cart
 app.post('/addToCart', async (req, res) => {
@@ -492,6 +492,17 @@ app.post('/addToCart', async (req, res) => {
   } catch (error) {
       console.error('Error in /addToCart:', error);
       res.status(500).json({ success: false, message: 'Server error' });
+  }
+});
+//POST method for deleting products from cart
+app.post('/deleteFromCart/:id', async(req, res) => {
+  const userId = getId();
+  const id = req.params.id;
+  try {
+    await User.findByIdAndUpdate(userId, { $pull: { cart: id } });
+    res.json({ success: true });
+  } catch (error) {
+    res.status(500).json({error});
   }
 });
 app.get('/add-article', (req, res) => res.render('AddArticle'));
