@@ -643,7 +643,7 @@ app.get('/cart', requireAuth, countFavoriteProduct, countCartProduct, async (req
       return total + (isNaN(price) ? 0 : price);
     }, 0);
     const deliveryCost = 5;
-    res.render('cart', {nrFavorites: req.nrFavorites, nrCart:  req.nrCart, cart, productCost, deliveryCost})
+    res.render('Cart', {nrFavorites: req.nrFavorites, nrCart:  req.nrCart, cart, productCost, deliveryCost})
   } catch (error) {
     res.status(500).json({error: 'Server error'});
   }
