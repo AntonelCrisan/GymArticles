@@ -6,7 +6,7 @@ const User = require('./public/user');
 const flash = require('connect-flash');
 const cookieParser = require('cookie-parser');
 const bodyParser = require("body-parser");   
-const {requireAuth,requirePasswordValidation, checkUser, getId, countFavoriteProduct} = require('./public/authMiddleWare');
+const {requireAuth,requirePasswordValidation, checkUser, getId, countFavoriteProduct, countCartProduct} = require('./public/authMiddleWare');
 require("dotenv").config();
 const jwt = require('jsonwebtoken');
 const app = express();
@@ -602,7 +602,25 @@ app.post('/getArticles', async (req, res) => {
   search = search.slice(0, 10);
   res.send({playload: search});
 });
-app.get('/cart', requireAuth, countFavoriteProduct, (req, res) => res.render('Cart', {nrFavorites: req.nrFavorites}));
+app.get('/cart', requireAuth, countFavoriteProduct, countCartProduct, async (req, res) => {
+  try {
+    const userId = getId();
+    const user = await User.findById(userId).populate('cart');
+    const productsCartId = user.cart;
+    const cart = await Article.find({ _id: { $in: productsCartId } });
+    // Calculate the total cost of all products in the cart
+    const productCost = cart.reduce((total, product) => {
+      // Convert price from string to number
+      const price = parseFloat(product.price);
+      // Check if the price is a valid number
+      return total + (isNaN(price) ? 0 : price);
+    }, 0);
+    const deliveryCost = 5;
+    res.render('cart', {nrFavorites: req.nrFavorites, nrCart:  req.nrCart, cart, productCost, deliveryCost})
+  } catch (error) {
+    res.status(500).json({error: 'Server error'});
+  }
+});
 app.get('/favorites', requireAuth, countFavoriteProduct, async (req, res) => {
   try {
     const userId = getId();

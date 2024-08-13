@@ -85,4 +85,19 @@ const countFavoriteProduct = async(req, res, next) => {
     }
     next();
 };
-module.exports = {requireAuth, requirePasswordValidation, checkUser, getId, countFavoriteProduct};
+const countCartProduct = async(req, res, next) => {
+    try {
+        const id = getId(); // Ensure this returns the correct user ID
+        const user = await User.findById(id); // Use findById for simplicity
+        if (user) {
+            req.nrCart = user.cart.length;
+        } else {
+            req.nrCart = 0; // Default value if user is not found
+        }
+    } catch (error) {
+        console.log(error);
+        req.nrCart = 0; // Default value in case of error
+    }
+    next();
+};
+module.exports = {requireAuth, requirePasswordValidation, checkUser, getId, countFavoriteProduct, countCartProduct};

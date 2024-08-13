@@ -12,43 +12,104 @@
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
 <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
-    <style>
-        .navbar {
-            background-color: #ffffff; /* culoarea navbarului */
-            box-shadow: 0 0 20px rgba(0, 0, 0, 0.1);
+<link rel="stylesheet" href="style/Cart.css">
 
-        }
-        .navbar-nav .nav-link {
-            color: #dedcdc; /* culoarea textului */
-        }
-        .navbar-nav .nav-link:hover {
-            color: #06b6d4; /* culoarea textului la hover */
-        }
-        #searchResults {
-            position: absolute;
-            top: 100%;
-            background: white;
-            border: 1px solid #06b6d4;
-            border-top: none;
-            border-radius: 0 0 15px 15px;
-            box-shadow: 0 8px 16px rgba(0, 0, 0, 0.1);
-            max-height: 300px; /* Maxima înălțime a secțiunii */
-            overflow-y: auto; /* Activarea scroll-ului dacă sunt prea multe rezultate */
-            z-index: 1000; /* Asigură-te că secțiunea apare deasupra altor elemente */
-            width: 350px;
-            display: none;
-            padding: 10px;
-        }
-    </style>
-    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.4/dist/umd/popper.min.js"></script>
-    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
 </head>
 <body style="background-color: #f5f5f5;">
-    <%- include('Navbar') %>
-    <div>
-        You are in basket page
+    <div class="navbar">
+        <%- include('Navbar') %>
     </div>
+    <div class="container-cart">
+        <div class="col-md-8 cart">
+            <h2 class="mb-4">My cart</h2>
+             <% if (nrCart && nrCart > 0) { %>
+                <div class="container-order">
+                    <div class="row">
+                        <% cart.forEach(element => { %>
+                            <div class="col-12 mb-4">
+                                <div class="cart-card">
+                                    <div class="product-image">
+                                        <img src="<%= element.image %>" alt="<%= element.name %>" width="150" height="150" style="max-width: 100%; height: auto;">
+                                    </div>
+                                    <div class="article-info">
+                                        <a href="/product?name=<%= element.name %>&id=<%= element._id %>" class="text-decoration-none text-dark product-container">
+                                            <h5><%= element.name %></h5>
+                                        </a>
+                                        <% if (element.cantity > 0) { %>
+                                            <p class="text-success">In stock</p>
+                                        <% } else { %>
+                                            <p class="text-danger">Not available in stock</p>
+                                        <% } %>
+                                    </div>
+                                    <div class="price-cantity last">
+                                        <div class="text-decoration-none text-dark price"><strong><%= element.price %>$</strong></div>
+                                        <div class="qty-container">
+                                            <button type="button" disabled class="btn-minus">
+                                                <div class="em em-minus">-</div>
+                                            </button>
+                                            <span class="qty-value" data-test="qtyValue">1</span>
+                                            <button type="button" class="btn-plus">
+                                                <div class="em em-plus">+</div>
+                                            </button>
+                                        </div>
+                                        <div class="buttons">
+                                            <button class="deleteFavoriteButton" id="deleteFavorite" data-id = "<%= element._id %>" style="display: flex; align-items: center; justify-content: center; gap: 5px;">
+                                             <svg xmlns="http://www.w3.org/2000/svg" height="20px" viewBox="0 -960 960 960" width="20px" fill="#ffffff"><path d="M312-144q-29.7 0-50.85-21.15Q240-186.3 240-216v-480h-48v-72h192v-48h192v48h192v72h-48v479.57Q720-186 698.85-165T648-144H312Zm336-552H312v480h336v-480ZM384-288h72v-336h-72v336Zm120 0h72v-336h-72v336ZM312-696v480-480Z"/></svg>
+                                             Delete
+                                             </button>
+                                         </div>
+                                    </div>
+                                   
+                                </div>
+                            </div>
+                        <% }) %>
+                    </div>
+                </div>
+                
+            <% } else { %> 
+                <div class="noProductsToCart text-center">
+                    <span>
+                        <svg xmlns="http://www.w3.org/2000/svg" height="100px" viewBox="0 -960 960 960" width="100px" fill="#06b6d4"><path d="M286.79-78.37Q257-78.37 236-99.58t-21-51q0-29.79 21.21-50.79t51-21q29.79 0 50.79 21.21 21 21.22 21 51 0 29.79-21.21 50.79t-51 21Zm400 0Q657-78.37 636-99.58t-21-51q0-29.79 21.21-50.79t51-21q29.79 0 50.79 21.21 21 21.22 21 51 0 29.79-21.21 50.79t-51 21ZM206.67-803.63h582.14q26.13 0 39.76 23.63 13.63 23.63.19 47.5L697.83-496.43q-11.48 19.47-29.51 31.45Q650.3-453 628.4-453H327.11l-54.33 101.37h488.85v65.26H277q-43.91 0-63.13-29.43-19.22-29.44.74-65.63L277.89-498 127.33-817.37H48.37v-65.26h121.3l37 79Z"/></svg>
+                    </span>
+                    <h2 class="mt-3">Your cart has no products</h2>
+                    <div class="mt-2">For adding products to your cart please <a href="/">go back to shop</a></div> 
+                </div>
+            <% } %>
+        </div>
+        <div class="order-summary">
+            <h5>Order Summary</h5>
+            <div class="summary-item">
+                <span class="label">Product Cost:</span>
+                <span class="amount">$<%= productCost %></span>
+            </div>
+            <div class="summary-item">
+                <span class="label">Delivery Cost:</span>
+                <% if (productCost >= 50) { %>
+                 <span class="text-success">FREE</span>
+                <% } else {%>
+                <span class="amount">$<%= deliveryCost %></span>
+                <% } %>
+            </div>
+            <div class="summary-item total">
+                <span class="label">Total:</span>
+                <% if (productCost >= 50) { %>
+                    <span class="amount">$<%= productCost %></span>
+                <% } else {%>
+                    <span class="amount">$<%= productCost + deliveryCost%></span>
+                <% } %>
+            </div>
+            <button class="continue-button">Continue</button>
+        </div>
+    </div>
+  
+</div>
+</div>
     
+    <div class="footer">
+        <%- include('Footer') %>
+    </div>
+<script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.4/dist/umd/popper.min.js"></script>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
 </body>
 </html>
