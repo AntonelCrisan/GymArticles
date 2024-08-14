@@ -35,9 +35,9 @@ const userSchema = new mongoose.Schema({
     type: mongoose.Schema.Types.ObjectId,
   }],
   cart:[{
-    type: mongoose.Schema.Types.ObjectId,
+    productId: { type: mongoose.Schema.Types.ObjectId, ref: 'Article' },
+    quantity: { type: Number, default: 1 }
   }]
-
 });
 userSchema.pre('save', async function(next) {
   const salt = await bcrypt.genSalt();

@@ -482,27 +482,66 @@ app.post('/deleteFavorite/:id', async(req, res) => {
 //POST method for adding products to cart
 app.post('/addToCart', async (req, res) => {
   try {
-      const {productId} = req.body;
-      const userId = getId();
-      const user = await User.findById(userId);
-      user.cart.push(productId);
-      await user.save();
-      const newCartCount = user.cart.length;
-      res.json({ success: true, newCartCount, user });
+    const { productId } = req.body;
+    const userId = getId();
+    const user = await User.findById(userId);
+    // Find if the product is already in the cart
+    const cartItem = user.cart.find(item => item.productId.toString() === productId);
+    if (cartItem) {
+      // If product already in cart, increase the quantity
+      cartItem.quantity += 1;
+    } else {
+      // If product not in cart, add a new entry with quantity 1
+      user.cart.push({ productId, quantity: 1 });
+    }
+    await user.save();
+    const newCartCount = user.cart.reduce((total, item) => total + item.quantity, 0);
+    res.json({ success: true, newCartCount, user });
   } catch (error) {
-      console.error('Error in /addToCart:', error);
-      res.status(500).json({ success: false, message: 'Server error' });
+    console.error('Error in /addToCart:', error);
+    res.status(500).json({ success: false, message: 'Server error' });
   }
 });
+
 //POST method for deleting products from cart
 app.post('/deleteFromCart/:id', async(req, res) => {
   const userId = getId();
   const id = req.params.id;
   try {
-    await User.findByIdAndUpdate(userId, { $pull: { cart: id } });
+    await User.updateOne(
+      { _id: userId, 'cart.productId': id },
+      { $pull: { cart: { productId: id } } }
+    );
     res.json({ success: true });
   } catch (error) {
     res.status(500).json({error});
+    console.log(error);
+  }
+});
+//POST method for increasing products in cart
+app.post('/updateCantity/:id', async (req, res) => {
+  const userId = getId();
+  const productId = req.params.id;
+  const { quantity } = req.body; // The new quantity from the request body
+
+  // Validate the quantity
+  if (typeof quantity !== 'number' || quantity <= 0) {
+    return res.status(400).json({ error: 'Invalid quantity' });
+  }
+  try {
+    const user = await User.findById(userId);
+    const cartItemIndex = user.cart.findIndex(item => item.productId.toString() === productId);
+
+    if (cartItemIndex === -1) {
+      return res.status(404).json({ error: 'Product not found in cart' });
+    }
+    // Update the quantity of the item in the cart
+    user.cart[cartItemIndex].quantity = quantity;
+    // Save the updated user document
+    res.json({ success: true, newQuantity: quantity });
+    await user.save();
+  } catch (error) {
+    console.log(error);
   }
 });
 app.get('/add-article', (req, res) => res.render('AddArticle'));
@@ -632,22 +671,27 @@ app.post('/getArticles', async (req, res) => {
 app.get('/cart', requireAuth, countFavoriteProduct, countCartProduct, async (req, res) => {
   try {
     const userId = getId();
-    const user = await User.findById(userId).populate('cart');
-    const productsCartId = user.cart;
-    const cart = await Article.find({ _id: { $in: productsCartId } });
-    // Calculate the total cost of all products in the cart
-    const productCost = cart.reduce((total, product) => {
-      // Convert price from string to number
-      const price = parseFloat(product.price);
-      // Check if the price is a valid number
-      return total + (isNaN(price) ? 0 : price);
+    const user = await User.findById(userId).populate('cart.productId');
+    const cart = user.cart.map(item => ({
+      ...item.productId.toObject(),
+      quantity: item.quantity
+    }));
+
+    // Calculate total cost
+    const productCost = cart.reduce((total, item) => {
+      const price = parseFloat(item.price);
+      const quantity = item.quantity || 1;
+      return total + (isNaN(price) ? 0 : price * quantity);
     }, 0);
     const deliveryCost = 5;
-    res.render('Cart', {nrFavorites: req.nrFavorites, nrCart:  req.nrCart, cart, productCost, deliveryCost})
+    res.render('cart', { nrFavorites: req.nrFavorites, nrCart: req.nrCart, cart, productCost, deliveryCost });
   } catch (error) {
-    res.status(500).json({error: 'Server error'});
+    res.status(500).json({ error: 'Server error' });
+    console.log(error);
   }
 });
+
+
 app.get('/favorites', requireAuth, countFavoriteProduct, countCartProduct, async (req, res) => {
   try {
     const userId = getId();

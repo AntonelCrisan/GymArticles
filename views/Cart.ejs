@@ -26,44 +26,45 @@
                 <div class="container-order">
                     <div class="row">
                         <% cart.forEach(element => { %>
-                            <div class="col-12 mb-4">
-                                <div class="cart-card">
-                                    <div class="product-image">
-                                        <img src="<%= element.image %>" alt="<%= element.name %>" width="150" height="150" style="max-width: 100%; height: auto;">
-                                    </div>
-                                    <div class="article-info">
-                                        <a href="/product?name=<%= element.name %>&id=<%= element._id %>" class="text-decoration-none text-dark product-container">
-                                            <h5><%= element.name %></h5>
-                                        </a>
-                                        <% if (element.cantity > 0) { %>
-                                            <p class="text-success">In stock</p>
-                                        <% } else { %>
-                                            <p class="text-danger">Not available in stock</p>
-                                        <% } %>
-                                    </div>
-                                    <div class="price-cantity last">
-                                        <div class="text-decoration-none text-dark price"><strong><%= element.price %>$</strong></div>
-                                        <div class="qty-container">
-                                            <button type="button" disabled class="btn-minus">
-                                                <div class="em em-minus">-</div>
-                                            </button>
-                                            <span class="qty-value" data-test="qtyValue">1</span>
-                                            <button type="button" class="btn-plus">
-                                                <div class="em em-plus">+</div>
-                                            </button>
-                                        </div>
-                                        <div class="buttons">
-                                            <button class="deleteFavoriteButton" id="deleteFromCart" data-id = "<%= element._id %>" style="display: flex; align-items: center; justify-content: center; gap: 5px;">
-                                             <svg xmlns="http://www.w3.org/2000/svg" height="20px" viewBox="0 -960 960 960" width="20px" fill="#ffffff"><path d="M312-144q-29.7 0-50.85-21.15Q240-186.3 240-216v-480h-48v-72h192v-48h192v48h192v72h-48v479.57Q720-186 698.85-165T648-144H312Zm336-552H312v480h336v-480ZM384-288h72v-336h-72v336Zm120 0h72v-336h-72v336ZM312-696v480-480Z"/></svg>
-                                             Delete
-                                             </button>
-                                         </div>
-                                    </div>
-                                   
+                          <div class="col-12 mb-4">
+                            <div class="cart-card">
+                              <div class="product-image">
+                                <img src="<%= element.image %>" alt="<%= element.name %>" width="150" height="150" style="max-width: 100%; height: auto;">
+                              </div>
+                              <div class="article-info">
+                                <a href="/product?name=<%= element.name %>&id=<%= element._id %>" class="text-decoration-none text-dark product-container">
+                                  <h5><%= element.name %></h5>
+                                </a>
+                                <% if (element.cantity > 0) { %>
+                                  <p class="text-success">In stock</p>
+                                <% } else { %>
+                                  <p class="text-danger">Not available in stock</p>
+                                <% } %>
+                                <div>The order will arrive in 2 days</div>
+                              </div>
+                              <div class="price-cantity last">
+                                <div class="text-decoration-none text-dark price"><strong><%= element.price * element.quantity %>$</strong></div>
+                                <div class="qty-container">
+                                  <button type="button" disabled class="btn-minus" id="decreaseCantityButton" data-id="<%=element._id%>">
+                                    -
+                                  </button>
+                                  <span class="qty-value"><%= element.quantity %></span>
+                                  <input class="hidden" type="number" min="1" max="10" value="<%= element.quantity %>" step="1" readonly="" name="quantity">
+                                  <button type="button" class="btn-plus" id="increaseCantityButton" data-id="<%=element._id%>">
+                                    +
+                                  </button>
                                 </div>
+                                <div class="buttons">
+                                  <button class="deleteFavoriteButton" id="deleteFromCart" data-id="<%= element._id %>" style="display: flex; align-items: center; justify-content: center; gap: 5px;">
+                                    <svg xmlns="http://www.w3.org/2000/svg" height="20px" viewBox="0 -960 960 960" width="20px" fill="#ffffff"><path d="M312-144q-29.7 0-50.85-21.15Q240-186.3 240-216v-480h-48v-72h192v-48h192v48h192v72h-48v479.57Q720-186 698.85-165T648-144H312Zm336-552H312v480h336v-480ZM384-288h72v-336h-72v336Zm120 0h72v-336h-72v336ZM312-696v480-480Z"/></svg>
+                                    Delete
+                                  </button>
+                                </div>
+                              </div>
                             </div>
+                          </div>
                         <% }) %>
-                    </div>
+                      </div>
                 </div>
                 
             <% } else { %> 
@@ -112,6 +113,7 @@
 <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.4/dist/umd/popper.min.js"></script>
 <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
-<script src="scripts/deleteProductFromCart.js"></script>
+<script src="scripts/cart/deleteProductFromCart.js"></script>
+<script src="scripts/cart/increaseAndDecreaseCantity.js"></script>
 </body>
 </html>

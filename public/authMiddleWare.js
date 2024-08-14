@@ -37,7 +37,9 @@ const requirePasswordValidation = (req, res, next) => {
 const state = {
     id: null
 };
-const getId = () => {return state.id};
+const getId = () => {
+    return state.id
+};
 const setId = (id) => {
     state.id = id;
 };
@@ -90,7 +92,7 @@ const countCartProduct = async(req, res, next) => {
         const id = getId(); // Ensure this returns the correct user ID
         const user = await User.findById(id); // Use findById for simplicity
         if (user) {
-            req.nrCart = user.cart.length;
+            req.nrCart = user.cart.reduce((total, item) => total + item.quantity, 0);
         } else {
             req.nrCart = 0; // Default value if user is not found
         }
