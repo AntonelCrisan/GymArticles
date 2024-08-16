@@ -40,10 +40,13 @@ const userSchema = new mongoose.Schema({
   }]
 });
 userSchema.pre('save', async function(next) {
-  const salt = await bcrypt.genSalt();
-  this.password = await bcrypt.hash(this.password, salt);
+  // Only hash the password if it has been modified or is new
+  if (this.isModified('password')) {
+    const salt = await bcrypt.genSalt();
+    this.password = await bcrypt.hash(this.password, salt);
+  }
   next();
-})
+});
 
 userSchema.statics.login = async function(email, password){
   const user = await this.findOne({email});

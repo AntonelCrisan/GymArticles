@@ -1,3 +1,5 @@
+document.addEventListener('DOMContentLoaded', () => {
+
 const form  = document.querySelector('form');
 const emailError = document.getElementById('emailError');
 const passwordError = document.getElementById('passwordError');
@@ -57,4 +59,5 @@ document.getElementById('togglePassword').addEventListener('click', () => {
       showPassword.style.display = 'block';
     hidePassword.style.display = 'none';
       }
+});
 });

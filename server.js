@@ -25,9 +25,10 @@ app.use(express.urlencoded({ extended: true }));
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(flash());
 app.use(session({
-    secret: 'secret',
-    resave: false,
-    saveUninitialized: false
+  secret: process.env.SEESION_KEY,
+  resave: false,
+  saveUninitialized: true,
+  cookie: { secure: false } // Set `secure: true` in production with HTTPS
 }));
 app.use(passport.initialize());
 app.use(passport.session());
@@ -559,10 +560,15 @@ app.post('/add-article', async (req, res) => {
 })
 //Log out get method
 app.get('/logout', (req, res) => {
-  res.cookie('user_token', '', {maxAge: 1}); //Set token maxmim age with 1
-  res.cookie('validate_pass', '', {maxAge: 1}); //Set token maxmim age with 1
-  res.redirect('/'); //Redirect user to home page
-})
+  req.session.destroy(err => {
+    if (err) {
+      return res.status(500).json({ error: 'Logout failed' });
+    }
+    res.cookie('user_token', '', {maxAge: 1}); //Set token maxmim age with 1
+    res.cookie('validate_pass', '', {maxAge: 1}); //Set token maxmim age with 1
+    res.redirect('/'); //Redirect user to home page
+  });
+});
 //Token age
 const maxAge = 3 * 24 * 60 * 60;
 //Creating token
