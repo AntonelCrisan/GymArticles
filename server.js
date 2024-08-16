@@ -690,6 +690,7 @@ app.get('/cart', requireAuth, countFavoriteProduct, countCartProduct, async (req
       return total + (isNaN(price) ? 0 : price * quantity);
     }, 0);
     const deliveryCost = 5;
+    req.session.productCost = productCost;
     res.render('Cart', { nrFavorites: req.nrFavorites, nrCart: req.nrCart, cart, productCost, deliveryCost });
   } catch (error) {
     res.status(500).json({ error: 'Server error' });
@@ -709,6 +710,18 @@ app.get('/favorites', requireAuth, countFavoriteProduct, countCartProduct, async
     res.status(500).json({error: 'Server error'});
   }
 });
+app.get('/checkout', countCartProduct, async (req, res) => {
+  const userID = getId(); //Gets id from middleware when user is loged in for displaing his addresses
+  const addresses = await Addresses.find({idUser: userID}); //Finds all addresses by idUser
+  const user = await User.findById(userID).populate('cart.productId');
+  const cart = user.cart.map(item => ({
+    ...item.productId.toObject(),
+    quantity: item.quantity
+  }));
+  const productCost = req.session.productCost;
+  const deliveryCost = 5;
+  res.render('Checkout', {cart, addresses, nrCart: req.nrCart, productCost, deliveryCost });
+})
 app.get('/showUsersAdmin', async (req, res) => {
   try {
     const users = await User.find({}, 'name email role');

@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>GymArticles</title>
+    <title>My cart</title>
     <!-- Font Awesome CSS -->
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
     <link rel="icon" type="image/png" href="images/logo.png">
@@ -100,7 +100,9 @@
                         <span class="amount">$<%= productCost + deliveryCost%></span>
                     <% } %>
                 </div>
-                <button class="continue-button">Continue</button>
+                <a href="/checkout">
+                  <button class="continue-button">Continue</button>
+                </a>
             </div>
         <% } %>
     </div>

@@ -1,0 +1,168 @@
+html, body {
+    height: 100%;
+}
+.navbar-container{
+    width: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-left: 20px;
+    margin-right: 20px;
+}
+.navbar {
+    background-color: #ffffff; /* culoarea navbarului */
+    box-shadow: 0 0 20px rgba(0, 0, 0, 0.1);
+}
+.main-container{
+    max-width: 1000px;
+    display: flex;
+    flex-direction: column;
+    margin: 80px auto;
+}
+.order-modality-container, .billing-data-container, .payment-method-container, .order-summary{
+    background-color: white;
+    padding: 30px;
+    border-radius: 8px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    margin-top: 10px;
+    width: 100%;
+}
+.title-order-modality, .title-billing-data, .title-payment-method{
+    display: flex;
+    align-items: center;
+    gap: 5px;
+    border-bottom:1px #b0b0b0 solid;
+    margin-bottom: 10px;
+}
+.title-order-modality h4, .title-billing-data h4, .title-payment-method h4{
+    min-width: 30px;
+    max-width: 30px;
+    height: 30px;
+    background-color: #5b5b5b;
+    color: #e4f1f9;
+    border-radius: 50%;
+    text-align: center;
+    font-weight: 700;
+    font-size: 16px;
+    margin-right: 15px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+}
+/* .title-order-modality div, .title-billing-data div, .title-payment-method div{
+
+} */
+.info-card, .payment-method-card{
+    background-color: #f7f7f7;
+    padding: 20px;
+    border-radius: 8px;
+    margin-bottom: 15px;
+  }
+  .products-image{
+    background-color: #f7f7f7;
+    padding: 20px;
+    border-radius: 8px;
+    margin-bottom: 15px;
+  }
+  .products-image div{
+    margin-top: 10px;
+  }
+  .name-phone, .street, .buttons{
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: start;
+    align-items: center;
+    gap: 10px;
+  }
+  .chosseAddressButton{
+    background-color: #06b6d4;
+    color: #ffffff;
+    border-radius: 15px;
+    min-height: 35px;
+    border-width: 0px;
+  }
+  input[type="checkbox"] {
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    appearance: none;
+    width: 20px;
+    height: 20px;
+    border: 2px solid #06b6d4; /* Border color for the checkbox */
+    border-radius: 50%; /* Make it round */
+    outline: none;
+    cursor: pointer;
+    position: relative;
+  }
+
+  input[type="checkbox"]:checked {
+    background-color: #06b6d4; /* Background color when checked */
+    border: none;
+  }
+
+  /* For the check mark (using ::after pseudo-element) */
+  input[type="checkbox"]:checked::after {
+    content: "";
+    position: absolute;
+    top: 3px;
+    left: 3px;
+    width: 10px;
+    height: 10px;
+    background-color: white; /* The white checkmark circle */
+    border-radius: 50%;
+  }
+
+  /* Style for the labels and spans */
+  .payment-method-card label {
+    margin-left: 10px;
+    font-weight: bold;
+  }
+
+  .payment-method-card span {
+    display: block;
+    margin-bottom: 10px;
+    font-size: 0.9rem;
+    color: #666;
+  }
+
+  /* For better alignment */
+  .checkbox-wrapper {
+    display: flex;
+    align-items: center;
+    margin-bottom: 15px;
+  }
+
+.order-summary h5 {
+    margin-top: 0;
+    color: #333;
+}
+
+.summary-item {
+    display: flex;
+    justify-content: space-between;
+    padding: 10px 0;
+}
+
+.summary-item .label {
+    font-weight: bold;
+}
+
+.summary-item .amount {
+    color: #333;
+}
+
+.summary-item.total {
+    border-top: 1px solid #ddd;
+    padding-top: 10px;
+    font-weight: bold;
+}
+.continue-button {
+    background-color: #06b6d4;
+    border-radius: 15px;
+    height: 35px;
+    border-width: 0px;
+    color: #ffffff;
+}
+
+.continue-button:hover {
+    background-color: #00c8eb;
+}
