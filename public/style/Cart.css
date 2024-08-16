@@ -1,3 +1,12 @@
+html, body {
+    height: 100%;
+    margin: 0;
+}
+body {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+}
 .navbar {
     background-color: #ffffff; /* culoarea navbarului */
     box-shadow: 0 0 20px rgba(0, 0, 0, 0.1);
@@ -47,9 +56,17 @@
     border-radius: 8px;
     margin-bottom: 15px;
     display: flex;
+    flex-direction: row;
     gap: 20px;
-    flex-wrap: wrap;
   }
+  @media(max-width: 768px){
+    .cart-card{
+        flex-direction: column;
+      }
+      .last{
+        margin-right: auto;
+      }
+}
 .last{
     margin-left: auto;
 }
@@ -74,6 +91,7 @@
     justify-content: space-between;
     flex-wrap: wrap;
     gap: 20px;
+    flex-grow: 1;
 }
 .order-summary {
     width: 100%;
@@ -175,3 +193,4 @@
 .hidden{
     display: none;
 }
+
