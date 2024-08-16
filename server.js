@@ -25,7 +25,7 @@ app.use(express.urlencoded({ extended: true }));
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(flash());
 app.use(session({
-  secret: process.env.SEESION_KEY || 'secret',
+  secret: process.env.SEESION_KEY || 'mySuperSecretKey',
   resave: false,
   saveUninitialized: true,
   cookie: { secure: false } // Set `secure: true` in production with HTTPS
