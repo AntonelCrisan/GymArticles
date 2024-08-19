@@ -54,7 +54,6 @@ document.addEventListener('DOMContentLoaded', () => {
         } catch (error) {
             console.error('Error updating favorite status:', error);
             window.location.assign('/login');
-            return null;
         }
     }
 

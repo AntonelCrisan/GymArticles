@@ -92,7 +92,9 @@ app.post('/signup', async (req, res) => {
         res.status(400).json({errors});
     }
 });
-app.get('/login', (req, res) => res.render('LoginPage'));
+app.get('/login', (req, res) => {
+  res.render('LoginPage');
+});
 //Log in post method
 app.post('/login', async(req, res) => {
   const {email, password} = req.body;
@@ -488,19 +490,24 @@ app.post('/addToCart', async (req, res) => {
     const user = await User.findById(userId);
     // Find if the product is already in the cart
     const cartItem = user.cart.find(item => item.productId.toString() === productId);
-    if (cartItem) {
-      // If product already in cart, increase the quantity
-      cartItem.quantity += 1;
-    } else {
-      // If product not in cart, add a new entry with quantity 1
-      user.cart.push({ productId, quantity: 1 });
+    const stockProduct = await Article.findById(productId);
+    if(stockProduct.cantity !== 0){
+      if (cartItem) {
+        // If product already in cart, increase the quantity
+        cartItem.quantity += 1;
+      } else {
+        // If product not in cart, add a new entry with quantity 1
+        user.cart.push({ productId, quantity: 1 });
+      }
+      await user.save();
+      const newCartCount = user.cart.reduce((total, item) => total + item.quantity, 0);
+      return res.json({ success: true, newCartCount, user });
+    }else{
+      return res.json({success: false, message: 'Product is out of stock'});
     }
-    await user.save();
-    const newCartCount = user.cart.reduce((total, item) => total + item.quantity, 0);
-    res.json({ success: true, newCartCount, user });
   } catch (error) {
     console.error('Error in /addToCart:', error);
-    res.status(500).json({ success: false, message: 'Server error' });
+    return res.status(500).json({ success: false, message: 'Server error' });
   }
 });
 
@@ -524,7 +531,7 @@ app.post('/updateCantity/:id', async (req, res) => {
   const userId = getId();
   const productId = req.params.id;
   const { quantity } = req.body; // The new quantity from the request body
-
+  const stockProduct = await Article.findById(productId);
   // Validate the quantity
   if (typeof quantity !== 'number' || quantity <= 0) {
     return res.status(400).json({ error: 'Invalid quantity' });

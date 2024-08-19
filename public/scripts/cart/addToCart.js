@@ -10,7 +10,6 @@ async function updateFavoriteStatus(cart) {
                 productId: cart.dataset.productId
             })
         });
-        console.log(cart.dataset);
         if (!response.ok) {
             throw new Error('Network response was not ok.');
         }
@@ -18,13 +17,14 @@ async function updateFavoriteStatus(cart) {
         const result = await response.json();
         if (result.success) {
             return result.newCartCount; // Return the new favorite count
-        } else {
+        }else {
             console.error('Failed to update favorite status.');
+            showWarningOutOfStock();
             return null;
         }
     } catch (error) {
         console.error('Error updating favorite status:', error);
-        return null;
+        window.location.assign('/login');
     }
 }
 
@@ -48,7 +48,22 @@ addToCart.forEach(cart => {
             }
         } else {
             console.error('Cart count element not found.');
+            
         }
     });
 });
+function showWarningOutOfStock() {
+    const message = document.getElementById('product-outof-stock');
+    if (message) {
+        message.classList.remove('d-none');
+        setTimeout(() => {
+            message.classList.add('hide');
+            setTimeout(() => {
+                message.classList.add('d-none');
+                message.classList.remove('hide');
+            }, 1000);
+        }, 1500);
+    }
+}
+
 });

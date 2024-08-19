@@ -154,4 +154,42 @@ body {
     opacity: 0;
     transform: translateX(100%);
   }
+  .product-outof-stock{
+    position: fixed;
+    top: 70px;
+    right: 1px;
+    max-width: 400px;
+    background-color: #ffffff;
+    border: 1px solid #ffffff;
+    border-radius: 5px;
+    padding: 10px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    z-index: 1050; /* Ensures it appears above other content */
+    opacity: 1;
+    transition: opacity 0.5s ease-out, transform 0.5s ease-out;
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
+    gap: 10px;
+}
+.product-outof-stock.hide {
+    opacity: 0;
+    transform: translateX(100%);
+  }
+  summary {
+    list-style: none; /* Remove the default arrow */
+    cursor: pointer;
+  }
+  
+  summary::before {
+    content: '\276F'; /* Unicode for a downward-facing arrow */
+    display: inline-block;
+    margin-right: 10px;
+    transition: transform 0.2s ease;
+  }
+  
+  details[open] summary::before {
+    transform: rotate(90deg); /* Rotate the arrow upwards when open */
+  }
   

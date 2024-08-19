@@ -75,12 +75,15 @@ html, body {
     align-items: center;
     gap: 10px;
   }
-  .chosseAddressButton{
+  .chosseAddressButton, .addAddressButton{
     background-color: #06b6d4;
     color: #ffffff;
     border-radius: 15px;
     min-height: 35px;
     border-width: 0px;
+  }
+  .chosseAddressButton:hover, .addAddressButton:hover{
+    background-color: #00c8eb;
   }
   input[type="checkbox"] {
     -webkit-appearance: none;

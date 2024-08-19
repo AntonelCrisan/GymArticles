@@ -61,3 +61,19 @@ document.getElementById('togglePassword').addEventListener('click', () => {
       }
 });
 });
+
+const message = document.getElementById('warning-message');
+function showwarningMessage(){
+    message.classList.remove('d-none');
+    //Close message
+    setTimeout(() => {
+        message.classList.add('hide');
+        setTimeout(() => {
+            message.classList.add('d-none');
+            message.classList.remove('hide');
+        }, 5000);
+    }, 7000);
+}
+if (message && message.classList.contains('d-none')) {
+  showwarningMessage();
+}
