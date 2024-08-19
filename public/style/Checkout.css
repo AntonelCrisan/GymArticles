@@ -1,5 +1,6 @@
 html, body {
     height: 100%;
+    width: 100%;
 }
 .navbar-container{
     width: 100%;
@@ -12,6 +13,12 @@ html, body {
 .navbar {
     background-color: #ffffff; /* culoarea navbarului */
     box-shadow: 0 0 20px rgba(0, 0, 0, 0.1);
+}
+.footer{
+  background-color: #ffffff; /* culoarea navbarului */
+  box-shadow: 0 0 20px rgba(0, 0, 0, 0.1);
+  margin-top: 40px;
+  width: 100%;
 }
 .main-container{
     max-width: 1000px;
