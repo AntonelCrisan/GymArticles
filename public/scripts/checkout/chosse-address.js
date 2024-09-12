@@ -67,7 +67,7 @@ document.addEventListener('DOMContentLoaded', function() {
             <div>${city}</div>
             <div>${country}</div>
           </div>
-          <div class="buttons mt-4" style="margin-left: 35px">
+          <div>
             <button class="chooseAnotherAddress" id="chooseAnotherAddress">Choose another address</button>
           </div>
         `;
