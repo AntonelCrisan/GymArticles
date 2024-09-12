@@ -4,14 +4,15 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Order Detail</title>
-    <link rel="stylesheet" href="/style/Checkout.css" />
     <link rel="icon" type="image/png" href="images/logo.png" />
     <!-- Bootstrap CSS -->
     <link
       href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha3/dist/css/bootstrap.min.css"
       rel="stylesheet"
     />
-    <link rel="stylesheet" href="style/Add-Addresses.css">
+    <link rel="stylesheet" href="style/Checkout/Add-Addresses.css" />
+    <link rel="stylesheet" href="style/Checkout/Choose-Address.css" />
+    <link rel="stylesheet" href="style/Checkout/Checkout.css" />
     <style>
       .container-progress {
         width: 100%;
@@ -157,53 +158,49 @@
       <!-- Order modality -->
       <div class="order-modality-container">
         <div class="title-order-modality">
-            <h4>1</h4>
-            <h3>Order modality</h3>
-            <div></div>
+          <h4>1</h4>
+          <h3>Order modality</h3>
+          <div></div>
         </div>
-        Order through courier at:
-        <div>
-          <% if (addresses.length > 0) { %> 
-          <div
-            class="container-fluid mt-4 address-item"
-          >
-            <div class="info-card">
-              <div class="name-phone">
-                <span>
-                  <svg
-                    xmlns="http://www.w3.org/2000/svg"
-                    height="24px"
-                    viewBox="0 -960 960 960"
-                    width="24px"
-                    fill="#06b6d4"
-                  >
-                    <path
-                      d="M480-477.61q34.2 0 58.29-24.1 24.1-24.09 24.1-58.29t-24.1-58.29q-24.09-24.1-58.29-24.1t-58.29 24.1q-24.1 24.09-24.1 58.29t24.1 58.29q24.09 24.1 58.29 24.1Zm0 285.15q120.33-110.08 178.73-198.59 58.4-88.52 58.4-161.91 0-107.31-68.67-175.74t-168.47-68.43q-99.79 0-168.46 68.43-68.66 68.43-68.66 175.74 0 73.39 58.4 161.79 58.4 88.39 178.73 198.71Zm0 120.59Q315.17-211.26 233.52-329.36q-81.65-118.1-81.65-223.6 0-153.28 98.95-244.22 98.95-90.95 229.18-90.95 130.23 0 229.18 90.95 98.95 90.94 98.95 244.22 0 105.5-81.65 223.6T480-71.87ZM480-560Z"
-                    />
-                  </svg>
-                </span>
-                <h5><%=addresses[0].name%></h5>
-                <div><h6>-</h6></div>
-                <div><h6><%= addresses[0].phoneNumber %></h6></div>
-              </div>
-              <div class="street" style="margin-left: 35px; color: #666666">
-                <div><%= addresses[0].street %></div>
-                <div><%= addresses[0].city %></div>
-                <div><%= addresses[0].country %></div>
-              </div>
-              <div class="buttons mt-4" style="margin-left: 35px">
-                <button
-                  class="chosseAddressButton"
-                  style="
-                    display: flex;
-                    align-items: center;
-                    justify-content: center;
-                    gap: 5px;
-                  "
+        Order through courier at: <% if (addresses.length > 0) { %>
+        <div class="container-fluid mt-4 address-item">
+          <div class="info-card">
+            <div class="name-phone">
+              <span>
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  height="24px"
+                  viewBox="0 -960 960 960"
+                  width="24px"
+                  fill="#06b6d4"
                 >
-                  Chosse another address
-                </button>
-              </div>
+                  <path
+                    d="M480-477.61q34.2 0 58.29-24.1 24.1-24.09 24.1-58.29t-24.1-58.29q-24.09-24.1-58.29-24.1t-58.29 24.1q-24.1 24.09-24.1 58.29t24.1 58.29q24.09 24.1 58.29 24.1Zm0 285.15q120.33-110.08 178.73-198.59 58.4-88.52 58.4-161.91 0-107.31-68.67-175.74t-168.47-68.43q-99.79 0-168.46 68.43-68.66 68.43-68.66 175.74 0 73.39 58.4 161.79 58.4 88.39 178.73 198.71Zm0 120.59Q315.17-211.26 233.52-329.36q-81.65-118.1-81.65-223.6 0-153.28 98.95-244.22 98.95-90.95 229.18-90.95 130.23 0 229.18 90.95 98.95 90.94 98.95 244.22 0 105.5-81.65 223.6T480-71.87ZM480-560Z"
+                  />
+                </svg>
+              </span>
+              <h5><%=addresses[0].name%></h5>
+              <div><h6>-</h6></div>
+              <div><h6><%= addresses[0].phoneNumber %></h6></div>
+            </div>
+            <div class="street" style="margin-left: 35px; color: #666666">
+              <div><%= addresses[0].street %></div>
+              <div><%= addresses[0].city %></div>
+              <div><%= addresses[0].country %></div>
+            </div>
+            <div class="buttons mt-4" style="margin-left: 35px">
+              <button
+                class="chooseAnotherAddress"
+                style="
+                  display: flex;
+                  align-items: center;
+                  justify-content: center;
+                  gap: 5px;
+                "
+                id="chooseAnotherAddress"
+              >
+                Choose another address
+              </button>
             </div>
           </div>
         </div>
@@ -217,38 +214,36 @@
             style="max-width: 100%; height: auto"
           />
           <% }) %> <% if (productCost > 50) { %>
-          <div style="color: #4caf50;">FREE</div>
+            <div style="color: #4caf50">FREE</div>
           <% } else {%>
-          <div>Delivery cost: $5</div>
+            <div>Delivery cost: $5</div>
           <% } %>
         </div>
         <% } else {%>
-            <div class="order-modality-container">
-                <div>Please add an address for see all delivery options.</div>
-                <div class="buttons mt-4">
-                <button
-                    class="addAddressButton"
-                    style="
-                    display: flex;
-                    align-items: center;
-                    justify-content: center;
-                    gap: 5px;
-                    "
-                    id="addAddressButton"
-                >
-                    Add an delivery address
-                </button>
-                </div>
-            </div>
+        <div class="order-modality-container">
+          <div>Please add an address for see all delivery options.</div>
+          <div class="buttons mt-4">
+            <button
+              class="addAddressDelivery"
+              style="
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                gap: 5px;
+              "
+              id="addAddressDelivery"
+            >
+              Add an delivery address
+            </button>
+          </div>
+        </div>
         <% } %>
-         
-   
-    </div>
+      </div>
       <div class="billing-data-container">
         <div class="title-billing-data">
-            <h4>2</h4>
-            <h3>Biling data</h3>
-            <div></div>
+          <h4>2</h4>
+          <h3>Biling data</h3>
+          <div></div>
         </div>
         <div>
           <!-- <div class="container-fluid mt-4 address-item">
@@ -304,118 +299,335 @@
               </div>
             </div>
           </div> -->
-            <div>Chosse or add available billing data for this order.</div>
-            </div>
-            <div class="buttons mt-4">
-            <button
-                class="addAddressButton"
-                style="
-                display: flex;
-                align-items: center;
-                justify-content: center;
-                gap: 5px;
-                "
-            >
-                Select billing address
-            </button>
-            </div>
+          <div>Chosse or add available billing data for this order.</div>
         </div>
+        <div class="buttons mt-4">
+          <button
+            class="addAddressButton"
+            style="
+              display: flex;
+              align-items: center;
+              justify-content: center;
+              gap: 5px;
+            "
+          >
+            Select billing address
+          </button>
+        </div>
+      </div>
       <!-- Chosse another address -->
 
       <!-- Payment method -->
       <div class="payment-method-container">
         <div class="title-payment-method">
-            <h4>3</h4>
-            <h3>Payment method</h3>
-            <div></div>
+          <h4>3</h4>
+          <h3>Payment method</h3>
+          <div></div>
         </div>
         <div class="payment-method-card">
-            <div class="checkbox-wrapper">
-                <input type="checkbox" name="online-card" id="online-card" />
-                <label for="online-card">Online card</label>
-            </div>
-              <span>Pay instant, without supplement costs</span>
-        
-              <div class="checkbox-wrapper">
-                <input type="checkbox" name="repay-courier" id="repay-courier" />
-                <label for="repay-courier">Repay at courier</label>
-              </div>
-              <span>You will pay when the order is delivered.</span>
-            </div>
-        </div>
+          <div class="checkbox-wrapper">
+            <input type="checkbox" name="online-card" id="online-card" />
+            <label for="online-card">Online card</label>
+          </div>
+          <span>Pay instant, without supplement costs</span>
 
-        <div class="order-summary">
-            <h5>Order Summary</h5>
-            <div class="summary-item">
-                <span class="label">Product Cost:</span>
-                <span class="amount">$<%= productCost %></span>
-            </div>
-            <div class="summary-item">
-                <span class="label">Delivery Cost:</span>
-                <% if (productCost >= 50) { %>
-                 <span class="text-success">FREE</span>
-                <% } else {%>
-                <span class="amount">$<%= deliveryCost %></span>
-                <% } %>
-            </div>
-            <div class="summary-item total">
-                <span class="label">Total:</span>
-                <% if (productCost >= 50) { %>
-                    <span class="amount">$<%= productCost %></span>
-                <% } else {%>
-                    <span class="amount">$<%= productCost + deliveryCost%></span>
-                <% } %>
-            </div>
-            <a href="/checkout">
-              <button class="continue-button">Next step</button>
-            </a>
+          <div class="checkbox-wrapper">
+            <input type="checkbox" name="repay-courier" id="repay-courier" />
+            <label for="repay-courier">Repay at courier</label>
+          </div>
+          <span>You will pay when the order is delivered.</span>
         </div>
-        </div>
+      </div>
 
-        
-        <!-- Add address functionality -->
-        <div class="add-address-container">
-          <svg xmlns="http://www.w3.org/2000/svg" id="close-button" height="24px" viewBox="0 -960 960 960" width="24px" fill="#5f6368"><path d="m256-200-56-56 224-224-224-224 56-56 224 224 224-224 56 56-224 224 224 224-56 56-224-224-224 224Z"/></svg>
-          <div class="card">
-            <div class="card-body">
-              <h4 class="card-title text-center">Add address</h4>
+      <div class="order-summary">
+        <h5>Order Summary</h5>
+        <div class="summary-item">
+          <span class="label">Product Cost:</span>
+          <span class="amount">$<%= productCost %></span>
+        </div>
+        <div class="summary-item">
+          <span class="label">Delivery Cost:</span>
+          <% if (productCost >= 50) { %>
+          <span class="text-success">FREE</span>
+          <% } else {%>
+          <span class="amount">$<%= deliveryCost %></span>
+          <% } %>
+        </div>
+        <div class="summary-item total">
+          <span class="label">Total:</span>
+          <% if (productCost >= 50) { %>
+          <span class="amount">$<%= productCost %></span>
+          <% } else {%>
+          <span class="amount">$<%= productCost + deliveryCost%></span>
+          <% } %>
+        </div>
+        <a href="/checkout">
+          <button class="continue-button">Next step</button>
+        </a>
+      </div>
+    </div>
+
+    <!-- Add address functionality -->
+    <div class="add-address-container">
+      <svg
+        xmlns="http://www.w3.org/2000/svg"
+        id="close-form-add-address"
+        height="24px"
+        viewBox="0 -960 960 960"
+        width="24px"
+        fill="#5f6368"
+      >
+        <path
+          d="m256-200-56-56 224-224-224-224 56-56 224 224 224-224 56 56-224 224 224 224-56 56-224-224-224 224Z"
+        />
+      </svg>
+      <div class="card">
+        <div class="card-body">
+          <h4 class="card-title text-center">Add address</h4>
           <form method="POST" action="/add-address" id="add-address-form">
-              <div class="form-group">
-                <label>Name</label>
-              <input type="text" class="form-control" id="name" name="name" placeholder="ex: John Wick">
+            <div class="form-group">
+              <label>Name</label>
+              <input
+                type="text"
+                class="form-control"
+                id="name"
+                name="name"
+                placeholder="ex: John Wick"
+              />
             </div>
             <div class="form-group">
-            <label>Phone number</label>
-            <input type="text" class="form-control" id="phone" name="phoneNumber" placeholder="0xxxxxxxxx">
-          </div>
-          <div class="form-group">
-              <label>Street</label>
-              <input type="text" class="form-control" id="street" name="street" placeholder="ex: Str. Wall, nr. 23">
+              <label>Phone number</label>
+              <input
+                type="text"
+                class="form-control"
+                id="phone"
+                name="phoneNumber"
+                placeholder="0xxxxxxxxx"
+              />
             </div>
-            <div class="form-group"> 
+            <div class="form-group">
+              <label>Street</label>
+              <input
+                type="text"
+                class="form-control"
+                id="street"
+                name="street"
+                placeholder="ex: Str. Wall, nr. 23"
+              />
+            </div>
+            <div class="form-group">
               <label>City</label>
-              <input type="text" class="form-control" id="city" name="city" placeholder="ex: New York">
+              <input
+                type="text"
+                class="form-control"
+                id="city"
+                name="city"
+                placeholder="ex: New York"
+              />
             </div>
             <div class="form-group">
               <label>Country</label>
-              <input type="text" class="form-control" id="country" name="country" placeholder="ex: SUA">
+              <input
+                type="text"
+                class="form-control"
+                id="country"
+                name="country"
+                placeholder="ex: SUA"
+              />
             </div>
-        <div id="warningMessageAdd" style="color: red; padding-bottom: 5px;" class="text-center">
+            <div
+              id="warningMessageAdd"
+              style="color: red; padding-bottom: 5px"
+              class="text-center"
+            ></div>
+            <button type="submit" class="btn btn-block" id="saveButton">
+              <span id="buttonText-add">Save</span>
+              <span
+                id="spinner-add"
+                class="spinner-border spinner-border-sm d-none"
+                role="status"
+                aria-hidden="true"
+              ></span>
+            </button>
+          </form>
         </div>
-              <button type="submit" class="btn btn-block" id="saveButton">
-                <span id="buttonText-add">Save</span>
-                <span id="spinner-add" class="spinner-border spinner-border-sm d-none" role="status" aria-hidden="true"></span>
+      </div>
+    </div>
+
+    <!-- Chosse another address -->
+    <div class="choose-address-container">
+      <svg
+        xmlns="http://www.w3.org/2000/svg"
+        id="close-button-chosse"
+        height="24px"
+        viewBox="0 -960 960 960"
+        width="24px"
+        fill="#5f6368"
+      >
+        <path
+          d="m256-200-56-56 224-224-224-224 56-56 224 224 224-224 56 56-224 224 224 224-56 56-224-224-224 224Z"
+        />
+      </svg>
+      <div class="card">
+        <div class="card-body">
+          <h4 class="card-title text-center">Choose the delivery address</h4>
+        </div>
+        <div class="add-address">
+          <strong
+            >Choose a delivery address from the bottom list or add a new
+            address.</strong
+          >
+          <button
+            id="add-address-btn"
+            style="
+              display: flex;
+              align-items: center;
+              justify-content: center;
+              gap: 5px;
+            "
+            class="add-address-btn"
+          >
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              height="24px"
+              viewBox="0 -960 960 960"
+              width="24px"
+              fill="#ffffff"
+            >
+              <path
+                d="M434.5-434.5H191.87v-91H434.5v-242.63h91v242.63h242.63v91H525.5v242.63h-91V-434.5Z"
+              />
+            </svg>
+            Add address
+          </button>
+        </div>
+        <% addresses.forEach(function(element, index) { %>
+        <div class="checkbox-wrapper select-address address-item" data-name="<%= element.name %>" data-phone="<%= element.phoneNumber %>" data-street="<%= element.street %>" data-city="<%= element.city %>" data-country="<%= element.country %>">
+          <input type="checkbox" <% if (index === 0) { %> checked <% } %>  />
+          <div
+            style="
+              display: flex;
+              width: 100%;
+              justify-content: space-between;
+              flex-wrap: wrap;
+            "
+          >
+            <div>
+              <div class="address-name">
+                <h5><%=element.name%></h5>
+                <div><h6>-</h6></div>
+                <div><h6><%= element.phoneNumber %></h6></div>
+              </div>
+              <div class="street">
+                <div><%= element.street %></div>
+                <div><%= element.city %></div>
+                <div><%= element.country %></div>
+              </div>
+            </div>
+            <div>
+              <button class="edit-address-btn" id="edit-address-btn" data-id="<%= element._id %>">
+                Edit
               </button>
-            </form>
+            </div>
           </div>
-          </div>
-       </div>
-        <div class="footer">
-          <%- include('Footer') %>
         </div>
+        <% }) %>
+      </div>
+    </div>
+
+    <!--Edit address functionality -->
+    <div class="edit-address-container">
+      <svg
+        xmlns="http://www.w3.org/2000/svg"
+        id="close-button-edit"
+        height="24px"
+        viewBox="0 -960 960 960"
+        width="24px"
+        fill="#5f6368"
+      >
+        <path
+          d="m256-200-56-56 224-224-224-224 56-56 224 224 224-224 56 56-224 224 224 224-56 56-224-224-224 224Z"
+        />
+      </svg>
+      <div class="card">
+        <div class="card-body">
+          <h4 class="card-title text-center">Edit address</h4>
+          <form method="POST" action="/update-address" id="edit-address-form">
+            <div class="form-group">
+              <label>Name</label>
+              <input
+                type="text"
+                class="form-control"
+                id="name-edit"
+                name="name"
+                placeholder="ex: John Wick"
+              />
+            </div>
+            <div class="form-group">
+              <label>Phone number</label>
+              <input
+                type="text"
+                class="form-control"
+                id="phone-edit"
+                name="phoneNumber"
+                placeholder="0xxxxxxxxx"
+              />
+            </div>
+            <div class="form-group">
+              <label>Street</label>
+              <input
+                type="text"
+                class="form-control"
+                id="street-edit"
+                name="street"
+                placeholder="ex: Str. Wall, nr. 23"
+              />
+            </div>
+            <div class="form-group">
+              <label>City</label>
+              <input
+                type="text"
+                class="form-control"
+                id="city-edit"
+                name="city"
+                placeholder="ex: New York"
+              />
+            </div>
+            <div class="form-group">
+              <label>Country</label>
+              <input
+                type="text"
+                class="form-control"
+                id="country-edit"
+                name="country"
+                placeholder="ex: SUA"
+              />
+            </div>
+            <div
+              id="warningMessageEdit"
+              style="color: red; padding-bottom: 5px"
+              class="text-center"
+            ></div>
+            <button type="submit" class="btn btn-block" id="saveButton">
+              <span id="buttonText-edit">Save</span>
+              <span
+                id="spinner-edit"
+                class="spinner-border spinner-border-sm d-none"
+                role="status"
+                aria-hidden="true"
+              ></span>
+            </button>
+          </form>
+        </div>
+      </div>
+    </div>
+    <div class="footer"><%- include('Footer') %></div>
     <!-- Bootstrap JS (optional, for interactive features) -->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha3/dist/js/bootstrap.bundle.min.js"></script>
     <script src="scripts/cart/addToCart.js"></script>
     <script src="scripts/checkout/add-address.js"></script>
+    <script src="scripts/checkout/chosse-address.js"></script>
+    <script src="scripts/checkout/edit-address.js"></script>
+
   </body>
 </html>
