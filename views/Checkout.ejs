@@ -323,7 +323,7 @@
         </div>
         <div class="payment-method-card">
           <div class="checkbox-wrapper">
-            <input type="checkbox" name="online-card" id="online-card" />
+            <input type="checkbox" name="online-card" id="online-card" checked/>
             <label for="online-card">Online card</label>
           </div>
           <span>Pay instant, without supplement costs</span>
@@ -342,10 +342,14 @@
           <span class="label">Product Cost:</span>
           <span class="amount">$<%= productCost %></span>
         </div>
+        <div class="summary-item" id="paymentProccesing" style="display: none;">
+          <span class="label">Payment processing cost: </span>
+          <span class="amount">$3</span>
+        </div>
         <div class="summary-item">
           <span class="label">Delivery Cost:</span>
           <% if (productCost >= 50) { %>
-          <span class="text-success">FREE</span>
+          <span style="color: #009900; font-weight: 500;">Free</span>
           <% } else {%>
           <span class="amount">$<%= deliveryCost %></span>
           <% } %>
@@ -700,6 +704,6 @@
     <script src="scripts/checkout-orderModality/chosse-address.js"></script>
     <script src="scripts/checkout-orderModality/edit-address.js"></script>
     <script src="scripts/checkout-BilingData/modify-bilingData.js"></script>
-    
+    <script src="scripts/checkout-paymentMethod/paymentMethod.js"></script>
   </body>
 </html>
