@@ -10,9 +10,11 @@
       href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha3/dist/css/bootstrap.min.css"
       rel="stylesheet"
     />
-    <link rel="stylesheet" href="style/Checkout/Add-Addresses.css" />
-    <link rel="stylesheet" href="style/Checkout/Choose-Address.css" />
-    <link rel="stylesheet" href="style/Checkout/Checkout.css" />
+    <link rel="stylesheet" href="style/Checkout-orderModality/Add-Addresses.css" />
+    <link rel="stylesheet" href="style/Checkout-orderModality/Choose-Address.css" />
+    <link rel="stylesheet" href="style/Checkout-orderModality/Checkout.css" />
+
+    <link rel="stylesheet" href="style/Checkout-bilingData/modifyBilingData.css" />
     <style>
       .container-progress {
         width: 100%;
@@ -162,7 +164,8 @@
           <h3>Order modality</h3>
           <div></div>
         </div>
-        Order through courier at: <% if (addresses.length > 0) { %>
+        Order through courier at:
+         <% if (addresses.length > 0) { %>
         <div class="container-fluid mt-4 address-item">
           <div class="info-card">
             <div class="name-phone">
@@ -206,7 +209,7 @@
             style="max-width: 100%; height: auto"
           />
           <% }) %> <% if (productCost > 50) { %>
-            <div style="color: #4caf50">FREE</div>
+            <div style="color: #009900; font-weight: 500;">Free</div>
           <% } else {%>
             <div>Delivery cost: $5</div>
           <% } %>
@@ -214,7 +217,7 @@
         <% } else {%>
         <div class="order-modality-container">
           <div>Please add an address for see all delivery options.</div>
-          <div class="buttons mt-4">
+          <div>
             <button
               class="addAddressDelivery"
               style="
@@ -237,10 +240,9 @@
           <h3>Biling data</h3>
           <div></div>
         </div>
-        <div>
-          <!-- <div class="container-fluid mt-4 address-item">
-            <div class="info-card">
-                <div><b>Natural person</b></div>
+        <% if (addresses.length > 0) { %>
+          <div class="container-fluid mt-4 address-item">
+            <div class="info-card-bilingData">
               <div class="name-phone">
                 <span>
                   <svg
@@ -255,25 +257,25 @@
                     />
                   </svg>
                 </span>
-                <h5></h5>
+                <h5><%=addresses[0].name%></h5>
                 <div><h6>-</h6></div>
-                <div><h6></h6></div>
+                <div><h6><%= addresses[0].phoneNumber %></h6></div>
               </div>
               <div class="street" style="margin-left: 35px; color: #666666">
-                <div></div>
-                <div></div>
-                <div></div>
+                <div><%= addresses[0].street %></div>
+                <div><%= addresses[0].city %></div>
+                <div><%= addresses[0].country %></div>
               </div>
-              <div class="buttons mt-4" style="margin-left: 35px">
+              <div style="margin-left: 35px">
                 <button
-                  class="chosseAddressButton"
-                  data-id=""
+                  class="modifyBilingDataButton"
                   style="
                     display: flex;
                     align-items: center;
                     justify-content: center;
                     gap: 5px;
                   "
+                  id="modifyBilingDataButton"
                 >
                   <svg
                     xmlns="http://www.w3.org/2000/svg"
@@ -290,24 +292,27 @@
                 </button>
               </div>
             </div>
-          </div> -->
-          <div>Chosse or add available billing data for this order.</div>
-        </div>
-        <div class="buttons mt-4">
-          <button
-            class="addAddressButton"
-            style="
-              display: flex;
-              align-items: center;
-              justify-content: center;
-              gap: 5px;
-            "
-          >
-            Select billing address
-          </button>
-        </div>
+          </div>
+        <% } else { %>
+          <div>
+            <div>Chosse or add available billing data for this order.</div>
+            <div>
+              <button
+                class="addAddressBilingDataButton"
+                style="
+                  display: flex;
+                  align-items: center;
+                  justify-content: center;
+                  gap: 5px;
+                "
+                id = "addAddressBilingDataButton"
+              >
+                Add billing address
+              </button>
+            </div>
+          </div>
+        <% } %> 
       </div>
-      <!-- Chosse another address -->
 
       <!-- Payment method -->
       <div class="payment-method-container">
@@ -449,21 +454,20 @@
     <!-- Chosse another address -->
     <div class="choose-address-container">
       <div class="sticky-header">
-        <svg
-        xmlns="http://www.w3.org/2000/svg"
-        id="close-button-chosse"
-        height="24px"
-        viewBox="0 -960 960 960"
-        width="24px"
-        fill="#5f6368"
-      >
-        <path
-          d="m256-200-56-56 224-224-224-224 56-56 224 224 224-224 56 56-224 224 224 224-56 56-224-224-224 224Z"
-        />
-      </svg>
-        <h4 class="card-title text-center mb-4">Choose the delivery address</h4>
+        <h4>Choose the delivery address</h4>
+          <svg
+          xmlns="http://www.w3.org/2000/svg"
+          id="close-button-chosse"
+          height="24px"
+          viewBox="0 -960 960 960"
+          width="24px"
+          fill="#5f6368"
+        >
+          <path
+            d="m256-200-56-56 224-224-224-224 56-56 224 224 224-224 56 56-224 224 224 224-56 56-224-224-224 224Z"
+          />
+        </svg>
       </div>
-   
       <div class="card">
         <div class="add-address mt-4">
           <strong
@@ -614,13 +618,88 @@
         </div>
       </div>
     </div>
+
+     <!-- Modify biling data modal -->
+     <div class="modify-bilingData-container">
+      <div class="sticky-header">
+        <h4>Choose the biling data</h4>
+          <svg
+          xmlns="http://www.w3.org/2000/svg"
+          id="close-button-bilingData"
+          height="24px"
+          viewBox="0 -960 960 960"
+          width="24px"
+          fill="#5f6368"
+        >
+          <path
+            d="m256-200-56-56 224-224-224-224 56-56 224 224 224-224 56 56-224 224 224 224-56 56-224-224-224 224Z"
+          />
+        </svg>
+      </div>
+      <div class="card">
+        <div class="add-address mt-4">
+          <strong
+            >Choose an address from the bottom list or add a new one.</strong>
+          <button
+            id="add-address-bilingData"
+            style="
+              display: flex;
+              align-items: center;
+              justify-content: center;
+              gap: 5px;
+            "
+            class="add-address-bilingData"
+          >
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              height="24px"
+              viewBox="0 -960 960 960"
+              width="24px"
+              fill="#ffffff"
+            >
+              <path
+                d="M434.5-434.5H191.87v-91H434.5v-242.63h91v242.63h242.63v91H525.5v242.63h-91V-434.5Z"
+              />
+            </svg>
+            Add new address
+          </button>
+        </div>
+        <% addresses.forEach(function(element, index) { %>
+        <div class="checkbox-wrapper select-address-bilingData address-item" data-name="<%= element.name %>" data-phone="<%= element.phoneNumber %>" data-street="<%= element.street %>" data-city="<%= element.city %>" data-country="<%= element.country %>">
+          <input type="checkbox" <% if (index === 0) { %> checked <% } %>  />
+          <div
+            style="
+              display: flex;
+              width: 100%;
+              justify-content: space-between;
+              flex-wrap: wrap;
+            "
+          >
+            <div>
+              <div class="address-name">
+                <h5><%=element.name%></h5>
+                <div><h6>-</h6></div>
+                <div><h6><%= element.phoneNumber %></h6></div>
+              </div>
+              <div class="street">
+                <div><%= element.street %></div>
+                <div><%= element.city %></div>
+                <div><%= element.country %></div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <% }) %>
+      </div>
+    </div>
     <div class="footer"><%- include('Footer') %></div>
     <!-- Bootstrap JS (optional, for interactive features) -->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha3/dist/js/bootstrap.bundle.min.js"></script>
     <script src="scripts/cart/addToCart.js"></script>
-    <script src="scripts/checkout/add-address.js"></script>
-    <script src="scripts/checkout/chosse-address.js"></script>
-    <script src="scripts/checkout/edit-address.js"></script>
-
+    <script src="scripts/checkout-orderModality/add-address.js"></script>
+    <script src="scripts/checkout-orderModality/chosse-address.js"></script>
+    <script src="scripts/checkout-orderModality/edit-address.js"></script>
+    <script src="scripts/checkout-BilingData/modify-bilingData.js"></script>
+    
   </body>
 </html>

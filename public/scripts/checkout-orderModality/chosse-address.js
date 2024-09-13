@@ -3,6 +3,7 @@ document.addEventListener('DOMContentLoaded', function() {
   const closeButtonChosse = document.getElementById('close-button-chosse');
   const chooseAnotherAddress = document.getElementById('chooseAnotherAddress');
   const addAddresBtn = document.getElementById('add-address-btn');
+  const addAddressDeliveryButton = document.getElementById('addAddressDelivery');
   const chooseAddressContainer = document.getElementsByClassName('choose-address-container')[0];
   const addAddressContainer = document.getElementsByClassName('add-address-container')[0];
   const navbar = document.getElementsByClassName('navbar')[0];
@@ -22,10 +23,7 @@ document.addEventListener('DOMContentLoaded', function() {
       }, 10); 
     });
   }
-
-  // Attach event listener to choose another address button on page load
-  attachChooseAnotherAddressListener();
-
+  
   // Loop through all address checkboxes and handle address selection
   addressCheckboxes.forEach((checkbox) => {
     checkbox.addEventListener('change', function () {
@@ -85,16 +83,18 @@ document.addEventListener('DOMContentLoaded', function() {
   });
 
   // Open address selection modal
-  chooseAnotherAddress.addEventListener('click', () => {
-    chooseAddressContainer.style.display = 'block';
-    setTimeout(() => {
-        mainContainer.style.opacity = '0.2';
-        navbar.style.opacity = '0.2';
-        footer.style.opacity = '0.2';
-        chooseAddressContainer.style.opacity = '1';
-    }, 10); 
-  });
 
+  if(chooseAnotherAddress){
+    chooseAnotherAddress.addEventListener('click', () => {
+      chooseAddressContainer.style.display = 'block';
+      setTimeout(() => {
+          mainContainer.style.opacity = '0.2';
+          navbar.style.opacity = '0.2';
+          footer.style.opacity = '0.2';
+          chooseAddressContainer.style.opacity = '1';
+      }, 10); 
+    });
+  }
   // Close the address selection modal
   closeButtonChosse.addEventListener('click', () => {
     setTimeout(() => {
@@ -116,4 +116,16 @@ document.addEventListener('DOMContentLoaded', function() {
         addAddressContainer.style.opacity = '1';
     }, 10); 
   });
+  if(addAddressDeliveryButton){
+    addAddressDeliveryButton.addEventListener('click', () => {
+      addAddressContainer.style.display = 'block';
+      setTimeout(() => {
+        mainContainer.style.opacity = '0.2';
+        navbar.style.opacity = '0.2';
+        footer.style.opacity = '0.2';
+        addAddressContainer.style.opacity = '1';
+    }, 10); 
+    });
+  }
+
 });
