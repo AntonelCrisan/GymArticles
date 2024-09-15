@@ -10,7 +10,6 @@ document.addEventListener('DOMContentLoaded', function() {
   const footer = document.getElementsByClassName('footer')[0];
   const mainContainer = document.getElementsByClassName('main-container')[0];
   const addressCheckboxes = document.querySelectorAll('.select-address input[type="checkbox"]');
-
   // Function to attach event listener to choose another address button
   function attachChooseAnotherAddressListener() {
     document.querySelector('#chooseAnotherAddress').addEventListener('click', function () {
@@ -27,6 +26,9 @@ document.addEventListener('DOMContentLoaded', function() {
   // Loop through all address checkboxes and handle address selection
   addressCheckboxes.forEach((checkbox) => {
     checkbox.addEventListener('change', function () {
+      if (!checkbox.checked) {
+        checkbox.checked = true; // Force the checkbox to stay checked
+      }
       if (this.checked) {
         // Uncheck other checkboxes
         addressCheckboxes.forEach((cb) => {
@@ -116,7 +118,7 @@ document.addEventListener('DOMContentLoaded', function() {
         addAddressContainer.style.opacity = '1';
     }, 10); 
   });
-  if(addAddressDeliveryButton){
+  if(addAddressDeliveryButton){ 
     addAddressDeliveryButton.addEventListener('click', () => {
       addAddressContainer.style.display = 'block';
       setTimeout(() => {
@@ -127,5 +129,10 @@ document.addEventListener('DOMContentLoaded', function() {
     }, 10); 
     });
   }
-
 });
+// addressSelector.js
+const selectedAddressForOrder = () => {
+  return document.querySelector('input[name="selectedAddress"]:checked').value;
+};
+
+export default selectedAddressForOrder;

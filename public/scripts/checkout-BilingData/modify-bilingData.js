@@ -26,6 +26,9 @@ document.addEventListener('DOMContentLoaded', function() {
    // Loop through all address checkboxes and handle address selection
    addressCheckboxesBilingData.forEach((checkbox) => {
     checkbox.addEventListener('change', function () {
+        if (!checkbox.checked) {
+            checkbox.checked = true; // Force the checkbox to stay checked
+          }
       if (this.checked) {
         // Uncheck other checkboxes
         addressCheckboxesBilingData.forEach((cb) => {
@@ -150,3 +153,8 @@ document.addEventListener('DOMContentLoaded', function() {
   }
   
 });
+const selectedAddressBilingData = () => {
+    return document.querySelector('input[name="selectedAddressForBiling"]:checked').value;
+  };
+  
+  export default selectedAddressBilingData;

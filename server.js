@@ -728,7 +728,11 @@ app.get('/checkout', countCartProduct, async (req, res) => {
   const productCost = req.session.productCost;
   const deliveryCost = 5;
   res.render('Checkout', {cart, addresses, nrCart: req.nrCart, productCost, deliveryCost });
-})
+});
+
+app.get('/summary',countCartProduct, (req, res) => {
+  res.render('OrderSummary', { nrCart: req.nrCart});
+});
 app.get('/showUsersAdmin', async (req, res) => {
   try {
     const users = await User.find({}, 'name email role');

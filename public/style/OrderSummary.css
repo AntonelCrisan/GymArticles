@@ -1,0 +1,97 @@
+html, body {
+    height: 100%;
+    width: 100%;
+}
+.navbar-container{
+    width: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-left: 20px;
+    margin-right: 20px;
+}
+.navbar {
+    background-color: #ffffff; /* culoarea navbarului */
+    box-shadow: 0 0 20px rgba(0, 0, 0, 0.1);
+}
+.footer{
+  background-color: #ffffff; /* culoarea navbarului */
+  box-shadow: 0 0 20px rgba(0, 0, 0, 0.1);
+  margin-top: 40px;
+  width: 100%;
+}
+.main-container{
+    max-width: 1000px;
+    display: flex;
+    flex-direction: column;
+    margin: 80px auto;
+    padding: 20px;
+}
+/* Container for all the cards */
+.summary-container {
+    display: flex;
+    justify-content: space-between;
+    gap: 20px;
+    padding: 20px;
+    background-color: #f3f6fa; /* Background color similar to the one in the image */
+    margin-top: 10px;
+}
+
+/* Individual card styles */
+.summary-card {
+    background-color: white;
+    border-radius: 8px;
+    padding: 20px;
+    width: 32%; /* Adjust width to fit three cards in one row */
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+/* Header style with title and button */
+.summary-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 10px;
+}
+
+/* Title style */
+.summary-header h3 {
+    font-size: 1.2em;
+    margin: 0;
+    color: #444; /* Dark text color for the title */
+}
+
+/* Modify button style */
+.modify-btn{
+    background-color: #ffffff;
+    color: #06b6d4;
+    border-radius: 15px;
+    height: 35px;
+    border: 1px solid #06b6d4;
+    margin-top: 10px;
+  }
+  .modify-btn:hover{
+    background-color: #06b6d4;
+    color: #ffffff;
+  }
+/* Text content inside the cards */
+.summary-card p {
+    margin: 5px 0;
+    color: #333;
+    line-height: 1.5em;
+}
+
+.summary-card strong {
+    color: #333;
+}
+
+/* Media query for responsive design */
+@media (max-width: 768px) {
+    .summary-container {
+        flex-direction: column;
+    }
+
+    .summary-card {
+        width: 100%;
+    }
+}
