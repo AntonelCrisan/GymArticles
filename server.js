@@ -730,8 +730,16 @@ app.get('/checkout', countCartProduct, async (req, res) => {
   res.render('Checkout', {cart, addresses, nrCart: req.nrCart, productCost, deliveryCost });
 });
 
-app.get('/summary',countCartProduct, (req, res) => {
-  res.render('OrderSummary', { nrCart: req.nrCart});
+app.get('/summary',countCartProduct, async (req, res) => {
+  const userId = getId();
+  const user = await User.findById(userId).populate('cart.productId');
+  const cart = user.cart.map(item => ({
+    ...item.productId.toObject(),
+    quantity: item.quantity
+  }));
+  const deliveryCost = 5;
+  const productCost = req.session.productCost;
+  res.render('OrderSummary', { nrCart: req.nrCart, cart,  productCost, deliveryCost});
 });
 app.get('/showUsersAdmin', async (req, res) => {
   try {

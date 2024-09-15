@@ -5,6 +5,7 @@
   const selectedAddressForBilingData = JSON.parse(localStorage.getItem('selectedAddressBilingData'));
   const paymentMethod = localStorage.getItem('paymentMethod');
   const infoPaymentMethod = localStorage.getItem('infoPayment');
+  const orderTotal = localStorage.getItem('newTotal');
 
   if (selectedAddress) {
       // Display the address
@@ -35,3 +36,10 @@
   }else{
       document.getElementById('paymentMethod').innerHTML = '<p>No payment method selected.</p>'
   }
+  if(paymentMethod === "Online card"){
+    document.getElementById('delivery-cost-processing').innerText = 'Free';
+    document.getElementById('delivery-cost-processing').style.color = '#009900';
+  }else{
+    document.getElementById('delivery-cost-processing').innerText = '$3';
+  }
+  document.getElementById('order-total').innerText = `Order total: $${orderTotal}`;

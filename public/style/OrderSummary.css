@@ -32,7 +32,7 @@ html, body {
     display: flex;
     justify-content: space-between;
     gap: 20px;
-    padding: 20px;
+    padding: 20px;  
     background-color: #f3f6fa; /* Background color similar to the one in the image */
     margin-top: 10px;
 }
@@ -51,7 +51,8 @@ html, body {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    margin-bottom: 10px;
+    border-bottom: 1px solid #a2a2a2;
+    padding-bottom: 10px;
 }
 
 /* Title style */
@@ -94,4 +95,89 @@ html, body {
     .summary-card {
         width: 100%;
     }
+}
+.order-summary-container {
+    padding: 0 20px 20px;
+    background-color: #f3f6fa;
+    font-family: Arial, sans-serif;
+}
+.order-summary-card{
+    background-color: white;
+    border-radius: 8px;
+    padding: 20px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+.order-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 10px;
+    font-size: 18px;
+    font-weight: bold;
+}
+
+.order-header .order-title {
+    display: flex;
+    align-items: center;
+}
+
+.order-header .arrow-icon {
+    margin-right: 10px;
+    font-size: 12px;
+}
+
+.order-header .delivery-date {
+    color: #888;
+    font-size: 14px;
+}
+
+.order-items {
+    margin-bottom: 10px;
+}
+
+.item {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 5px;
+    font-size: 16px;
+}
+
+.item .price {
+    font-weight: bold;
+    color: #000;
+}
+
+.order-total {
+    display: flex;
+    justify-content: space-between;
+    border-top: 1px solid #ddd;
+    padding-top: 10px;
+    font-weight: bold;
+}
+
+
+.total-summary-container{
+    padding: 0 20px 20px;
+    background-color: #f3f6fa;
+    font-family: Arial, sans-serif;
+    display: flex;
+    justify-content: center;
+    flex-direction: column;
+    align-items: center;
+}
+.total-summary-container span{
+    font-size: 30px;
+}
+.total-summary-container button{
+    background-color: #06b6d4;
+    border-radius: 25px;
+    height: 50px;
+    max-width: 200px;
+    width: 100%;
+    border-width: 0px;
+    color: #ffffff;
+}
+.total-summary-container button:hover{
+    background-color: #00c8eb;
 }

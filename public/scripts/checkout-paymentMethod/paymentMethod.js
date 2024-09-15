@@ -7,12 +7,22 @@ const totalElement = document.querySelector('.summary-item.total .amount'); // T
 let originalTotal = parseFloat(totalElement.textContent.replace('$', ''));
 const paymentProcessingCost = 3; // Processing cost for courier repayment
 // Function to update the total
+const state = {
+    summaryTotal: 0
+};
+
+const getTotal = () => state.summaryTotal;
+
+const setTotal = (summaryTotal) => {
+    state.summaryTotal = summaryTotal;
+};
 function updateTotal(addProcessingCost) {
     let newTotal = originalTotal;
     if (addProcessingCost) {
         newTotal += paymentProcessingCost;
     }
     totalElement.textContent = `$${newTotal.toFixed(1)}`;
+    setTotal(newTotal);
 }
 // Event listener for "Online Card" option
 onlineCard.addEventListener('click', () => {
@@ -51,6 +61,6 @@ const infoRepayCourier = document.getElementById('info-RepayCourier');
         return infoRepayCourier.textContent;
     }
 }
-
+console.log(getTotal());
 export default paymentMethod;
-export {infoPayment};
+export {infoPayment, getTotal};
