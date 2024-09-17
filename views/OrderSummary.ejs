@@ -216,7 +216,9 @@
         </div>
         <div class="total-summary-container">
             <span id="order-total"></span>
-            <button id="send-order-button">Send order</button>
+            <form action="/pay" method="POST">
+                <button id="send-order-button">Send order</button>
+            </form>
         </div>
       </div>
     <div class="footer"><%- include('Footer') %></div>

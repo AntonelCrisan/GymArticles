@@ -17,6 +17,7 @@ const Addresses = require('./public/addresses');
 const path = require('path');
 const nodemailer = require('nodemailer');
 const bcrypt = require('bcryptjs');
+const stripe = require('stripe')(process.env.SECRET_STRIPE_KEY);
 // Middleware-uri
 app.use(express.static('public'));
 app.use(express.json());
@@ -743,6 +744,30 @@ app.get('/summary',countCartProduct, async (req, res) => {
 });
 app.get('/order-placed',countCartProduct, async (req, res) => {
   res.render('OrderPlaced', { nrCart: req.nrCart});
+});
+app.post('/pay', async (req, res) => {
+  const userId = getId();
+  const user = await User.findById(userId).populate('cart.productId');
+  const cart = user.cart.map(item => ({
+    ...item.productId.toObject(),
+    quantity: item.quantity
+  }));
+  const session = await stripe.checkout.sessions.create({
+    line_items: cart.map(product => ({
+      price_data: {
+        currency: 'usd',
+        product_data: {
+          name: product.name
+        },
+        unit_amount: product.price * 100 // Price in cents
+      },
+      quantity: product.quantity
+    })),
+    mode: 'payment',
+    success_url: `${process.env.CLIENT_URL}/success-payment`,
+    cancel_url: `${process.env.CLIENT_URL}`
+  });
+  res.redirect(session.url);
 });
 app.get('/showUsersAdmin', async (req, res) => {
   try {
