@@ -139,19 +139,26 @@ html, body {
 .item {
     display: flex;
     justify-content: space-between;
+    align-items: center;
     margin-bottom: 5px;
+    padding: 10px 0;
     font-size: 16px;
+    border-bottom: 1px solid #cacaca;
+    margin-bottom: 10px;
 }
-
+.item span {
+    text-align: left;
+}
 .item .price {
     font-weight: bold;
     color: #000;
+    text-align: right;
+    margin-left: auto;
 }
 
 .order-total {
     display: flex;
     justify-content: space-between;
-    border-top: 1px solid #ddd;
     padding-top: 10px;
     font-weight: bold;
 }
@@ -168,6 +175,7 @@ html, body {
 }
 .total-summary-container span{
     font-size: 30px;
+    margin-bottom: 10px;
 }
 .total-summary-container button{
     background-color: #06b6d4;
@@ -177,6 +185,8 @@ html, body {
     width: 100%;
     border-width: 0px;
     color: #ffffff;
+    font-size: 25px;
+
 }
 .total-summary-container button:hover{
     background-color: #00c8eb;

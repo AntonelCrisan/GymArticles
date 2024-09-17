@@ -1,12 +1,11 @@
-// const { infoPayment } = require("./checkout-paymentMethod/paymentMethod");
-
   // Retrieve the selected address from localStorage
   const selectedAddress = JSON.parse(localStorage.getItem('selectedAddressForOrder'));
   const selectedAddressForBilingData = JSON.parse(localStorage.getItem('selectedAddressBilingData'));
   const paymentMethod = localStorage.getItem('paymentMethod');
   const infoPaymentMethod = localStorage.getItem('infoPayment');
   const orderTotal = localStorage.getItem('newTotal');
-
+  const deliveryCostAndProcessingCost = localStorage.getItem('deliveryCostAndProcessing');
+//Displays address for delivery address
   if (selectedAddress) {
       // Display the address
       document.getElementById('summary-orderModality').innerHTML = `
@@ -17,7 +16,7 @@
   } else {
       document.getElementById('addressSummary').innerHTML = '<p>No address selected.</p>';
   }
-
+//Displays address for billing address
   if (selectedAddressForBilingData) {
       // Display the address
       document.getElementById('summary-BilingData').innerHTML = `
@@ -27,7 +26,7 @@
   } else {
       document.getElementById('bilingSummary').innerHTML = '<p>No address selected.</p>';
   }
-
+//Displays payment method
   if(paymentMethod){
       document.getElementById('summary-paymentMethod').innerHTML = `
     <p><strong>${paymentMethod}</strong></p>
@@ -36,10 +35,28 @@
   }else{
       document.getElementById('paymentMethod').innerHTML = '<p>No payment method selected.</p>'
   }
-  if(paymentMethod === "Online card"){
-    document.getElementById('delivery-cost-processing').innerText = 'Free';
-    document.getElementById('delivery-cost-processing').style.color = '#009900';
-  }else{
-    document.getElementById('delivery-cost-processing').innerText = '$3';
-  }
+//Displays delivery cost and processing cost
+const deliveryCostAndProcessingCostElement = document.getElementById('delivery-cost-processing');
+if(deliveryCostAndProcessingCost === 'Free'){
+    deliveryCostAndProcessingCostElement.style.color = '#009900';
+    deliveryCostAndProcessingCostElement.innerText = `${deliveryCostAndProcessingCost}`;
+}else{
+    deliveryCostAndProcessingCostElement.innerText = `${deliveryCostAndProcessingCost}`;
+}
+  //Displays total
   document.getElementById('order-total').innerText = `Order total: $${orderTotal}`;
+
+
+
+
+  //Sends order based on payment method
+const sendOrderButton = document.getElementById('send-order-button');
+  if(paymentMethod === 'Online card'){
+    sendOrderButton.addEventListener('click', () => {
+        window.location.href = '/pay';
+    });
+  }else{
+    sendOrderButton.addEventListener('click', () => {
+        window.location.href = '/order-placed'
+    });
+  }

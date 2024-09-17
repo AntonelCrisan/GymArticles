@@ -741,6 +741,9 @@ app.get('/summary',countCartProduct, async (req, res) => {
   const productCost = req.session.productCost;
   res.render('OrderSummary', { nrCart: req.nrCart, cart,  productCost, deliveryCost});
 });
+app.get('/order-placed',countCartProduct, async (req, res) => {
+  res.render('OrderPlaced', { nrCart: req.nrCart});
+});
 app.get('/showUsersAdmin', async (req, res) => {
   try {
     const users = await User.find({}, 'name email role');
