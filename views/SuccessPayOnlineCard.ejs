@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Succes</title>
+    <link rel="icon" type="image/png" href="images/logo.png" />
+    <link rel="stylesheet" href="style/SuccessPayOnlineCard.css">
+</head>
+<body>
+    <script src="https://unpkg.com/@dotlottie/player-component@latest/dist/dotlottie-player.mjs" type="module"></script> 
+    <div style="display: flex; align-items: center; justify-content: center; flex-direction: column;" class="success-container">
+    <dotlottie-player src="https://lottie.host/f53612c0-b882-4167-8cb4-ee3556532fcf/oA7vIOFSfe.json" background="transparent" speed="1" style="width: 300px; height: 300px;" loop autoplay></dotlottie-player>
+    <span> <h1>Thank You for Your Order!</h1>
+        <p>Your payment has been successfully processed.</p>
+        <p>
+            We’re excited to get started on your order! You’ll receive an email confirmation shortly with all the details.
+        </p>
+        <p>
+            <h2>Estimated Delivery Date</h2>
+            <p>Your order will be delivered by: <strong id="estimated-delivery-date"></strong></p>
+        </p>
+        <p>
+            <a href="/">Continue Shopping</a>
+        </p>
+    </span>
+    </div>
+    <script src="scripts/orderPlaced.js"></script>
+</body>
+</html>

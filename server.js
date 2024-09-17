@@ -765,10 +765,13 @@ app.post('/pay', async (req, res) => {
     })),
     mode: 'payment',
     success_url: `${process.env.CLIENT_URL}/success-payment`,
-    cancel_url: `${process.env.CLIENT_URL}`
+    cancel_url: `${process.env.CLIENT_URL}/summary`
   });
   res.redirect(session.url);
 });
+app.get('/success-payment', (req, res) => {
+  res.render('SuccessPayOnlineCard');
+})
 app.get('/showUsersAdmin', async (req, res) => {
   try {
     const users = await User.find({}, 'name email role');
