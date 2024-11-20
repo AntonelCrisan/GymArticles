@@ -216,9 +216,14 @@
         </div>
         <div class="total-summary-container">
             <span id="order-total"></span>
-            <form action="/pay" method="POST">
-                <button id="send-order-button">Send order</button>
+            <div id="onlineCard-button">
+                <form action="/pay" method="POST">
+                <button id="online-card-button">Send order</button>
             </form>
+            </div>
+            <div id="payCourier-button">
+                <button id="pay-courier-button">Send order</button>
+            </div>
         </div>
       </div>
     <div class="footer"><%- include('Footer') %></div>

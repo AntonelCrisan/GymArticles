@@ -745,33 +745,90 @@ app.get('/summary',countCartProduct, async (req, res) => {
 app.get('/order-placed',countCartProduct, async (req, res) => {
   res.render('OrderPlaced', { nrCart: req.nrCart});
 });
-app.post('/pay', async (req, res) => {
-  const userId = getId();
-  const user = await User.findById(userId).populate('cart.productId');
-  const cart = user.cart.map(item => ({
-    ...item.productId.toObject(),
-    quantity: item.quantity
-  }));
-  const session = await stripe.checkout.sessions.create({
-    line_items: cart.map(product => ({
-      price_data: {
-        currency: 'usd',
-        product_data: {
-          name: product.name
-        },
-        unit_amount: product.price * 100 // Price in cents
-      },
-      quantity: product.quantity
-    })),
-    mode: 'payment',
-    success_url: `${process.env.CLIENT_URL}/success-payment`,
-    cancel_url: `${process.env.CLIENT_URL}/summary`
+  app.post('/pay', async (req, res) => {
+    const userId = getId(); // Retrieve user ID
+    const user = await User.findById(userId).populate('cart.productId');
+    const { deliveryAddress, billingAddress, paymentMethod, orderTotal, deliveryCostAndProcessingCost } = req.body;
+    const cart = user.cart.map(item => ({
+      productId: item.productId._id,
+      name: item.productId.name,
+      price: item.productId.price,
+      quantity: item.quantity,
+    }));
+    req.session.orderDetails = {
+      deliveryAddress,
+      billingAddress,
+      paymentMethod,
+      orderTotal,
+      deliveryCostAndProcessingCost
+    };
+    
+    try {
+      // Create Stripe checkout session
+      const session = await stripe.checkout.sessions.create({
+        line_items: cart.map(product => ({
+          price_data: {
+            currency: 'usd',
+            product_data: {
+              name: product.name,
+            },
+            unit_amount: product.price * 100, // Convert price to cents
+          },
+          quantity: product.quantity,
+        })),
+        mode: 'payment',
+        success_url: `${process.env.CLIENT_URL}/success-payment?session_id={CHECKOUT_SESSION_ID}`,
+        cancel_url: `${process.env.CLIENT_URL}/summary`,
+      });
+      res.redirect(session.url);
+    } catch (error) {
+      console.error('Error creating Stripe session:', error);
+      res.status(500).send('Internal Server Error');
+    }
   });
-  res.redirect(session.url);
+  app.get('/success-payment', async (req, res) => {
+      // Retrieve the session details from Stripe
+      const session = await stripe.checkout.sessions.retrieve(req.query.session_id);
+  
+        const userId = getId(); // Get the user ID from session metadata
+  
+        // Retrieve the user and cart details
+        const user = await User.findById(userId).populate('cart.productId');
+  
+        const cartItems = user.cart.map(item => ({
+          productId: item.productId._id,
+          name: item.productId.name,
+          price: item.productId.price,
+          quantity: item.quantity,
+        }));
+  
+        const { deliveryAddress, billingAddress, paymentMethod, orderTotal, deliveryCostAndProcessingCost } = req.session.orderDetails;
+
+        const orderData = {
+          cartItem: cartItems,
+          totalPrice: session.metadata.orderTotal,
+          deliveryCostAndProcessingCost: session.metadata.deliveryCostAndProcessingCost,
+          deliveryAddress: deliveryAddress,
+          billingAddress: billingAddress,
+          paymentMethod: session.metadata.paymentMethod,
+        };
+        // Add the order to the user's orders array
+        console.log(session.metadata);
+        // user.orders.push(orderData);
+  
+        // // Clear the cart
+        // user.cart = [];
+  
+        // // Save the updated user data
+        // await user.save();
+  
+        // Render the success page
+        res.render('SuccessPayOnlineCard');
+  });
+  
+app.post('/create-order', async (req, res) => {
+
 });
-app.get('/success-payment', (req, res) => {
-  res.render('SuccessPayOnlineCard');
-})
 app.get('/showUsersAdmin', async (req, res) => {
   try {
     const users = await User.find({}, 'name email role');

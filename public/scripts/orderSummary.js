@@ -4,7 +4,9 @@
   const paymentMethod = localStorage.getItem('paymentMethod');
   const infoPaymentMethod = localStorage.getItem('infoPayment');
   const orderTotal = localStorage.getItem('newTotal');
-  const deliveryCostAndProcessingCost = localStorage.getItem('deliveryCostAndProcessing');
+  const deliveryCostAndProcessingCost = localStorage.getItem('deliveryCostAndProcessing'); 
+
+
 //Displays address for delivery address
   if (selectedAddress) {
       // Display the address
@@ -50,13 +52,40 @@ if(deliveryCostAndProcessingCost === 'Free'){
 
 
   //Sends order based on payment method
-const sendOrderButton = document.getElementById('send-order-button');
+const onlineCard = document.getElementById('online-card-button');
+const payCourier = document.getElementById('pay-courier-button');
   if(paymentMethod === 'Online card'){
-    sendOrderButton.addEventListener('click', () => {
-        window.location.href = '/pay';
+    document.getElementById('payCourier-button').style.display = 'none';
+    onlineCard.addEventListener('click', async () => {
+        const orderData = {
+            deliveryAddress: selectedAddress,
+            billingAddress: selectedAddressForBilingData,
+            paymentMethod: paymentMethod,
+            orderTotal: orderTotal,
+            deliveryCostAndProcessingCost: deliveryCostAndProcessingCost,
+          }
+          try {
+            // Send POST request to your backend /pay route
+            const response = await fetch('/pay', {
+              method: 'POST',
+              headers: {
+                'Content-Type': 'application/json'
+              },
+              body: JSON.stringify(orderData)
+            });
+        
+            if (response.ok) {
+              window.location.href = '/pay';
+            } else {
+              console.error('Error during payment process:', response.statusText);
+            }
+          } catch (error) {
+            console.error('Error during payment:', error);
+          }
     });
   }else{
-    sendOrderButton.addEventListener('click', () => {
+    document.getElementById('onlineCard-button').style.display = 'none';
+    payCourier.addEventListener('click', () => {
         window.location.href = '/order-placed'
     });
   }

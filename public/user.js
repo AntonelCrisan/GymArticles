@@ -9,14 +9,14 @@ const userSchema = new mongoose.Schema({
   },
   email: {
     type: String,
-    required: [true, 'Please enter a email'],
+    required: [true, 'Please enter an email'],
     unique: true,
     validate: [isEmail, "Please enter a valid email"]
   },
   password: {
     type: String,
     required: [true, 'Please enter a password'],
-    minLength: [8, 'Minimun length for the password is 8 characters']
+    minLength: [8, 'Minimum length for the password is 8 characters']
   },
   role: {
     type: String,
@@ -29,14 +29,44 @@ const userSchema = new mongoose.Schema({
   },
   phoneNumber: {
     type: String,
-    minLength: [10, 'Minimun length for the phone number is 10 characters']
+    minLength: [10, 'Minimum length for the phone number is 10 characters']
   },
-  favorites:[{
+  favorites: [{
     type: mongoose.Schema.Types.ObjectId,
+    ref: 'Article'
   }],
-  cart:[{
+  cart: [{
     productId: { type: mongoose.Schema.Types.ObjectId, ref: 'Article' },
     quantity: { type: Number, default: 1 }
+  }],
+  orders: [{
+    orderDate: { type: Date, default: Date.now },
+    products: [{
+      productId: { type: mongoose.Schema.Types.ObjectId, ref: 'Article' },
+      quantity: { type: Number, default: 1 }
+    }],
+    totalPrice: { type: String },
+    deliveryCostAndProcessingCost: { type: String },
+    status: {
+      type: String,
+      default: 'pending', // other statuses: 'shipped', 'delivered', etc.
+      enum: ['pending', 'shipped', 'delivered', 'cancelled']
+    },
+    deliveryAddress: {
+      name: { type: String },
+      phoneNumber: { type: String },
+      street: { type: String },
+      city: { type: String },
+      country: { type: String }
+    },
+    deliveryBillingData: {
+      name: { type: String },
+      phoneNumber: { type: String },
+      street: { type: String },
+      city: { type: String },
+      country: { type: String }
+    },
+    paymentMethod: { type: String}
   }]
 });
 userSchema.pre('save', async function(next) {
