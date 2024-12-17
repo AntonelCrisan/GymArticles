@@ -7,7 +7,6 @@ const flash = require('connect-flash');
 const cookieParser = require('cookie-parser');
 const bodyParser = require("body-parser");   
 const {requireAuth,requirePasswordValidation, checkUser, getId, countFavoriteProduct, countCartProduct} = require('./public/authMiddleWare');
-require("dotenv").config();
 const jwt = require('jsonwebtoken');
 const app = express();
 const port = process.env.PORT || 3012;
@@ -17,8 +16,9 @@ const Addresses = require('./public/addresses');
 const path = require('path');
 const nodemailer = require('nodemailer');
 const bcrypt = require('bcryptjs');
+const createObjectCsvWriter  = require('csv-writer').createObjectCsvWriter;
+require("dotenv").config();
 const stripe = require('stripe')(process.env.SECRET_STRIPE_KEY);
-// Middleware-uri
 app.use(express.static('public'));
 app.use(express.json());
 app.use(cookieParser());
@@ -73,6 +73,18 @@ const handleErros = (err) => {
     })
   }
   return errors;
+}
+const getCurrentFormattedDate = () => {
+  const now = new Date();
+
+  const year = now.getFullYear();
+  const month = String(now.getMonth() + 1).padStart(2, '0'); // Luna începe de la 0
+  const day = String(now.getDate()).padStart(2, '0');
+  const hours = String(now.getHours()).padStart(2, '0');
+  const minutes = String(now.getMinutes()).padStart(2, '0');
+  const seconds = String(now.getSeconds()).padStart(2, '0');
+
+  return `${year}-${month}-${day} ${hours}:${minutes}:${seconds}`;
 }
 app.get('*', checkUser); //Apply globally checkUser function from user.js file, for checking user for the entire application
 app.get('/signup', (req, res) => res.render('SignUpPage'));
@@ -452,9 +464,43 @@ app.post('/addFavorite', async (req, res) => {
       const { productId, isAdding } = req.body;
       const userId = getId(); // Ensure this function returns the correct user ID
       const user = await User.findById(userId);
+      const product = await Article.findById(productId);
+      console.log(product);
       if (isAdding) {
           // Add productId to favorites if it's not already present
           if (!user.favorites.includes(productId)) {
+            //Save the interaction into a csv file
+                const csvWriter = createObjectCsvWriter({
+                  path: 'user_product_interactions.csv', 
+                  header: [
+                    { id: 'userId', title: 'userId' },
+                    { id: 'productId', title: 'productId' },
+                    { id: 'productName', title: 'productName' },
+                    { id: 'category', title: 'category' },
+                    { id: 'subcategory', title: 'subcategory' },
+                    { id: 'price', title: 'price' },
+                    { id: 'action', title: 'action' },
+                    { id: 'timestamp', title: 'timestamp' }
+                  ],
+                  append: true 
+                });
+              const userInteraction = [{
+                userId: userId,
+                productId: productId,
+                productName: product.name,
+                category: product.category,
+                subcategory: product.subcategory,
+                price: product.price,
+                action: "added_to_favorite",
+                timestamp : getCurrentFormattedDate()
+              }];
+              csvWriter.writeRecords(userInteraction)
+              .then(() => {
+                  console.log('Datele noi au fost adăugate cu succes în fișierul CSV!');
+              })
+              .catch((err) => {
+                  console.error('Eroare la scrierea datelor în fișierul CSV:', err);
+              });
               user.favorites.push(productId);
               await user.save();
           }
@@ -486,9 +532,9 @@ app.post('/deleteFavorite/:id', async(req, res) => {
 //POST method for adding products to cart
 app.post('/addToCart', async (req, res) => {
   try {
-    const { productId } = req.body;
     const userId = getId();
-    const user = await User.findById(userId);
+    const user = await User.findById(userId).populate('cart.productId');
+    const { productId } = req.body;
     // Find if the product is already in the cart
     const cartItem = user.cart.find(item => item.productId.toString() === productId);
     const stockProduct = await Article.findById(productId);
@@ -499,6 +545,38 @@ app.post('/addToCart', async (req, res) => {
       } else {
         // If product not in cart, add a new entry with quantity 1
         user.cart.push({ productId, quantity: 1 });
+        //Save the interaction into a csv file
+        const csvWriter = createObjectCsvWriter({
+          path: 'user_product_interactions.csv', 
+          header: [
+            { id: 'userId', title: 'userId' },
+            { id: 'productId', title: 'productId' },
+            { id: 'productName', title: 'productName' },
+            { id: 'category', title: 'category' },
+            { id: 'subcategory', title: 'subcategory' },
+            { id: 'price', title: 'price' },
+            { id: 'action', title: 'action' },
+            { id: 'timestamp', title: 'timestamp' }
+          ],
+          append: true 
+        });
+      const userInteraction = [{
+        userId: userId,
+        productId: productId,
+        productName: stockProduct.name,
+        category: stockProduct.category,
+        subcategory: stockProduct.subcategory,
+        price: stockProduct.price,
+        action: "added_to_cart",
+        timestamp : getCurrentFormattedDate()
+      }];
+      csvWriter.writeRecords(userInteraction)
+      .then(() => {
+          console.log('Datele noi au fost adăugate cu succes în fișierul CSV!');
+      })
+      .catch((err) => {
+          console.error('Eroare la scrierea datelor în fișierul CSV:', err);
+      });
       }
       await user.save();
       const newCartCount = user.cart.reduce((total, item) => total + item.quantity, 0);
@@ -690,7 +768,6 @@ app.get('/cart', requireAuth, countFavoriteProduct, countCartProduct, async (req
       ...item.productId.toObject(),
       quantity: item.quantity
     }));
-
     // Calculate total cost
     const productCost = cart.reduce((total, item) => {
       const price = parseFloat(item.price);
@@ -699,7 +776,7 @@ app.get('/cart', requireAuth, countFavoriteProduct, countCartProduct, async (req
     }, 0);
     const deliveryCost = 5;
     req.session.productCost = productCost;
-    res.render('Cart', { nrFavorites: req.nrFavorites, nrCart: req.nrCart, cart, productCost, deliveryCost });
+    res.render('Cart', { nrFavorites: req.nrFavorites, nrCart: req.nrCart, cart, productCost, deliveryCost});
   } catch (error) {
     res.status(500).json({ error: 'Server error' });
     console.log(error);
