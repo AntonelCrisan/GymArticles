@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>GymArticles</title>
+<!-- Font Awesome CSS -->
+<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+<link
+    href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha3/dist/css/bootstrap.min.css"
+    rel="stylesheet"
+  >
+<link rel="stylesheet" href="style/OrderHistory.css">
+<link rel="icon" type="image/png" href="images/logo.png">
+</head>
+<body>
+     <div class="navbar">
+      <%- include('Navbar') %>
+     </div>
+     <%- include('Sidebar') %>
+     <div class="col-md-8 personal-info">
+      <h2>My orders</h2>
+      <% if (orders.length === 0) { %>
+        <div class="no-orders-message text-center">
+          <span>
+            <svg xmlns="http://www.w3.org/2000/svg" height="100px" viewBox="0 -960 960 960" width="100px" fill="#06b6d4">
+              <path d="M164-160v-517L82-853l56-27 90 203h505l90-203 56 27-82 176v517H164Zm232-297h170q12.75 0 21.38-8.68 8.62-8.67 8.62-21.5 0-12.82-8.62-21.32-8.63-8.5-21.38-8.5H396q-12.75 0-21.37 8.68-8.63 8.67-8.63 21.5 0 12.82 8.63 21.32 8.62 8.5 21.37 8.5ZM224-220h513v-397H224v397Zm0 0v-397 397Z"/>
+            </svg>
+          </span>
+          <h2>You don't have any orders</h2>
+          <p>Use the button below and choose an article you like</p>
+          <a href="/" style="color: #06b6d4; cursor: pointer; text-decoration: none;">GymArticles</a>
+        </div>
+      <% } else { %>
+        <div class="container my-5">
+          <% orders.forEach(order => { %>
+            <div class="order-card" id="order-<%= order._id %>">
+              <div class="d-flex justify-content-between">
+                <div>
+                  <div class="order-header">Nr. comandă: <%= order._id %></div>
+                  <div class="order-details">
+                    Order delivered by GymArticles | Subtotal: $<%= order.totalPrice %>
+                  </div>
+                  <div class="mt-2">
+                    <a href="#" class="order-status"><%= order.status %></a>
+                  </div>
+                </div>
+                <div class="text-end">
+                  <div><%= order.orderDate.getFullYear()%>/<%= order.orderDate.getMonth() + 1 %>/<%= order.orderDate.getDate()%></div>
+                  <div>Total: $<%= order.totalPrice %></div>
+                </div>
+              </div>
+              <div class="d-flex justify-content-between align-items-center mt-3">
+                <div class="d-flex">
+                  <% order.products.forEach(product => { %>
+                    <div class="me-3">
+                      <img src="<%= product.image %>" alt="<%= product.name %>" style="width: 50px; height: 50px; object-fit: cover;">
+                    </div>
+                  <% }) %>
+                </div>
+                <div>
+                  <button class="track-delivery-btn" data-id="<%= order._id %>">Urmărește livrarea</button>
+                </div>
+              </div>
+            </div>
+          <% }) %>
+        </div>
+      <% } %>
+    </div>
+    
+    </div>
+    </div>
+    <div class="footer">
+      <%- include('Footer') %>
+    </div>
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.4/dist/umd/popper.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+</body>
+</html>

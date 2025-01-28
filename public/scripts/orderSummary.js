@@ -56,7 +56,8 @@ const onlineCard = document.getElementById('online-card-button');
 const payCourier = document.getElementById('pay-courier-button');
   if(paymentMethod === 'Online card'){
     document.getElementById('payCourier-button').style.display = 'none';
-    onlineCard.addEventListener('click', async () => {
+    onlineCard.addEventListener('click', async (e) => {
+      e.preventDefault();
         const orderData = {
             deliveryAddress: selectedAddress,
             billingAddress: selectedAddressForBilingData,
@@ -73,11 +74,11 @@ const payCourier = document.getElementById('pay-courier-button');
               },
               body: JSON.stringify(orderData)
             });
-        
-            if (response.ok) {
-              window.location.href = '/pay';
+            const data = await response.json();
+            if (data.url) {
+              window.location.href = data.url;
             } else {
-              console.error('Error during payment process:', response.statusText);
+              console.error('Error during payment process:', data.error);
             }
           } catch (error) {
             console.error('Error during payment:', error);
@@ -85,7 +86,32 @@ const payCourier = document.getElementById('pay-courier-button');
     });
   }else{
     document.getElementById('onlineCard-button').style.display = 'none';
-    payCourier.addEventListener('click', () => {
-        window.location.href = '/order-placed'
+    payCourier.addEventListener('click', async (e) => {
+      e.preventDefault();
+      const orderData = {
+        deliveryAddress: selectedAddress,
+        billingAddress: selectedAddressForBilingData,
+        paymentMethod: paymentMethod,
+        orderTotal: orderTotal,
+        deliveryCostAndProcessingCost: deliveryCostAndProcessingCost,
+      }
+      try {
+        // Send POST request to your backend /pay-courier route
+        const response = await fetch('/pay-courier', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json'
+          },
+          body: JSON.stringify(orderData)
+        });
+        const data = await response.json();
+        if (data.success) {
+          window.location.href = '/order-placed';
+        } else {
+          console.error('Error during payment process:', data.statusText);
+        }
+      } catch (error) {
+        console.error('Error during payment:', error);
+      }
     });
   }

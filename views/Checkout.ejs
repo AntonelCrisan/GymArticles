@@ -345,7 +345,7 @@
         <h5>Order Summary</h5>
         <div class="summary-item">
           <span class="label">Product Cost:</span>
-          <span class="amount">$<%= productCost %></span>
+          <span class="amount">$<%= productCost.toFixed(2) %></span>
         </div>
         <div class="summary-item" id="paymentProccesing" style="display: none;">
           <span class="label">Payment processing cost: </span>
@@ -362,9 +362,9 @@
         <div class="summary-item total">
           <span class="label">Total:</span>
           <% if (productCost >= 50) { %>
-          <span class="amount">$<%= productCost %></span>
+          <span class="amount">$<%= productCost.toFixed(2) %></span>
           <% } else {%>
-          <span class="amount">$<%= productCost + deliveryCost%></span>
+          <span class="amount">$<%= (productCost + deliveryCost).toFixed(2)%></span>
           <% } %>
         </div>
         <a href="/summary">

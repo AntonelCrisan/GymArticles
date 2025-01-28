@@ -43,6 +43,8 @@ const userSchema = new mongoose.Schema({
     orderDate: { type: Date, default: Date.now },
     products: [{
       productId: { type: mongoose.Schema.Types.ObjectId, ref: 'Article' },
+      name: { type: String },
+      image: { type: String },
       quantity: { type: Number, default: 1 }
     }],
     totalPrice: { type: String },

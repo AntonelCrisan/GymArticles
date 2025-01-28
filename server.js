@@ -465,13 +465,12 @@ app.post('/addFavorite', async (req, res) => {
       const userId = getId(); // Ensure this function returns the correct user ID
       const user = await User.findById(userId);
       const product = await Article.findById(productId);
-      console.log(product);
       if (isAdding) {
           // Add productId to favorites if it's not already present
           if (!user.favorites.includes(productId)) {
             //Save the interaction into a csv file
                 const csvWriter = createObjectCsvWriter({
-                  path: 'user_product_interactions.csv', 
+                  path: 'recommender/recomandations.csv', 
                   header: [
                     { id: 'userId', title: 'userId' },
                     { id: 'productId', title: 'productId' },
@@ -547,7 +546,7 @@ app.post('/addToCart', async (req, res) => {
         user.cart.push({ productId, quantity: 1 });
         //Save the interaction into a csv file
         const csvWriter = createObjectCsvWriter({
-          path: 'user_product_interactions.csv', 
+          path: 'recommender/recomandations.csv', 
           header: [
             { id: 'userId', title: 'userId' },
             { id: 'productId', title: 'productId' },
@@ -819,7 +818,104 @@ app.get('/summary',countCartProduct, async (req, res) => {
   const productCost = req.session.productCost;
   res.render('OrderSummary', { nrCart: req.nrCart, cart,  productCost, deliveryCost});
 });
+
+app.post('/pay-courier', async (req, res) => {
+  try {
+      const userId = getId(); // Retrieve user ID
+      const { deliveryAddress, billingAddress, paymentMethod, orderTotal, deliveryCostAndProcessingCost } = req.body;
+      const user = await User.findById(userId).populate('cart.productId');
+      if (!user) {
+        console.error(`User with ID ${userId} not found.`);
+        return res.status(404).json({ error: 'User not found' });
+    }
+      const cart = user.cart.map(item => ({
+        productId: item.productId._id,
+        name: item.productId.name,
+        image: item.productId.image,
+        price: item.productId.price,
+        quantity: item.quantity,
+    }));
+    // Construirea unui nou obiect pentru comanda
+    const newOrder = {
+      orderDate: new Date(),
+      products: cart.map(product => ({
+        productId: product.productId,
+        name: product.name,
+        image: product.image,
+        quantity: product.quantity,
+      })),
+      totalPrice: orderTotal,
+      deliveryCostAndProcessingCost: deliveryCostAndProcessingCost,
+      status: 'pending',
+      deliveryAddress: deliveryAddress,
+      deliveryBillingData: billingAddress, // Folosim direct billingAddress dacă structura e compatibilă
+      paymentMethod: paymentMethod,
+    };
+    await User.findOneAndUpdate(
+      { _id: userId },
+      {
+          $push: { orders: newOrder },
+          $set: { cart: [] } // Golește coșul
+      },
+      { new: true, useFindAndModify: false }
+  );
+  res.status(200).json({success: true});
+  } catch (error) {
+      console.error('Eroare la procesarea comenzii:', error);
+      return res.status(500).json({ error: 'Internal server error' });
+  }
+});
 app.get('/order-placed',countCartProduct, async (req, res) => {
+  const userId = getId(); // Get the user ID from session metadata
+  
+  // Retrieve the user and cart details
+  const user = await User.findById(userId).populate('cart.productId');
+  const cartItems = user.cart.map(item => ({
+    productId: item.productId._id,
+    name: item.productId.name,
+    price: item.productId.price,
+    quantity: item.quantity,
+  }));
+// Obține detaliile suplimentare ale produselor
+const cartWithDetails = await Promise.all(
+  cartItems.map(async (item) => {
+      const productDetails = await Article.findById(item.productId); // Caută produsul în baza de date
+      return {
+          ...item,
+          category: productDetails?.category || 'Unknown', // Folosește "Unknown" dacă nu există categoria
+          subcategory: productDetails?.subcategory || 'Unknown',
+      };
+  })
+);
+
+const csvWriter = createObjectCsvWriter({
+  path: 'recommender/recomandations.csv',
+  header: [
+      { id: 'userId', title: 'userId' },
+      { id: 'productId', title: 'productId' },
+      { id: 'productName', title: 'productName' },
+      { id: 'category', title: 'category' },
+      { id: 'subcategory', title: 'subcategory' },
+      { id: 'price', title: 'price' },
+      { id: 'action', title: 'action' },
+      { id: 'timestamp', title: 'timestamp' },
+  ],
+  append: true,
+});
+// Construiește datele pentru CSV
+const userInteractions = cartWithDetails.map(item => ({
+  userId: userId,
+  productId: item.productId,
+  productName: item.name,
+  category: item.category,
+  subcategory: item.subcategory,
+  price: item.price,
+  action: "purchased",
+  timestamp: getCurrentFormattedDate(),
+}));
+// Scrie în CSV
+await csvWriter.writeRecords(userInteractions);
+console.log('Datele noi au fost adăugate cu succes în fișierul CSV!');
   res.render('OrderPlaced', { nrCart: req.nrCart});
 });
   app.post('/pay', async (req, res) => {
@@ -829,17 +925,25 @@ app.get('/order-placed',countCartProduct, async (req, res) => {
     const cart = user.cart.map(item => ({
       productId: item.productId._id,
       name: item.productId.name,
+      image: item.productId.image,
       price: item.productId.price,
       quantity: item.quantity,
     }));
-    req.session.orderDetails = {
-      deliveryAddress,
-      billingAddress,
-      paymentMethod,
-      orderTotal,
-      deliveryCostAndProcessingCost
+    const newOrder = {
+      orderDate: new Date(),
+      products: cart.map(product => ({
+        productId: product.productId,
+        name: product.name,
+        image: product.image,
+        quantity: product.quantity,
+      })),
+      totalPrice: orderTotal,
+      deliveryCostAndProcessingCost: deliveryCostAndProcessingCost,
+      status: 'pending',
+      deliveryAddress: deliveryAddress,
+      deliveryBillingData: billingAddress, // Folosim direct billingAddress dacă structura e compatibilă
+      paymentMethod: paymentMethod,
     };
-    
     try {
       // Create Stripe checkout session
       const session = await stripe.checkout.sessions.create({
@@ -849,7 +953,7 @@ app.get('/order-placed',countCartProduct, async (req, res) => {
             product_data: {
               name: product.name,
             },
-            unit_amount: product.price * 100, // Convert price to cents
+            unit_amount: Math.round(product.price * 100), // Convert price to cents
           },
           quantity: product.quantity,
         })),
@@ -857,55 +961,90 @@ app.get('/order-placed',countCartProduct, async (req, res) => {
         success_url: `${process.env.CLIENT_URL}/success-payment?session_id={CHECKOUT_SESSION_ID}`,
         cancel_url: `${process.env.CLIENT_URL}/summary`,
       });
-      res.redirect(session.url);
+    user.orders.push(newOrder);
+    await user.save();
+    res.status(200).json({ url: session.url });
     } catch (error) {
       console.error('Error creating Stripe session:', error);
-      res.status(500).send('Internal Server Error');
+      res.status(500).send({ error: 'Internal Server Error' });
     }
   });
   app.get('/success-payment', async (req, res) => {
       // Retrieve the session details from Stripe
-      const session = await stripe.checkout.sessions.retrieve(req.query.session_id);
-  
+        await stripe.checkout.sessions.retrieve(req.query.session_id);
         const userId = getId(); // Get the user ID from session metadata
-  
         // Retrieve the user and cart details
         const user = await User.findById(userId).populate('cart.productId');
-  
         const cartItems = user.cart.map(item => ({
           productId: item.productId._id,
           name: item.productId.name,
           price: item.productId.price,
           quantity: item.quantity,
         }));
-  
-        const { deliveryAddress, billingAddress, paymentMethod, orderTotal, deliveryCostAndProcessingCost } = req.session.orderDetails;
-
-        const orderData = {
-          cartItem: cartItems,
-          totalPrice: session.metadata.orderTotal,
-          deliveryCostAndProcessingCost: session.metadata.deliveryCostAndProcessingCost,
-          deliveryAddress: deliveryAddress,
-          billingAddress: billingAddress,
-          paymentMethod: session.metadata.paymentMethod,
-        };
-        // Add the order to the user's orders array
-        console.log(session.metadata);
-        // user.orders.push(orderData);
-  
-        // // Clear the cart
-        // user.cart = [];
-  
-        // // Save the updated user data
-        // await user.save();
-  
+      // Obține detaliile suplimentare ale produselor
+      const cartWithDetails = await Promise.all(
+        cartItems.map(async (item) => {
+            const productDetails = await Article.findById(item.productId); // Caută produsul în baza de date
+            return {
+                ...item,
+                category: productDetails?.category || 'Unknown', // Folosește "Unknown" dacă nu există categoria
+                subcategory: productDetails?.subcategory || 'Unknown',
+            };
+        })
+    );
+        const csvWriter = createObjectCsvWriter({
+          path: 'recommender/recomandations.csv',
+          header: [
+              { id: 'userId', title: 'userId' },
+              { id: 'productId', title: 'productId' },
+              { id: 'productName', title: 'productName' },
+              { id: 'category', title: 'category' },
+              { id: 'subcategory', title: 'subcategory' },
+              { id: 'price', title: 'price' },
+              { id: 'action', title: 'action' },
+              { id: 'timestamp', title: 'timestamp' },
+          ],
+          append: true,
+      });
+      // Construiește datele pentru CSV
+      const userInteractions = cartWithDetails.map(item => ({
+          userId: userId,
+          productId: item.productId,
+          productName: item.name,
+          category: item.category,
+          subcategory: item.subcategory,
+          price: item.price,
+          action: "purchased",
+          timestamp: getCurrentFormattedDate(),
+      }));
+      // Clear the cart
+      user.cart = [];
+      // Save the updated user data
+      await user.save();
+      // Scrie în CSV
+      await csvWriter.writeRecords(userInteractions);
+      console.log('Datele noi au fost adăugate cu succes în fișierul CSV!');
         // Render the success page
         res.render('SuccessPayOnlineCard');
   });
+  app.get('/order-history', countFavoriteProduct, countCartProduct, async (req, res) => {
+    try {
+      const userId = getId();
+      const user = await User.findById(userId).select('orders').lean();
+      const orders = user.orders;
+      // Renderizează pagina HTML pentru utilizatori
+      res.render('OrderHistory', {
+        nrFavorites: req.nrFavorites,
+        nrCart: req.nrCart,
+        orders: orders, // toate comenzile (pentru cazul fără paginare în HTML)
+      });
+    } catch (error) {
+      console.error(error);
+      res.status(500).send('Server error');
+    }
+  });
   
-app.post('/create-order', async (req, res) => {
-
-});
+  
 app.get('/showUsersAdmin', async (req, res) => {
   try {
     const users = await User.find({}, 'name email role');
