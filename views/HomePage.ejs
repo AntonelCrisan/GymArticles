@@ -11,6 +11,9 @@
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
 <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+<!-- Swiper CSS -->
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swiper/swiper-bundle.min.css">
+
 <link rel="stylesheet" type="text/css" href="style/HomePage.css">
 <link rel="icon" type="image/png" href="images/logo.png">
 <!-- Bootstrap JS -->
@@ -143,7 +146,7 @@
              <% } %>
         </div>
         <!-- Lista de produse -->
-        <div class="col-md-9" style="margin-top: 30px;">
+        <div class="col-md-9"  style="margin-top: 30px;">
             <div class="row">
             <% articles.forEach(element => { %>
                 <!-- Aici puteți adăuga carduri pentru articole sportive -->
@@ -176,6 +179,45 @@
                 <% }) %>
         </div>
     </div>
+        <div class="swiper">
+            <h3>Frequently purchased products</h3>
+            <div class="swiper-container">
+                <div class="swiper-wrapper">
+                    <% products.forEach(product => { %>
+                        <div class="swiper-slide">
+                            <div class="card">
+                                <div class="card-body">
+                                    <span class="fa fa-heart heartIcon <%= favoriteProductsID.includes(product._id.toString()) ? 'clicked' : '' %>" id="addFavorite" data-product-id="<%= product._id %>"></span>
+                                    <a href="/product?name=<%= product.name %>&id=<%= product._id %>" class="article">
+                                        <img src="<%= product.image %>" alt="img" style="max-width: 100%; height: auto;">
+                                        <h5 class="card-title" id="name" style="white-space: nowrap; overflow: hidden; text-overflow: ellipsis; padding-top: 10px;"><%=  product.name %></h5>
+                                        <ul class="rating">
+                                            <span class="fa fa-star checked"></span>
+                                            <span class="fa fa-star checked"></span>
+                                            <span class="fa fa-star checked"></span>
+                                            <span class="fa fa-star checked"></span>
+                                            <span class="fa fa-star"></span>
+                                        </ul>
+                                        <p id="price"><strong><%= product.price %>$</strong></p>
+                                    </a>
+                                    <button class="btn btn-primary" id="addToCartButton" data-product-id="<%= product._id %>">
+                                        <span>
+                                            <svg xmlns="http://www.w3.org/2000/svg" height="25px" viewBox="0 -960 960 960" width="25px" fill="#ffffff"><path d="M466.43-615.63v-123h-124v-60h124v-123h60v123h123v60h-123v123h-60ZM289.79-77.37Q260-77.37 239-98.58t-21-51q0-29.79 21.21-50.79t51-21q29.79 0 50.79 21.21 21 21.22 21 51 0 29.79-21.21 50.79t-51 21Zm404 0Q664-77.37 643-98.58t-21-51q0-29.79 21.21-50.79t51-21q29.79 0 50.79 21.21 21 21.22 21 51 0 29.79-21.21 50.79t-51 21Zm-634.42-740v-65.26h120.54L348.48-521.5h286.99l158.86-277.13h73.45l-162.95 304.2q-11.48 19.47-29.51 31.45Q657.3-451 635.4-451H334.11l-54.33 101.37h488.85v65.26H284q-39.34 0-59.72-31.31-20.39-31.32-2.67-63.75L284.89-496 138.33-817.37H59.37Z"/></svg>
+                                        </span>
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    <% }) %>
+                </div>
+            </div>
+                <!-- Butoane de navigare -->
+                <div class="swiper-button-next"></div>
+                <div class="swiper-button-prev"></div>
+                <!-- Paginare -->
+                <div class="swiper-pagination"></div>
+        </div>
+        
     <div>
         <% if (user) { %>
             <div id="added-favorite" class="added-favorite d-none">
@@ -203,5 +245,28 @@
     
 <%- include('Footer') %>
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<!-- Swiper JS -->
+<script src="https://cdn.jsdelivr.net/npm/swiper/swiper-bundle.min.js"></script>
+<script>
+    var swiper = new Swiper('.swiper-container', {
+        slidesPerView: 5, // Afișează 5 produse simultan
+        slidesPerGroup: 5, // Avansează câte 5 produse
+        navigation: {
+            nextEl: '.swiper-button-next',
+            prevEl: '.swiper-button-prev',
+        },
+        pagination: {
+            el: '.swiper-pagination',
+            clickable: true,
+        },
+        loop: false, // Setează true dacă vrei să reia lista de la început
+        breakpoints: {
+            1024: { slidesPerView: 5, slidesPerGroup: 5 }, // Desktop
+            768: { slidesPerView: 3, slidesPerGroup: 3 },  // Tabletă
+            480: { slidesPerView: 2, slidesPerGroup: 2 }   // Mobil
+        }
+    });
+</script>
+
 </body>
 </html>

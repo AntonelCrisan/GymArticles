@@ -17,6 +17,7 @@ const path = require('path');
 const nodemailer = require('nodemailer');
 const bcrypt = require('bcryptjs');
 const createObjectCsvWriter  = require('csv-writer').createObjectCsvWriter;
+const axios = require("axios");
 require("dotenv").config();
 const stripe = require('stripe')(process.env.SECRET_STRIPE_KEY);
 app.use(express.static('public'));
@@ -527,7 +528,15 @@ app.post('/deleteFavorite/:id', async(req, res) => {
     res.status(500).json({error});
   }
 });
-
+async function recommendations(user_id, product_id, filter_type){
+  try {
+    const response = await axios.get(`http://127.0.0.1:5000/recommendations?user_id=${user_id}&product_id=${product_id}&filter_type=${filter_type}`);
+    return response.data;
+} catch (error) {
+    console.error("Eroare la preluarea datelor:", error);
+    return null; // Poți returna o valoare implicită sau să arunci eroarea
+}
+}
 //POST method for adding products to cart
 app.post('/addToCart', async (req, res) => {
   try {
@@ -537,11 +546,17 @@ app.post('/addToCart', async (req, res) => {
     // Find if the product is already in the cart
     const cartItem = user.cart.find(item => item.productId.toString() === productId);
     const stockProduct = await Article.findById(productId);
+    let products;
     if(stockProduct.cantity !== 0){
       if (cartItem) {
         // If product already in cart, increase the quantity
         cartItem.quantity += 1;
       } else {
+        const product_recomendations = await recommendations(userId, productId, 'strict');
+        if(product_recomendations){
+          const recomendationsArray = product_recomendations.recommendations;
+          products = await Article.find({ _id: { $in: recomendationsArray } });
+        }
         // If product not in cart, add a new entry with quantity 1
         user.cart.push({ productId, quantity: 1 });
         //Save the interaction into a csv file
@@ -579,7 +594,7 @@ app.post('/addToCart', async (req, res) => {
       }
       await user.save();
       const newCartCount = user.cart.reduce((total, item) => total + item.quantity, 0);
-      return res.json({ success: true, newCartCount, user });
+      return res.json({ success: true, newCartCount, user, products });
     }else{
       return res.json({success: false, message: 'Product is out of stock'});
     }
@@ -663,11 +678,21 @@ const createToken = (id) => {
     expiresIn: maxAge
   })
 }
+async function showTop15Products() {
+  try {
+      const response = await axios.get("http://127.0.0.1:5000/top15");
+      return response.data;
+  } catch (error) {
+      console.error("Eroare la preluarea datelor:", error);
+      return null; // Poți returna o valoare implicită sau să arunci eroarea
+  }
+}
 //Home page get method
 app.get('/', countFavoriteProduct, countCartProduct, async (req, res) => {
   try {
     const { subcategory, category } = req.query;
     let articles;
+    let products;
     const userId = getId();
     const user = await User.findById(userId);
     const favoriteProductsID = user ? user.favorites : [];
@@ -678,7 +703,12 @@ app.get('/', countFavoriteProduct, countCartProduct, async (req, res) => {
     } else {
       articles = await Article.find(); //Showing all products
     }
-    res.render('HomePage', {articles,  nrFavorites: req.nrFavorites, nrCart:  req.nrCart, favoriteProductsID});
+    const top15Products = await showTop15Products();
+    if (top15Products) {
+      const productIds = top15Products.map(product => product.productId);
+      products = await Article.find({ _id: { $in: productIds } });
+    }
+    res.render('HomePage', {articles, products, nrFavorites: req.nrFavorites, nrCart:  req.nrCart, favoriteProductsID});
   } catch (err) {
     return res.status(500).json({error: err.message});
   }
@@ -859,26 +889,9 @@ app.post('/pay-courier', async (req, res) => {
       },
       { new: true, useFindAndModify: false }
   );
-  res.status(200).json({success: true});
-  } catch (error) {
-      console.error('Eroare la procesarea comenzii:', error);
-      return res.status(500).json({ error: 'Internal server error' });
-  }
-});
-app.get('/order-placed',countCartProduct, async (req, res) => {
-  const userId = getId(); // Get the user ID from session metadata
-  
-  // Retrieve the user and cart details
-  const user = await User.findById(userId).populate('cart.productId');
-  const cartItems = user.cart.map(item => ({
-    productId: item.productId._id,
-    name: item.productId.name,
-    price: item.productId.price,
-    quantity: item.quantity,
-  }));
-// Obține detaliile suplimentare ale produselor
+  // Obține detaliile suplimentare ale produselor
 const cartWithDetails = await Promise.all(
-  cartItems.map(async (item) => {
+  cart.map(async (item) => {
       const productDetails = await Article.findById(item.productId); // Caută produsul în baza de date
       return {
           ...item,
@@ -916,6 +929,13 @@ const userInteractions = cartWithDetails.map(item => ({
 // Scrie în CSV
 await csvWriter.writeRecords(userInteractions);
 console.log('Datele noi au fost adăugate cu succes în fișierul CSV!');
+  res.status(200).json({success: true});
+  } catch (error) {
+      console.error('Eroare la procesarea comenzii:', error);
+      return res.status(500).json({ error: 'Internal server error' });
+  }
+});
+app.get('/order-placed',countCartProduct, async (req, res) => {
   res.render('OrderPlaced', { nrCart: req.nrCart});
 });
   app.post('/pay', async (req, res) => {

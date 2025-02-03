@@ -25,6 +25,7 @@ body {
     box-shadow: 0 8px 16px rgba(0, 0, 0, 0.1);
     height: 100%;
 }
+
 .card-body .btn, .card-btn .btn{
     background-color: #06b6d4;
     color: white;
@@ -192,4 +193,18 @@ body {
   details[open] summary::before {
     transform: rotate(90deg); /* Rotate the arrow upwards when open */
   }
-  
+.swiper{
+    margin: 0px 15px 15px 15px;
+}
+.swiper-container {
+    gap: 10px;
+    overflow: hidden;
+}
+
+.swiper-button-next,
+.swiper-button-prev {
+    color: #06b6d4;
+}
+.swiper-pagination {
+    margin-top: 10px;
+}

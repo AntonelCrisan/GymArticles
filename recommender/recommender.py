@@ -8,7 +8,7 @@ import sys
 import os
 
 
-def top_10_popular_products(file_path):
+def top15_popular_products(file_path):
     # Citim datele din fișierul CSV
     data = pd.read_csv(file_path)
 
@@ -21,10 +21,10 @@ def top_10_popular_products(file_path):
     # Sortăm descrescător după numărul de achiziții
     popular_products = popular_products.sort_values(by='purchase_count', ascending=False)
 
-    # Selectăm doar primele 10 produse
-    top_10 = popular_products.head(10)
+    # Selectăm doar primele 15 produse
+    top15 = popular_products.head(15)
 
-    return top_10
+    return top15
 def train_user_based_model(data):
     """
     Antrenăm un model User-Based Collaborative Filtering folosind biblioteca Surprise.
@@ -60,7 +60,7 @@ def get_user_recommendations(model, trainset, user_id):
         return {"error": "User ID not found in dataset"}
 
     # Vecinii cei mai apropiați (utilizatori similari)
-    neighbors = model.get_neighbors(inner_user_id, k=3)
+    neighbors = model.get_neighbors(inner_user_id, k=5)
 
     # Produse recomandate de la vecinii apropiați
     recommendations = []
@@ -145,8 +145,8 @@ def main():
     # Încărcăm datele cu metoda aleasă
     file_path = os.path.join(os.path.dirname(__file__), "recomandations.csv")
     data = load_data(file_path, filter_purchases_only=filter_purchases_only)
-    top_10 = top_10_popular_products(file_path)
-    print(top_10)
+    top15 = top15_popular_products(file_path)
+    print(top15)
     if user_id not in data['userId'].values:
         print(json.dumps({"error": f"User ID {user_id} not found in dataset."}, indent=4))
         sys.exit(1)
@@ -166,7 +166,6 @@ def main():
 
     # Optimizăm și evaluăm modelul SVD
     svd_model, best_rmse, best_params = optimize_svd(data)
-
     # Afișăm rezultatele într-un format JSON
     print(json.dumps({
         "filter_type": filter_type,
