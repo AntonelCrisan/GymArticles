@@ -7,7 +7,6 @@ import json
 import sys
 import os
 
-
 def top15_popular_products(file_path):
     # Citim datele din fișierul CSV
     data = pd.read_csv(file_path)

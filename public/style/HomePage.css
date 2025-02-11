@@ -193,8 +193,8 @@ body {
   details[open] summary::before {
     transform: rotate(90deg); /* Rotate the arrow upwards when open */
   }
-.swiper{
-    margin: 0px 15px 15px 15px;
+.swiper h3{
+    margin: 20px 0px 15px 15px;
 }
 .swiper-container {
     gap: 10px;
