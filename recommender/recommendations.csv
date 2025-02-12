@@ -131,3 +131,20 @@ userId,productId,productName,category,subcategory,price,action,timestamp
 66bcb2a87ace238e8cdd5f40,66320a2433f7e8cb27162c59,Hexagonal Dumbbell,Workout home,Dumbbells,34,added_to_cart,1739286712
 66bcb2a87ace238e8cdd5f40,66320a2433f7e8cb27162c59,Hexagonal Dumbbell,Workout home,Dumbbells,34,purchased,1739286725
 66bcb2a87ace238e8cdd5f40,6760135cb637cdbfbb2adfd5,Adjustable Dumbbell 3-20kg - GymBeam,Workout home,Dumbbells,140.67,added_to_cart,1739286951
+66bcb2a87ace238e8cdd5f40,676013ddb637cdbfbb2adfef,Eternal Power Olympic Bar - GymBeam,Workout home,Dumbbells,247.98,viewed,1739352565
+66bcb2a87ace238e8cdd5f40,676016f2b637cdbfbb2ae31f,Kettlebell Black - GymBeam,Workout home,Weights and dumbbells,35.89,viewed,1739352591
+66bcb2a87ace238e8cdd5f40,676017f7b637cdbfbb2ae36f,Ab Wheel - GymBeam,Workout home,Home workouts & others,8.60,viewed,1739352620
+66bcb2a87ace238e8cdd5f40,676014eab637cdbfbb2ae1ac,Digital kitchen scale - GymBeam,Bags & Backpacks,Bags & accessories for food,16.56,viewed,1739352653
+66bcb2a87ace238e8cdd5f40,676014eab637cdbfbb2ae1ac,Digital kitchen scale - GymBeam,Bags & Backpacks,Bags & accessories for food,16.56,added_to_favorite,1739352658
+66bcb2a87ace238e8cdd5f40,66320a2433f7e8cb27162c59,Hexagonal Dumbbell,Workout home,Dumbbells,34,added_to_cart,1739355691
+67a1f91f88a01a219caade57,6632076933f7e8cb27162c28,Black Shaker 700ml - GymBeam,Fitness accessories,Shakers,4.00,viewed,1739360401
+67a1f91f88a01a219caade57,663207d433f7e8cb27162c2f,Shaker Steel 750 ml - GymBeam,Fitness accessories,Shakers,6.00,viewed,1739360403
+67a1f91f88a01a219caade57,663207d433f7e8cb27162c2f,Shaker Steel 750 ml - GymBeam,Fitness accessories,Shakers,6,added_to_favorite,1739360409
+67a1f91f88a01a219caade57,663207d433f7e8cb27162c2f,Shaker Steel 750 ml - GymBeam,Fitness accessories,Shakers,6,added_to_cart,1739360414
+67a1f91f88a01a219caade57,663207d433f7e8cb27162c2f,Shaker Steel 750 ml - GymBeam,Fitness accessories,Shakers,6,purchased,1739360427
+67a1f91f88a01a219caade57,663514684e95b9d4add29404,Boxing Gloves F6 Kara Red Rdx 7,Accessory depending on the activity,Contact sports,23.65,viewed,1739360446
+67a1f91f88a01a219caade57,676018d8b637cdbfbb2ae3b5,Flexor Grip Trainer - GymBeam,Workout home,Home workouts & others,4.78,viewed,1739360452
+67a1f91f88a01a219caade57,663514684e95b9d4add29404,Boxing Gloves F6 Kara Red Rdx 7,Accessory depending on the activity,Contact sports,23.65,viewed,1739360499
+67601e9fb682385a7b8c2c16,67601199b637cdbfbb2adf11,Nebula Stone Blue Shorts - STRIX,Clothes for men,Short pants,25.50,added_to_cart,1739370956
+67601e9fb682385a7b8c2c16,67601199b637cdbfbb2adf11,Nebula Stone Blue Shorts - STRIX,Clothes for men,Short pants,25.50,purchased,1739373856
+67601e9fb682385a7b8c2c16,6632093e33f7e8cb27162c4c,Compression Tshirt Hg Armour Comp White Under Armour,Clothes for men,T-Shirt,25,added_to_cart,1739374049

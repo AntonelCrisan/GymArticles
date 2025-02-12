@@ -132,7 +132,8 @@ document.addEventListener('DOMContentLoaded', function() {
 });
 // addressSelector.js
 const selectedAddressForOrder = () => {
-  return document.querySelector('input[name="selectedAddress"]:checked').value;
+  const selected = document.querySelector('input[name="selectedAddress"]:checked');
+  return selected ? selected.value : null;
 };
 
 export default selectedAddressForOrder;

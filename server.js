@@ -551,13 +551,13 @@ app.post('/addToCart', async (req, res) => {
         // If product already in cart, increase the quantity
         cartItem.quantity += 1;
       } else {
+        user.cart.push({ productId, quantity: 1 });
         const recommendedProducts = await recommendations_cart(userId, productId);
         if(recommendedProducts){
           const recomendationsArray = recommendedProducts.recommended_products;
           products = await Article.find({ _id: { $in: recomendationsArray } });
         }
         // If product not in cart, add a new entry with quantity 1
-        user.cart.push({ productId, quantity: 1 });
         //Save the interaction into a csv file
         const csvWriter = createObjectCsvWriter({
           path: 'recommender/recommendations.csv', 

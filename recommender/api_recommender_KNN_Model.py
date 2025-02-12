@@ -7,6 +7,7 @@ import os
 import matplotlib.pyplot as plt
 from sklearn.metrics.pairwise import cosine_similarity
 from sklearn.feature_extraction.text import TfidfVectorizer
+from sklearn.metrics import precision_score, recall_score, f1_score
 import numpy as np
 
 
@@ -32,9 +33,9 @@ def load_data(file_path):
     data['timestamp'] = pd.to_datetime(data['timestamp'], unit='s')
     max_time = data['timestamp'].max()
     
-    # Penalizăm acțiunile vechi și favorizăm acțiunile recente
+    #Penalizăm acțiunile vechi și favorizăm acțiunile recente
     data['time_decay'] = (max_time - data['timestamp']).dt.days
-    data['time_decay'] = np.exp(-data['time_decay'] / 2)
+    data['time_decay'] = np.exp(-data['time_decay'] / 7)
 
     data['price'] = (data['price'] - data['price'].min()) / (data['price'].max() - data['price'].min())
 
@@ -59,7 +60,8 @@ def train_knn_model(data):
     dataset = Dataset.load_from_df(data[['userId', 'productId', 'rating']], reader)
     trainset = dataset.build_full_trainset()  # Antrenăm pe toate datele disponibile
     testset = trainset.build_testset()  # Folosim un test set separat
-    knn_model = KNNBaseline()
+    bsl_options = {'method': 'sgd', 'learning_rate': 0.2, 'n_epochs': 42}
+    knn_model = KNNBaseline(bsl_options=bsl_options, k=50, min_k=3, sim_options={'name': 'pearson_baseline', 'user_based': False})
     knn_model.fit(trainset)
     global pred
     pred = knn_model.test(testset)  # Testăm pe date care NU au fost văzute
@@ -68,7 +70,7 @@ def train_knn_model(data):
 #Funcția de filtrare pe bază de conținut
 def content_based_recommendations(data, product_id, top_n=15):
     data["features"] = data[['category', 'subcategory', 'price']].apply(lambda x: ' '.join(x.astype(str)), axis=1)
-    vectorizer = TfidfVectorizer(stop_words='english')
+    vectorizer = TfidfVectorizer(stop_words='english', max_df=0.85, min_df=2)
     X = vectorizer.fit_transform(data["features"])
     cosine_sim = cosine_similarity(X, X)
     
@@ -127,7 +129,17 @@ def cart_recommendations(data, user_model, trainset, user_id, product_id, top_n=
     hybrid_recommendations = list(set(content_recommendations + co_occurrence_recommendations + knn_recommendations))[:top_n]
 
     return hybrid_recommendations
+def calculate_classification_metrics(real_values, predicted_values, threshold=3.5):
+    # Creăm predicțiile binare (1 dacă scorul este mai mare decât threshold, 0 altfel)
+    pred_binary = [1 if pred >= threshold else 0 for pred in predicted_values]
+    real_binary = [1 if real >= threshold else 0 for real in real_values]
     
+    # Calculăm precision, recall și F1-score
+    precision = precision_score(real_binary, pred_binary)
+    recall = recall_score(real_binary, pred_binary)
+    f1 = f1_score(real_binary, pred_binary)
+    
+    return precision, recall, f1
 
 # Endpoint pentru recomandări bazate pe coș cu ML
 @app.route("/cart-recommendations", methods=["GET"])
@@ -182,7 +194,11 @@ def get_recommendations():
     r2 = r2_score(real_values, predicted_values)
     print(f"R-squared: {r2}")
     
-
+    # Calculăm Precision, Recall și F1-score
+    precision, recall, f1 = calculate_classification_metrics(real_values, predicted_values)
+    print(f"Precision: {precision}")
+    print(f"Recall: {recall}")
+    print(f"F1-Score: {f1}")
     
     return jsonify({
         "user_id": user_id,

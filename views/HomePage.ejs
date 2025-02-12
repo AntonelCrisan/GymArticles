@@ -177,12 +177,11 @@
                         </div>
                     <% }) %>
                 </div>
+                <div class="swiper-button-next swiper-button-next-top15"></div>
+                <div class="swiper-button-prev swiper-button-prev-top15"></div>
+                <div class="swiper-pagination swiper-pagination-top15"></div>
             </div>
-                <!-- Butoane de navigare -->
-                <div class="swiper-button-next"></div>
-                <div class="swiper-button-prev"></div>
-                <!-- Paginare -->
-                <div class="swiper-pagination"></div>
+                
         </div>
             <% if (user) { %>
                 <div class="swiper">
@@ -217,11 +216,9 @@
                             <% }) %>
                         </div>
                     </div>
-                        <!-- Butoane de navigare -->
-                        <div class="swiper-button-next"></div>
-                        <div class="swiper-button-prev"></div>
-                        <!-- Paginare -->
-                        <div class="swiper-pagination"></div>
+                    <div class="swiper-button-next swiper-button-next-recommended"></div>
+                    <div class="swiper-button-prev swiper-button-prev-recommended"></div>
+                    <div class="swiper-pagination swiper-pagination-recommended"></div>
                 </div>
             <% } else {%>
                 <div></div>
@@ -305,43 +302,48 @@
 <!-- Swiper JS -->
 <script src="https://cdn.jsdelivr.net/npm/swiper/swiper-bundle.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+
 <script>
+   window.onload = function () {
     new Swiper('.swiper-container-top15', {
-        slidesPerView: 5, // Afișează 5 produse simultan
-        slidesPerGroup: 5, // Avansează câte 5 produse
+        slidesPerView: 5,
+        slidesPerGroup: 5,
         navigation: {
-            nextEl: '.swiper-button-next',
-            prevEl: '.swiper-button-prev',  
+            nextEl: '.swiper-button-next-top15',
+            prevEl: '.swiper-button-prev-top15',
         },
         pagination: {
-            el: '.swiper-pagination',
+            el: '.swiper-pagination-top15',
             clickable: true,
         },
-        loop: false, // Setează true dacă vrei să reia lista de la început
+        loop: false,
         breakpoints: {
-            1024: { slidesPerView: 5, slidesPerGroup: 5 }, // Desktop
-            768: { slidesPerView: 3, slidesPerGroup: 3 },  // Tabletă
-            480: { slidesPerView: 2, slidesPerGroup: 2 }   // Mobil
+            1024: { slidesPerView: 5, slidesPerGroup: 5 },
+            768: { slidesPerView: 3, slidesPerGroup: 3 },
+            480: { slidesPerView: 2, slidesPerGroup: 2 }
         }
     });
+
     new Swiper('.swiper-container-recommended', {
-        slidesPerView: 5, // Afișează 5 produse simultan
-        slidesPerGroup: 5, // Avansează câte 5 produse
+        slidesPerView: 5,
+        slidesPerGroup: 5,
         navigation: {
-            nextEl: '.swiper-button-next',
-            prevEl: '.swiper-button-prev',  
+            nextEl: '.swiper-button-next-recommended',
+            prevEl: '.swiper-button-prev-recommended',
         },
         pagination: {
-            el: '.swiper-pagination',
+            el: '.swiper-pagination-recommended',
             clickable: true,
         },
-        loop: false, // Setează true dacă vrei să reia lista de la început
+        loop: false,
         breakpoints: {
-            1024: { slidesPerView: 5, slidesPerGroup: 5 }, // Desktop
-            768: { slidesPerView: 3, slidesPerGroup: 3 },  // Tabletă
-            480: { slidesPerView: 2, slidesPerGroup: 2 }   // Mobil
+            1024: { slidesPerView: 5, slidesPerGroup: 5 },
+            768: { slidesPerView: 3, slidesPerGroup: 3 },
+            480: { slidesPerView: 2, slidesPerGroup: 2 }
         }
     });
+};
+    
 </script>
 </body>
 </html>
