@@ -545,6 +545,15 @@ async function recommendations_cart_view(user_id, product_id){
       return null; // Poți returna o valoare implicită sau să arunci eroarea
   }
 }
+async function recommendations_favorite_view(user_id, product_id){
+  try {
+    const response = await axios.get(`http://127.0.0.1:5000/favorite-view-recommendations?user_id=${user_id}&product_id=${product_id}`);
+    return response.data;
+  } catch (error) {
+      console.error("Eroare la preluarea datelor:", error);
+      return null; // Poți returna o valoare implicită sau să arunci eroarea
+  }
+}
 //POST method for adding products to cart
 app.post('/addToCart', async (req, res) => {
   try {
@@ -875,7 +884,18 @@ app.get('/favorites', requireAuth, countFavoriteProduct, countCartProduct, async
     const user = await User.findById(userId).populate('favorites');
     const favoriteProductIds = user.favorites;
     const favorites = await Article.find({ _id: { $in: favoriteProductIds } });
-    res.render('Favorites', {nrFavorites: req.nrFavorites, nrCart:  req.nrCart, favorites})
+    let products;
+    const productId = favorites.map(productID => ({
+      id: productID._id
+    }))
+    const totalProducts = favoriteProductIds.length - 1;
+    const lastProductAddedToCart = productId[totalProducts];
+    const recommendedProducts = await recommendations_favorite_view(userId, lastProductAddedToCart);
+    if(recommendedProducts){
+      const recomendationsArray = recommendedProducts.recommended_products;
+      products = await Article.find({ _id: { $in: recomendationsArray } });
+    }
+    res.render('Favorites', {nrFavorites: req.nrFavorites, nrCart:  req.nrCart, favorites, products})
   } catch (error) {
     res.status(500).json({error: 'Server error'});
   }

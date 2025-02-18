@@ -306,7 +306,7 @@ def get_cart_view_recommendations():
         "recommended_products": recommended_products
     })
 @app.route("/favorite-view-recommendations", methods=["GET"])
-def get_cart_view_recommendations():
+def get_favorite_recommendations():
     user_id = request.args.get('user_id')
     product_id = request.args.get('product_id')
 
