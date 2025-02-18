@@ -536,6 +536,15 @@ async function recommendations_cart(user_id, product_id){
   }
 }
 
+async function recommendations_cart_view(user_id, product_id){
+  try {
+    const response = await axios.get(`http://127.0.0.1:5000/cart-view-recommendations?user_id=${user_id}&product_id=${product_id}`);
+    return response.data;
+  } catch (error) {
+      console.error("Eroare la preluarea datelor:", error);
+      return null; // Poți returna o valoare implicită sau să arunci eroarea
+  }
+}
 //POST method for adding products to cart
 app.post('/addToCart', async (req, res) => {
   try {
@@ -829,10 +838,21 @@ app.get('/cart', requireAuth, countFavoriteProduct, countCartProduct, async (req
   try {
     const userId = getId();
     const user = await User.findById(userId).populate('cart.productId');
+    let products;
     const cart = user.cart.map(item => ({
       ...item.productId.toObject(),
       quantity: item.quantity
     }));
+    const productId = cart.map(productID => ({
+      id: productID._id
+    }))
+    const totalProducts = productId.length - 1;
+    const lastProductAddedToCart = productId[totalProducts];
+    const recommendedProducts = await recommendations_cart_view(userId, lastProductAddedToCart);
+    if(recommendedProducts){
+      const recomendationsArray = recommendedProducts.recommended_products;
+      products = await Article.find({ _id: { $in: recomendationsArray } });
+    }
     // Calculate total cost
     const productCost = cart.reduce((total, item) => {
       const price = parseFloat(item.price);
@@ -841,7 +861,7 @@ app.get('/cart', requireAuth, countFavoriteProduct, countCartProduct, async (req
     }, 0);
     const deliveryCost = 5;
     req.session.productCost = productCost;
-    res.render('Cart', { nrFavorites: req.nrFavorites, nrCart: req.nrCart, cart, productCost, deliveryCost});
+    res.render('Cart', { nrFavorites: req.nrFavorites, nrCart: req.nrCart, cart, productCost, deliveryCost, products});
   } catch (error) {
     res.status(500).json({ error: 'Server error' });
     console.log(error);

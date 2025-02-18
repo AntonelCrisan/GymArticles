@@ -117,34 +117,122 @@ userId,productId,productName,category,subcategory,price,action,timestamp
 67a1f91f88a01a219caade57,663209ab33f7e8cb27162c53,Hoodie Zipper Hoodie Black - GymBeam,Clothes for men,Hoodies,30.00,viewed,1738758448
 67a1f91f88a01a219caade57,67601199b637cdbfbb2adf11,Nebula Stone Blue Shorts - STRIX,Clothes for men,Short pants,25.50,viewed,1738758462
 67a1f91f88a01a219caade57,663209ab33f7e8cb27162c53,Hoodie Zipper Hoodie Black - GymBeam,Clothes for men,Hoodies,30.00,viewed,1738758471
-66bcb2a87ace238e8cdd5f40,66320a2433f7e8cb27162c59,Hexagonal Dumbbell,Workout home,Dumbbells,34,added_to_cart,1739275935
-66bcb2a87ace238e8cdd5f40,6632083d33f7e8cb27162c37,Explorer Backpack Black,Bags & Backpacks,Backpacks,50,added_to_cart,1739275958
-66bcb2a87ace238e8cdd5f40,6632080a33f7e8cb27162c33,Black Towel for Fitness,Fitness accessories,Towels,6,added_to_cart,1739275960
-66bcb2a87ace238e8cdd5f40,66320a2433f7e8cb27162c59,Hexagonal Dumbbell,Workout home,Dumbbells,34.00,viewed,1739281503
-66bcb2a87ace238e8cdd5f40,6632070c33f7e8cb27162c24,Fitness belt,Fitness accessories,Fitness belts,30.00,viewed,1739285206
-66bcb2a87ace238e8cdd5f40,6632070c33f7e8cb27162c24,Fitness belt,Fitness accessories,Fitness belts,30.00,viewed,1739285654
-66bcb2a87ace238e8cdd5f40,663208a333f7e8cb27162c3f,Women Limitless High Waist Leggings Black,Clothes for women,Sport pants,25.00,viewed,1739285945
-66bcb2a87ace238e8cdd5f40,663208a333f7e8cb27162c3f,Women Limitless High Waist Leggings Black,Clothes for women,Sport pants,25.00,viewed,1739285954
-66bcb2a87ace238e8cdd5f40,6632070c33f7e8cb27162c24,Fitness belt,Fitness accessories,Fitness belts,30.00,viewed,1739285956
-66bcb2a87ace238e8cdd5f40,663511e74e95b9d4add293a6,Yoga Mat Baby Pink,Workout home,Fitness mats,7.90,viewed,1739285961
-66bcb2a87ace238e8cdd5f40,6632086d33f7e8cb27162c3b,Compression Arm Sleeves Black,Accessory depending on the activity,Running,5.00,viewed,1739285966
-66bcb2a87ace238e8cdd5f40,66320a2433f7e8cb27162c59,Hexagonal Dumbbell,Workout home,Dumbbells,34,added_to_cart,1739286712
-66bcb2a87ace238e8cdd5f40,66320a2433f7e8cb27162c59,Hexagonal Dumbbell,Workout home,Dumbbells,34,purchased,1739286725
-66bcb2a87ace238e8cdd5f40,6760135cb637cdbfbb2adfd5,Adjustable Dumbbell 3-20kg - GymBeam,Workout home,Dumbbells,140.67,added_to_cart,1739286951
-66bcb2a87ace238e8cdd5f40,676013ddb637cdbfbb2adfef,Eternal Power Olympic Bar - GymBeam,Workout home,Dumbbells,247.98,viewed,1739352565
-66bcb2a87ace238e8cdd5f40,676016f2b637cdbfbb2ae31f,Kettlebell Black - GymBeam,Workout home,Weights and dumbbells,35.89,viewed,1739352591
-66bcb2a87ace238e8cdd5f40,676017f7b637cdbfbb2ae36f,Ab Wheel - GymBeam,Workout home,Home workouts & others,8.60,viewed,1739352620
-66bcb2a87ace238e8cdd5f40,676014eab637cdbfbb2ae1ac,Digital kitchen scale - GymBeam,Bags & Backpacks,Bags & accessories for food,16.56,viewed,1739352653
-66bcb2a87ace238e8cdd5f40,676014eab637cdbfbb2ae1ac,Digital kitchen scale - GymBeam,Bags & Backpacks,Bags & accessories for food,16.56,added_to_favorite,1739352658
-66bcb2a87ace238e8cdd5f40,66320a2433f7e8cb27162c59,Hexagonal Dumbbell,Workout home,Dumbbells,34,added_to_cart,1739355691
-67a1f91f88a01a219caade57,6632076933f7e8cb27162c28,Black Shaker 700ml - GymBeam,Fitness accessories,Shakers,4.00,viewed,1739360401
-67a1f91f88a01a219caade57,663207d433f7e8cb27162c2f,Shaker Steel 750 ml - GymBeam,Fitness accessories,Shakers,6.00,viewed,1739360403
-67a1f91f88a01a219caade57,663207d433f7e8cb27162c2f,Shaker Steel 750 ml - GymBeam,Fitness accessories,Shakers,6,added_to_favorite,1739360409
-67a1f91f88a01a219caade57,663207d433f7e8cb27162c2f,Shaker Steel 750 ml - GymBeam,Fitness accessories,Shakers,6,added_to_cart,1739360414
-67a1f91f88a01a219caade57,663207d433f7e8cb27162c2f,Shaker Steel 750 ml - GymBeam,Fitness accessories,Shakers,6,purchased,1739360427
-67a1f91f88a01a219caade57,663514684e95b9d4add29404,Boxing Gloves F6 Kara Red Rdx 7,Accessory depending on the activity,Contact sports,23.65,viewed,1739360446
-67a1f91f88a01a219caade57,676018d8b637cdbfbb2ae3b5,Flexor Grip Trainer - GymBeam,Workout home,Home workouts & others,4.78,viewed,1739360452
-67a1f91f88a01a219caade57,663514684e95b9d4add29404,Boxing Gloves F6 Kara Red Rdx 7,Accessory depending on the activity,Contact sports,23.65,viewed,1739360499
-67601e9fb682385a7b8c2c16,67601199b637cdbfbb2adf11,Nebula Stone Blue Shorts - STRIX,Clothes for men,Short pants,25.50,added_to_cart,1739370956
-67601e9fb682385a7b8c2c16,67601199b637cdbfbb2adf11,Nebula Stone Blue Shorts - STRIX,Clothes for men,Short pants,25.50,purchased,1739373856
-67601e9fb682385a7b8c2c16,6632093e33f7e8cb27162c4c,Compression Tshirt Hg Armour Comp White Under Armour,Clothes for men,T-Shirt,25,added_to_cart,1739374049
+66bcb2a87ace238e8cdd5f40,676015b8b637cdbfbb2ae1f9,Microfiber sports towel Medium Black - GymBeam,Fitness accessories,Towels,6.98,viewed,1739446326
+66bcb2a87ace238e8cdd5f40,676015b8b637cdbfbb2ae1f9,Microfiber sports towel Medium Black - GymBeam,Fitness accessories,Towels,6.98,added_to_favorite,1739446336
+66bcb2a87ace238e8cdd5f40,676015b8b637cdbfbb2ae1f9,Microfiber sports towel Medium Black - GymBeam,Fitness accessories,Towels,6.98,viewed,1739446343
+66bcb2a87ace238e8cdd5f40,6630bd3db1cb58b5e3f01a2e,Jump rope,Work home,Jump ropes,5.00,viewed,1739454242
+66bcb2a87ace238e8cdd5f40,6630bd3db1cb58b5e3f01a2e,Jump rope,Work home,Jump ropes,5.00,viewed,1739454248
+67601e78b682385a7b8c2bf8,6630bd3db1cb58b5e3f01a2e,Jump rope,Work home,Jump ropes,5,added_to_cart,1739454366
+66bcb2a87ace238e8cdd5f40,6630bd3db1cb58b5e3f01a2e,Jump rope,Work home,Jump ropes,5,added_to_cart,1739454381
+66bcb2a87ace238e8cdd5f40,663207d433f7e8cb27162c2f,Shaker Steel 750 ml - GymBeam,Fitness accessories,Shakers,6,added_to_cart,1739454437
+66bcb2a87ace238e8cdd5f40,6632086d33f7e8cb27162c3b,Compression Arm Sleeves Black,Accessory depending on the activity,Running,5.00,viewed,1739454466
+66bcb2a87ace238e8cdd5f40,6632086d33f7e8cb27162c3b,Compression Arm Sleeves Black,Accessory depending on the activity,Running,5,added_to_cart,1739454478
+66bcb2a87ace238e8cdd5f40,6632086d33f7e8cb27162c3b,Compression Arm Sleeves Black,Accessory depending on the activity,Running,5,purchased,1739454521
+66bcb2a87ace238e8cdd5f40,6632086d33f7e8cb27162c3b,Compression Arm Sleeves Black,Accessory depending on the activity,Running,5,added_to_cart,1739455123
+66bcb2a87ace238e8cdd5f40,66320a2433f7e8cb27162c59,Hexagonal Dumbbell,Workout home,Dumbbells,34,added_to_cart,1739455585
+66bcb2a87ace238e8cdd5f40,66320a2433f7e8cb27162c59,Hexagonal Dumbbell,Workout home,Dumbbells,34,added_to_cart,1739455587
+66bcb2a87ace238e8cdd5f40,676012c0b637cdbfbb2adf87,Yoga Tape - Spokey,Workout home,Resistance bands and elastic bands,6.90,viewed,1739455691
+66bcb2a87ace238e8cdd5f40,676012c0b637cdbfbb2adf87,Yoga Tape - Spokey,Workout home,Resistance bands and elastic bands,6.90,added_to_favorite,1739455694
+66bcb2a87ace238e8cdd5f40,676012c0b637cdbfbb2adf87,Yoga Tape - Spokey,Workout home,Resistance bands and elastic bands,6.90,viewed,1739455765
+66bcb2a87ace238e8cdd5f40,676012c0b637cdbfbb2adf87,Yoga Tape - Spokey,Workout home,Resistance bands and elastic bands,6.90,viewed,1739455807
+67601e78b682385a7b8c2bf8,676012c0b637cdbfbb2adf87,Yoga Tape - Spokey,Workout home,Resistance bands and elastic bands,6.90,added_to_cart,1739455840
+66bcb2a87ace238e8cdd5f40,676012c0b637cdbfbb2adf87,Yoga Tape - Spokey,Workout home,Resistance bands and elastic bands,6.90,added_to_cart,1739455857
+66a0f2c7a56de48f22d0ca08,663209ab33f7e8cb27162c53,Hoodie Zipper Hoodie Black - GymBeam,Clothes for men,Hoodies,30.00,viewed,1738756795
+66a0f2c7a56de48f22d0ca08,67601199b637cdbfbb2adf11,Nebula Stone Blue Shorts - STRIX,Clothes for men,Short pants,25.50,viewed,1738756810
+66a0f2c7a56de48f22d0ca08,6632093e33f7e8cb27162c4c,Compression Tshirt Hg Armour Comp White Under Armour,Clothes for men,T-Shirt,25.00,viewed,1738756834
+66a0f2c7a56de48f22d0ca08,663209ab33f7e8cb27162c53,Hoodie Zipper Hoodie Black - GymBeam,Clothes for men,Hoodies,30.00,viewed,1738756838
+66a0f2c7a56de48f22d0ca08,663209ab33f7e8cb27162c53,Hoodie Zipper Hoodie Black - GymBeam,Clothes for men,Hoodies,30,added_to_favorite,1738756861
+66bcb2a87ace238e8cdd5f40,6760161cb637cdbfbb2ae239,LIFT Belts Black & Gray - GymBeam,Fitness accessories,Classic straps and hooks straps,5.70,viewed,1738756924
+66bcb2a87ace238e8cdd5f40,676012e9b637cdbfbb2adf94,Resistance band with handles 5 kg - GymBeam,Workout home,Resistance bands and elastic bands,24.98,viewed,1738756931
+66bcb2a87ace238e8cdd5f40,676012c0b637cdbfbb2adf87,Yoga Tape - Spokey,Workout home,Resistance bands and elastic bands,6.90,viewed,1738756936
+66bcb2a87ace238e8cdd5f40,6760135cb637cdbfbb2adfd5,Adjustable Dumbbell 3-20kg - GymBeam,Workout home,Dumbbells,140.67,added_to_favorite,1738756961
+66bcb2a87ace238e8cdd5f40,6760184ab637cdbfbb2ae37c,Flat bench - GymBeam,Workout home,Home workouts & others,198.89,viewed,1738756969
+66bcb2a87ace238e8cdd5f40,6760184ab637cdbfbb2ae37c,Flat bench - GymBeam,Workout home,Home workouts & others,198.89,added_to_cart,1738756976
+66bcb2a87ace238e8cdd5f40,6760184ab637cdbfbb2ae37c,Flat bench - GymBeam,Workout home,Home workouts & others,198.89,purchased,1738756995
+66bcb2a87ace238e8cdd5f40,6760135cb637cdbfbb2adfd5,Adjustable Dumbbell 3-20kg - GymBeam,Workout home,Dumbbells,140.67,viewed,1738757020
+66bcb2a87ace238e8cdd5f40,6760135cb637cdbfbb2adfd5,Adjustable Dumbbell 3-20kg - GymBeam,Workout home,Dumbbells,140.67,added_to_cart,1738757036
+66bcb2a87ace238e8cdd5f40,6760135cb637cdbfbb2adfd5,Adjustable Dumbbell 3-20kg - GymBeam,Workout home,Dumbbells,140.67,purchased,1738757047
+66bcb2a87ace238e8cdd5f40,676012c0b637cdbfbb2adf87,Yoga Tape - Spokey,Workout home,Resistance bands and elastic bands,6.90,added_to_cart,1738757082
+66bcb2a87ace238e8cdd5f40,676012c0b637cdbfbb2adf87,Yoga Tape - Spokey,Workout home,Resistance bands and elastic bands,6.90,purchased,1738757093
+66bcb2a87ace238e8cdd5f40,676013a3b637cdbfbb2adfe2,Dumbbell - Climaqx,Workout home,Dumbbells,154.99,viewed,1738757107
+67601e67b682385a7b8c2be9,676013ddb637cdbfbb2adfef,Eternal Power Olympic Bar - GymBeam,Workout home,Dumbbells,247.98,viewed,1738757151
+67601e67b682385a7b8c2be9,67601418b637cdbfbb2adffc,Competition Bumper Plate Weight - GymBeam,Workout home,Dumbbells,134.87,viewed,1738757156
+67601e67b682385a7b8c2be9,6760184ab637cdbfbb2ae37c,Flat bench - GymBeam,Workout home,Home workouts & others,198.89,viewed,1738757161
+67601e67b682385a7b8c2be9,6760188ab637cdbfbb2ae389,Adjustable bench - GymBeam,Workout home,Home workouts & others,239.80,viewed,1738757166
+67601e67b682385a7b8c2be9,676013ddb637cdbfbb2adfef,Eternal Power Olympic Bar - GymBeam,Workout home,Dumbbells,247.98,viewed,1738757177
+67601e67b682385a7b8c2be9,6760135cb637cdbfbb2adfd5,Adjustable Dumbbell 3-20kg - GymBeam,Workout home,Dumbbells,140.67,viewed,1738757180
+67601e67b682385a7b8c2be9,676013a3b637cdbfbb2adfe2,Dumbbell - Climaqx,Workout home,Dumbbells,154.99,viewed,1738757184
+67601e67b682385a7b8c2be9,67601418b637cdbfbb2adffc,Competition Bumper Plate Weight - GymBeam,Workout home,Dumbbells,134.87,viewed,1738757194
+67601e67b682385a7b8c2be9,6760184ab637cdbfbb2ae37c,Flat bench - GymBeam,Workout home,Home workouts & others,198.89,viewed,1738757213
+67601e67b682385a7b8c2be9,6760135cb637cdbfbb2adfd5,Adjustable Dumbbell 3-20kg - GymBeam,Workout home,Dumbbells,140.67,viewed,1738757221
+66bcb2a87ace238e8cdd5f40,6760188ab637cdbfbb2ae389,Adjustable bench - GymBeam,Workout home,Home workouts & others,239.80,viewed,1739481960
+66bcb2a87ace238e8cdd5f40,6760188ab637cdbfbb2ae389,Adjustable bench - GymBeam,Workout home,Home workouts & others,239.80,added_to_favorite,1739481964
+66bcb2a87ace238e8cdd5f40,6760188ab637cdbfbb2ae389,Adjustable bench - GymBeam,Workout home,Home workouts & others,239.80,viewed,1739481965
+67ae188b6e17ee95d6ec054a,6760135cb637cdbfbb2adfd5,Adjustable Dumbbell 3-20kg - GymBeam,Workout home,Dumbbells,140.67,added_to_cart,1739482036
+67ae188b6e17ee95d6ec054a,6760188ab637cdbfbb2ae389,Adjustable bench - GymBeam,Workout home,Home workouts & others,239.80,added_to_cart,1739482046
+66bcb2a87ace238e8cdd5f40,6760188ab637cdbfbb2ae389,Adjustable bench - GymBeam,Workout home,Home workouts & others,239.80,added_to_cart,1739482054
+67ae188b6e17ee95d6ec054a,663514684e95b9d4add29404,Boxing Gloves F6 Kara Red Rdx 7,Accessory depending on the activity,Contact sports,23.65,viewed,1739529762
+67ae188b6e17ee95d6ec054a,663514684e95b9d4add29404,Boxing Gloves F6 Kara Red Rdx 7,Accessory depending on the activity,Contact sports,23.65,added_to_favorite,1739529765
+67ae188b6e17ee95d6ec054a,66320a2433f7e8cb27162c59,Hexagonal Dumbbell,Workout home,Dumbbells,34,added_to_cart,1739529827
+66bcb2a87ace238e8cdd5f40,6632086d33f7e8cb27162c3b,Compression Arm Sleeves Black,Accessory depending on the activity,Running,5,added_to_cart,1739529893
+67ae188b6e17ee95d6ec054a,676017f7b637cdbfbb2ae36f,Ab Wheel - GymBeam,Workout home,Home workouts & others,8.60,added_to_favorite,1739530512
+67ae188b6e17ee95d6ec054a,676017f7b637cdbfbb2ae36f,Ab Wheel - GymBeam,Workout home,Home workouts & others,8.60,added_to_cart,1739530514
+66bcb2a87ace238e8cdd5f40,676010a6b637cdbfbb2adeaf,Winter Beanie Olivine - BeastPink,Clothes for women,Sports caps and hats,12.89,added_to_cart,1739530588
+66bcb2a87ace238e8cdd5f40,6632086d33f7e8cb27162c3b,Compression Arm Sleeves Black,Accessory depending on the activity,Running,5,added_to_cart,1739530632
+66bcb2a87ace238e8cdd5f40,663207d433f7e8cb27162c2f,Shaker Steel 750 ml - GymBeam,Fitness accessories,Shakers,6,added_to_cart,1739872111
+66bcb2a87ace238e8cdd5f40,663207d433f7e8cb27162c2f,Shaker Steel 750 ml - GymBeam,Fitness accessories,Shakers,6,added_to_cart,1739872202
+66bcb2a87ace238e8cdd5f40,6632080a33f7e8cb27162c33,Black Towel for Fitness,Fitness accessories,Towels,6,added_to_cart,1739872262
+66bcb2a87ace238e8cdd5f40,663207d433f7e8cb27162c2f,Shaker Steel 750 ml - GymBeam,Fitness accessories,Shakers,6,added_to_cart,1739872312
+66bcb2a87ace238e8cdd5f40,6630bd3db1cb58b5e3f01a2e,Jump rope,Work home,Jump ropes,5,added_to_cart,1739872316
+66bcb2a87ace238e8cdd5f40,6632080a33f7e8cb27162c33,Black Towel for Fitness,Fitness accessories,Towels,6,added_to_cart,1739872322
+66bcb2a87ace238e8cdd5f40,67601535b637cdbfbb2ae1b9,Glass food container 1050 ml - GymBeam,Bags & Backpacks,Bags & accessories for food,16.89,added_to_cart,1739872352
+66bcb2a87ace238e8cdd5f40,676012c0b637cdbfbb2adf87,Yoga Tape - Spokey,Workout home,Resistance bands and elastic bands,6.90,added_to_cart,1739872357
+66bcb2a87ace238e8cdd5f40,6632083d33f7e8cb27162c37,Explorer Backpack Black,Bags & Backpacks,Backpacks,50,added_to_cart,1739872403
+66bcb2a87ace238e8cdd5f40,6632070c33f7e8cb27162c24,Fitness belt,Fitness accessories,Fitness belts,30,added_to_cart,1739873131
+66bcb2a87ace238e8cdd5f40,663209ab33f7e8cb27162c53,Hoodie Zipper Hoodie Black - GymBeam,Clothes for men,Hoodies,30,added_to_cart,1739873136
+66bcb2a87ace238e8cdd5f40,67601111b637cdbfbb2adebc,Women's Zipper Hoodie Black - GymBeam,Clothes for women,Hoodies,24.98,added_to_cart,1739873142
+66bcb2a87ace238e8cdd5f40,6760135cb637cdbfbb2adfd5,Adjustable Dumbbell 3-20kg - GymBeam,Workout home,Dumbbells,140.67,added_to_cart,1739873148
+66bcb2a87ace238e8cdd5f40,676012c0b637cdbfbb2adf87,Yoga Tape - Spokey,Workout home,Resistance bands and elastic bands,6.90,added_to_cart,1739873154
+66bcb2a87ace238e8cdd5f40,676014eab637cdbfbb2ae1ac,Digital kitchen scale - GymBeam,Bags & Backpacks,Bags & accessories for food,16.56,added_to_cart,1739873288
+66bcb2a87ace238e8cdd5f40,676014eab637cdbfbb2ae1ac,Digital kitchen scale - GymBeam,Bags & Backpacks,Bags & accessories for food,16.56,added_to_cart,1739873356
+66bcb2a87ace238e8cdd5f40,67601535b637cdbfbb2ae1b9,Glass food container 1050 ml - GymBeam,Bags & Backpacks,Bags & accessories for food,16.89,added_to_cart,1739873361
+66bcb2a87ace238e8cdd5f40,663207d433f7e8cb27162c2f,Shaker Steel 750 ml - GymBeam,Fitness accessories,Shakers,6,added_to_cart,1739874693
+66bcb2a87ace238e8cdd5f40,6630bd3db1cb58b5e3f01a2e,Jump rope,Work home,Jump ropes,5,added_to_cart,1739874869
+66bcb2a87ace238e8cdd5f40,663207d433f7e8cb27162c2f,Shaker Steel 750 ml - GymBeam,Fitness accessories,Shakers,6.00,viewed,1739874936
+66bcb2a87ace238e8cdd5f40,663207d433f7e8cb27162c2f,Shaker Steel 750 ml - GymBeam,Fitness accessories,Shakers,6.00,viewed,1739874939
+66bcb2a87ace238e8cdd5f40,6630bd3db1cb58b5e3f01a2e,Jump rope,Work home,Jump ropes,5.00,viewed,1739875255
+66bcb2a87ace238e8cdd5f40,6630bd3db1cb58b5e3f01a2e,Jump rope,Work home,Jump ropes,5.00,viewed,1739875257
+66bcb2a87ace238e8cdd5f40,6632076933f7e8cb27162c28,Black Shaker 700ml - GymBeam,Fitness accessories,Shakers,4,added_to_cart,1739875274
+66bcb2a87ace238e8cdd5f40,6632070c33f7e8cb27162c24,Fitness belt,Fitness accessories,Fitness belts,30,added_to_cart,1739877134
+66bcb2a87ace238e8cdd5f40,6630bd3db1cb58b5e3f01a2e,Jump rope,Work home,Jump ropes,5,added_to_cart,1739877255
+66bcb2a87ace238e8cdd5f40,663207d433f7e8cb27162c2f,Shaker Steel 750 ml - GymBeam,Fitness accessories,Shakers,6.00,viewed,1739877375
+66bcb2a87ace238e8cdd5f40,663207d433f7e8cb27162c2f,Shaker Steel 750 ml - GymBeam,Fitness accessories,Shakers,6,added_to_cart,1739877378
+66bcb2a87ace238e8cdd5f40,6632086d33f7e8cb27162c3b,Compression Arm Sleeves Black,Accessory depending on the activity,Running,5,added_to_cart,1739877676
+66bcb2a87ace238e8cdd5f40,663207d433f7e8cb27162c2f,Shaker Steel 750 ml - GymBeam,Fitness accessories,Shakers,6,added_to_cart,1739877759
+66bcb2a87ace238e8cdd5f40,6632070c33f7e8cb27162c24,Fitness belt,Fitness accessories,Fitness belts,30,added_to_cart,1739877979
+66bcb2a87ace238e8cdd5f40,6632076933f7e8cb27162c28,Black Shaker 700ml - GymBeam,Fitness accessories,Shakers,4,added_to_cart,1739878231
+66bcb2a87ace238e8cdd5f40,6632076933f7e8cb27162c28,Black Shaker 700ml - GymBeam,Fitness accessories,Shakers,4,added_to_cart,1739879106
+66bcb2a87ace238e8cdd5f40,6632080a33f7e8cb27162c33,Black Towel for Fitness,Fitness accessories,Towels,6,added_to_cart,1739879109
+66bcb2a87ace238e8cdd5f40,663207d433f7e8cb27162c2f,Shaker Steel 750 ml - GymBeam,Fitness accessories,Shakers,6,added_to_cart,1739879644
+66bcb2a87ace238e8cdd5f40,6632070c33f7e8cb27162c24,Fitness belt,Fitness accessories,Fitness belts,30,added_to_cart,1739880007
+66bcb2a87ace238e8cdd5f40,663511e74e95b9d4add293a6,Yoga Mat Baby Pink,Workout home,Fitness mats,7.90,added_to_cart,1739882953
+66bcb2a87ace238e8cdd5f40,663514684e95b9d4add29404,Boxing Gloves F6 Kara Red Rdx 7,Accessory depending on the activity,Contact sports,23.65,added_to_cart,1739882956
+66bcb2a87ace238e8cdd5f40,6630bd3db1cb58b5e3f01a2e,Jump rope,Work home,Jump ropes,5.00,viewed,1739884175
+66bcb2a87ace238e8cdd5f40,6632070c33f7e8cb27162c24,Fitness belt,Fitness accessories,Fitness belts,30,added_to_cart,1739884183
+66bcb2a87ace238e8cdd5f40,6632086d33f7e8cb27162c3b,Compression Arm Sleeves Black,Accessory depending on the activity,Running,5,added_to_cart,1739884241
+66bcb2a87ace238e8cdd5f40,6632076933f7e8cb27162c28,Black Shaker 700ml - GymBeam,Fitness accessories,Shakers,4,added_to_favorite,1739886081
+66bcb2a87ace238e8cdd5f40,663207d433f7e8cb27162c2f,Shaker Steel 750 ml - GymBeam,Fitness accessories,Shakers,6,added_to_cart,1739886104
+66bcb2a87ace238e8cdd5f40,67601a3ab637cdbfbb2ae42b,Black swimming helmet - ZONE3,Accessory depending on the activity,Swimming,5.98,added_to_cart,1739886157
+66bcb2a87ace238e8cdd5f40,67601a3ab637cdbfbb2ae42b,Black swimming helmet - ZONE3,Accessory depending on the activity,Swimming,5.98,added_to_cart,1739886169
+66bcb2a87ace238e8cdd5f40,67601a3ab637cdbfbb2ae42b,Black swimming helmet - ZONE3,Accessory depending on the activity,Swimming,5.98,viewed,1739886173
+66bcb2a87ace238e8cdd5f40,67601a3ab637cdbfbb2ae42b,Black swimming helmet - ZONE3,Accessory depending on the activity,Swimming,5.98,added_to_cart,1739886251
+66bcb2a87ace238e8cdd5f40,663207d433f7e8cb27162c2f,Shaker Steel 750 ml - GymBeam,Fitness accessories,Shakers,6,added_to_cart,1739886273
+66bcb2a87ace238e8cdd5f40,663514684e95b9d4add29404,Boxing Gloves F6 Kara Red Rdx 7,Accessory depending on the activity,Contact sports,23.65,added_to_cart,1739887536
+66bcb2a87ace238e8cdd5f40,663207d433f7e8cb27162c2f,Shaker Steel 750 ml - GymBeam,Fitness accessories,Shakers,6,added_to_cart,1739887602
+66bcb2a87ace238e8cdd5f40,66320a2433f7e8cb27162c59,Hexagonal Dumbbell,Workout home,Dumbbells,34,added_to_cart,1739888226
+66bcb2a87ace238e8cdd5f40,6632070c33f7e8cb27162c24,Fitness belt,Fitness accessories,Fitness belts,30,added_to_cart,1739888249
+66bcb2a87ace238e8cdd5f40,67600fd2b637cdbfbb2ade50,MERINO Beanie Black - STRIX,Clothes for women,Sports caps and hats,19.6,added_to_cart,1739888293
+66bcb2a87ace238e8cdd5f40,676013a3b637cdbfbb2adfe2,Dumbbell - Climaqx,Workout home,Dumbbells,154.99,added_to_cart,1739888295
+66bcb2a87ace238e8cdd5f40,6630bd3db1cb58b5e3f01a2e,Jump rope,Work home,Jump ropes,5,added_to_cart,1739888670
+66bcb2a87ace238e8cdd5f40,6632080a33f7e8cb27162c33,Black Towel for Fitness,Fitness accessories,Towels,6,added_to_cart,1739888672
+66bcb2a87ace238e8cdd5f40,6632070c33f7e8cb27162c24,Fitness belt,Fitness accessories,Fitness belts,30,added_to_cart,1739888681
