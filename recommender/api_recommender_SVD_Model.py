@@ -185,19 +185,20 @@ def cart_recommendations(data, user_model, trainset, user_id, product_id, top_n=
     return hybrid_recommendations
 
 def cart_view_recommendations(data, user_model, trainset, user_id, product_id, top_n=15):
-    """ Recomandă produse relevante folosind ML (SVD) + co-ocurență """
+    """ Recomandă produse relevante folosind ML (SVD) + conținut """
 
-    #  PAS 2: Co-ocurență (produse cumpărate împreună)
-    purchased_together = data[data['action'] == 'purchased'].groupby('userId')['productId'].apply(list)
-    co_occur = {}
-    for products in purchased_together:
-        if product_id in products:
-            for p in products:
-                if p != product_id:
-                    co_occur[p] = co_occur.get(p, 0) + 1
-    co_occurrence_recommendations = sorted(co_occur, key=co_occur.get, reverse=True)[:top_n]
+    #Filtrare pe bază de conținut (similaritate de produs)
+    data["features"] = data[['category', 'subcategory', 'price']].apply(lambda x: ' '.join(x.astype(str)), axis=1)
+    vectorizer = TfidfVectorizer(stop_words='english')
+    X = vectorizer.fit_transform(data["features"])
+    cosine_sim = cosine_similarity(X, X)
 
-    #  PAS 3: Recomandări bazate pe modelul SVD
+    product_index = data[data['productId'] == product_id].index[0]
+    similar_products = cosine_sim[product_index]
+    similar_product_indices = similar_products.argsort()[-(top_n + 1):][::-1]
+    content_recommendations = data.iloc[similar_product_indices]['productId'].tolist()
+
+    #Recomandări bazate pe modelul SVD
     all_products = data['productId'].unique()
     predictions = []
     
@@ -211,7 +212,38 @@ def cart_view_recommendations(data, user_model, trainset, user_id, product_id, t
     predictions.sort(key=lambda x: x[1], reverse=True)
     svd_recommendations = [pid for pid, _ in predictions[:top_n]]
 
-    #  PAS 4: Combinăm toate metodele
+    #Combinăm toate metodele
+    hybrid_recommendations = list(set(content_recommendations + svd_recommendations))[:top_n]
+
+    return hybrid_recommendations
+def favorite_view_recommendations(data, user_model, trainset, user_id, product_id, top_n=15):
+    """ Recomandă produse relevante folosind ML (SVD) + co-ocurență """
+
+    #Co-ocurență (produse cumpărate împreună)
+    purchased_together = data[data['action'] == 'purchased'].groupby('userId')['productId'].apply(list)
+    co_occur = {}
+    for products in purchased_together:
+        if product_id in products:
+            for p in products:
+                if p != product_id:
+                    co_occur[p] = co_occur.get(p, 0) + 1
+    co_occurrence_recommendations = sorted(co_occur, key=co_occur.get, reverse=True)[:top_n]
+
+    #Recomandări bazate pe modelul SVD
+    all_products = data['productId'].unique()
+    predictions = []
+    
+    for pid in all_products:
+        try:
+            pred = user_model.predict(user_id, pid)
+            predictions.append((pid, pred.est))
+        except:
+            continue
+
+    predictions.sort(key=lambda x: x[1], reverse=True)
+    svd_recommendations = [pid for pid, _ in predictions[:top_n]]
+
+    #Combinăm toate metodele
     hybrid_recommendations = list(set(co_occurrence_recommendations + svd_recommendations))[:top_n]
 
     return hybrid_recommendations
@@ -263,6 +295,25 @@ def get_cart_view_recommendations():
         return jsonify({"error": "Missing user_id or product_id"}), 400
 
     recommended_products = cart_view_recommendations(data, user_model, trainset, user_id, product_id, top_n=15)
+    
+    # Eliminăm produsul adăugat în coș din recomandări
+    if product_id in recommended_products:
+        recommended_products.remove(product_id)
+
+    return jsonify({
+        "user_id": user_id,
+        "product_id": product_id,
+        "recommended_products": recommended_products
+    })
+@app.route("/favorite-view-recommendations", methods=["GET"])
+def get_cart_view_recommendations():
+    user_id = request.args.get('user_id')
+    product_id = request.args.get('product_id')
+
+    if not user_id or not product_id:
+        return jsonify({"error": "Missing user_id or product_id"}), 400
+
+    recommended_products = favorite_view_recommendations(data, user_model, trainset, user_id, product_id, top_n=15)
     
     # Eliminăm produsul adăugat în coș din recomandări
     if product_id in recommended_products:
