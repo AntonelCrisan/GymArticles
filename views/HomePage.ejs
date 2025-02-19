@@ -147,7 +147,7 @@
              <% } %>
         </div>
         <div class="swiper">
-            <h3>Frequently purchased products</h3>
+            <h3>Most Popular Now</h3>
             <div class="swiper-container-top15">
                 <div class="swiper-wrapper">
                     <% topProducts.forEach(product => { %>
@@ -185,7 +185,7 @@
         </div>
             <% if (user) { %>
                 <div class="swiper">
-                    <h3>Recommended products for you</h3>
+                    <h3>Inspired by Your Shopping</h3>
                     <div class="swiper-container-recommended">
                         <div class="swiper-wrapper">
                             <% top15ProductsRecomendations.forEach(product => { %>
@@ -266,6 +266,7 @@
                     <h5 class="modal-title">The product has been added to the cart.</h5>
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Închide"></button>
                 </div>
+                <h6 class="m-4">Customers who added this product also bought...</h6>
                 <div class="modal-body" style="max-height: 400px; overflow-y: auto;">
                  <div id="modal-body-recommendations" class="row"></div>
                 </div>

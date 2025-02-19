@@ -570,6 +570,7 @@ app.post('/addToCart', async (req, res) => {
         cartItem.quantity += 1;
       } else {
         user.cart.push({ productId, quantity: 1 });
+        console.log(productId);
         const recommendedProducts = await recommendations_cart(userId, productId);
         if(recommendedProducts){
           const recomendationsArray = recommendedProducts.recommended_products;
@@ -852,15 +853,16 @@ app.get('/cart', requireAuth, countFavoriteProduct, countCartProduct, async (req
       ...item.productId.toObject(),
       quantity: item.quantity
     }));
-    const productId = cart.map(productID => ({
-      id: productID._id
-    }))
+    const productId = cart.map(productID => (
+      productID._id.toString()
+    ));
     const totalProducts = productId.length - 1;
     const lastProductAddedToCart = productId[totalProducts];
     const recommendedProducts = await recommendations_cart_view(userId, lastProductAddedToCart);
     if(recommendedProducts){
       const recomendationsArray = recommendedProducts.recommended_products;
       products = await Article.find({ _id: { $in: recomendationsArray } });
+     
     }
     // Calculate total cost
     const productCost = cart.reduce((total, item) => {
@@ -885,9 +887,9 @@ app.get('/favorites', requireAuth, countFavoriteProduct, countCartProduct, async
     const favoriteProductIds = user.favorites;
     const favorites = await Article.find({ _id: { $in: favoriteProductIds } });
     let products;
-    const productId = favorites.map(productID => ({
-      id: productID._id
-    }))
+    const productId = favorites.map(productID => (
+      productID._id.toString()
+    ))
     const totalProducts = favoriteProductIds.length - 1;
     const lastProductAddedToCart = productId[totalProducts];
     const recommendedProducts = await recommendations_favorite_view(userId, lastProductAddedToCart);

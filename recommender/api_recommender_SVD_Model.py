@@ -164,21 +164,6 @@ def cart_recommendations(data, user_model, trainset, user_id, product_id, top_n=
                 if p != product_id:
                     co_occur[p] = co_occur.get(p, 0) + 1
     co_occurrence_recommendations = sorted(co_occur, key=co_occur.get, reverse=True)[:top_n]
-
-    #  PAS 3: Recomandări bazate pe modelul KNN
-    all_products = data['productId'].unique()
-    predictions = []
-    
-    for pid in all_products:
-        try:
-            pred = user_model.predict(user_id, pid)
-            predictions.append((pid, pred.est))
-        except:
-            continue
-
-    predictions.sort(key=lambda x: x[1], reverse=True)
-    svd_recommendations = [pid for pid, _ in predictions[:top_n]]
-
     #  PAS 4: Combinăm toate metodele
     hybrid_recommendations = list(set(co_occurrence_recommendations + content_recommendations))[:top_n]
 
@@ -213,7 +198,7 @@ def cart_view_recommendations(data, user_model, trainset, user_id, product_id, t
     svd_recommendations = [pid for pid, _ in predictions[:top_n]]
 
     #Combinăm toate metodele
-    hybrid_recommendations = list(set(content_recommendations + svd_recommendations))[:top_n]
+    hybrid_recommendations = list(set(svd_recommendations + content_recommendations))[:top_n]
 
     return hybrid_recommendations
 def favorite_view_recommendations(data, user_model, trainset, user_id, product_id, top_n=15):
