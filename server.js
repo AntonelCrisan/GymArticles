@@ -778,7 +778,7 @@ app.get('/product', countFavoriteProduct,countCartProduct, async (req, res) => {
     let products;
     const viewProductRecommendations = await recommendations_product_view(userId, id);
     if(viewProductRecommendations){
-      const recomendationsArray = recommendedProducts.recommended_products;
+      const recomendationsArray = viewProductRecommendations.recommended_products;
       products = await Article.find({ _id: { $in: recomendationsArray } });
     }
       //Save the interaction into a csv file
