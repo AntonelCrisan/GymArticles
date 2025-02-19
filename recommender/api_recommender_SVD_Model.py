@@ -233,6 +233,36 @@ def favorite_view_recommendations(data, user_model, trainset, user_id, product_i
 
     return hybrid_recommendations
 
+def view_product(data, user_model, trainset, user_id, product_id, top_n=15):
+    """ Recomandă produse relevante folosind ML (SVD) + co-ocurență """
+
+    #Co-ocurență (produse cumpărate împreună)
+    purchased_together = data[data['action'] == 'purchased'].groupby('userId')['productId'].apply(list)
+    co_occur = {}
+    for products in purchased_together:
+        if product_id in products:
+            for p in products:
+                if p != product_id:
+                    co_occur[p] = co_occur.get(p, 0) + 1
+    co_occurrence_recommendations = sorted(co_occur, key=co_occur.get, reverse=True)[:top_n]
+
+    #Filtrare pe bază de conținut (similaritate de produs)
+    data["features"] = data[['category', 'subcategory', 'price']].apply(lambda x: ' '.join(x.astype(str)), axis=1)
+    vectorizer = TfidfVectorizer(stop_words='english')
+    X = vectorizer.fit_transform(data["features"])
+    cosine_sim = cosine_similarity(X, X)
+
+    product_index = data[data['productId'] == product_id].index[0]
+    similar_products = cosine_sim[product_index]
+    similar_product_indices = similar_products.argsort()[-(top_n + 1):][::-1]
+    content_recommendations = data.iloc[similar_product_indices]['productId'].tolist()
+
+
+    #Combinăm toate metodele
+    hybrid_recommendations = list(set(co_occurrence_recommendations + content_recommendations))[:top_n]
+
+    return hybrid_recommendations
+
 @app.route("/recommendations", methods=["GET"])
 def get_recommendations():
     user_id = request.args.get('user_id')
@@ -299,6 +329,25 @@ def get_favorite_recommendations():
         return jsonify({"error": "Missing user_id or product_id"}), 400
 
     recommended_products = favorite_view_recommendations(data, user_model, trainset, user_id, product_id, top_n=15)
+    
+    # Eliminăm produsul adăugat în coș din recomandări
+    if product_id in recommended_products:
+        recommended_products.remove(product_id)
+
+    return jsonify({
+        "user_id": user_id,
+        "product_id": product_id,
+        "recommended_products": recommended_products
+    })
+@app.route("/view-product", methods=["GET"])
+def get_view_recommendations():
+    user_id = request.args.get('user_id')
+    product_id = request.args.get('product_id')
+
+    if not user_id or not product_id:
+        return jsonify({"error": "Missing user_id or product_id"}), 400
+
+    recommended_products = view_product(data, user_model, trainset, user_id, product_id, top_n=15)
     
     # Eliminăm produsul adăugat în coș din recomandări
     if product_id in recommended_products:

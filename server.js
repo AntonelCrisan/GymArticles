@@ -554,6 +554,15 @@ async function recommendations_favorite_view(user_id, product_id){
       return null; // Poți returna o valoare implicită sau să arunci eroarea
   }
 }
+async function recommendations_product_view(user_id, product_id){
+  try {
+    const response = await axios.get(`http://127.0.0.1:5000/view-product?user_id=${user_id}&product_id=${product_id}`);
+    return response.data;
+  } catch (error) {
+      console.error("Eroare la preluarea datelor:", error);
+      return null; // Poți returna o valoare implicită sau să arunci eroarea
+  }
+}
 //POST method for adding products to cart
 app.post('/addToCart', async (req, res) => {
   try {
@@ -766,6 +775,12 @@ app.get('/product', countFavoriteProduct,countCartProduct, async (req, res) => {
     const userId = getId();
     const {id} = req.query; //Get product id from query
     const article = await Article.findById(id); //Searching the article from database by product id
+    let products;
+    const viewProductRecommendations = await recommendations_product_view(userId, id);
+    if(viewProductRecommendations){
+      const recomendationsArray = recommendedProducts.recommended_products;
+      products = await Article.find({ _id: { $in: recomendationsArray } });
+    }
       //Save the interaction into a csv file
       const csvWriter = createObjectCsvWriter({
         path: 'recommender/recommendations.csv', 
@@ -798,7 +813,7 @@ app.get('/product', countFavoriteProduct,countCartProduct, async (req, res) => {
     .catch((err) => {
         console.error('Eroare la scrierea datelor în fișierul CSV:', err);
     });
-    res.render('Product', {article, nrFavorites: req.nrFavorites,  nrCart:  req.nrCart});//Display the product result and render the 'Product' page
+    res.render('Product', {article, nrFavorites: req.nrFavorites,  nrCart:  req.nrCart, products});//Display the product result and render the 'Product' page
   } catch (error) {
     console.error('Error for getting the product:', error);  
   }
