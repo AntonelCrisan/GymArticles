@@ -863,6 +863,7 @@ app.get('/cart', requireAuth, countFavoriteProduct, countCartProduct, async (req
   try {
     const userId = getId();
     const user = await User.findById(userId).populate('cart.productId');
+    const favoriteProductsID = user ? user.favorites : [];
     let products;
     const cart = user.cart.map(item => ({
       ...item.productId.toObject(),
@@ -888,7 +889,7 @@ app.get('/cart', requireAuth, countFavoriteProduct, countCartProduct, async (req
     }, 0);
     const deliveryCost = 5;
     req.session.productCost = productCost;
-    res.render('Cart', { nrFavorites: req.nrFavorites, nrCart: req.nrCart, cart, productCost, deliveryCost, products});
+    res.render('Cart', { nrFavorites: req.nrFavorites, nrCart: req.nrCart, cart, productCost, deliveryCost, products, favoriteProductsID});
   } catch (error) {
     res.status(500).json({ error: 'Server error' });
     console.log(error);
@@ -900,6 +901,7 @@ app.get('/favorites', requireAuth, countFavoriteProduct, countCartProduct, async
   try {
     const userId = getId();
     const user = await User.findById(userId).populate('favorites');
+    const favoriteProductsID = user ? user.favorites : [];
     const favoriteProductIds = user.favorites;
     const favorites = await Article.find({ _id: { $in: favoriteProductIds } });
     let products;
@@ -915,7 +917,7 @@ app.get('/favorites', requireAuth, countFavoriteProduct, countCartProduct, async
         products = await Article.find({ _id: { $in: recomendationsArray } });
       }
     }
-    res.render('Favorites', {nrFavorites: req.nrFavorites, nrCart:  req.nrCart, favorites, products})
+    res.render('Favorites', {nrFavorites: req.nrFavorites, nrCart:  req.nrCart, favorites, products, favoriteProductsID})
   } catch (error) {
     res.status(500).json({error: 'Server error'});
   }
