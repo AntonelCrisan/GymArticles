@@ -113,17 +113,17 @@ def initialize_model():
     regression_line = np.polyval(coefficients, real_values)
 
     # Graficul
-    # plt.figure(figsize=(10, 6))
-    # plt.scatter(real_values, predicted_values, color='green', label='Valori prezise')
-    # plt.plot(real_values, regression_line, color='red', label='Linie de regresie', linewidth=2)
+    plt.figure(figsize=(10, 6))
+    plt.scatter(real_values, predicted_values, color='green', label='Valori prezise')
+    plt.plot(real_values, regression_line, color='red', label='Linie de regresie', linewidth=2)
 
-    # # Adăugăm etichete și legendă
-    # plt.title("Grafic Valori Reale vs. Valori Prezise")
-    # plt.xlabel("Valori Reale")
-    # plt.ylabel("Valori Prezise")
-    # plt.legend()
-    # plt.grid(True)
-    # plt.show()
+    # Adăugăm etichete și legendă
+    plt.title("Grafic Valori Reale vs. Valori Prezise")
+    plt.xlabel("Valori Reale")
+    plt.ylabel("Valori Prezise")
+    plt.legend()
+    plt.grid(True)
+    plt.show()
 
 #Funcția de filtrare pe bază de conținut
 def content_based_recommendations(data, product_id, top_n=20):

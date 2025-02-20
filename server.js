@@ -873,11 +873,12 @@ app.get('/cart', requireAuth, countFavoriteProduct, countCartProduct, async (req
     ));
     const totalProducts = productId.length - 1;
     const lastProductAddedToCart = productId[totalProducts];
-    const recommendedProducts = await recommendations_cart_view(userId, lastProductAddedToCart);
-    if(recommendedProducts){
-      const recomendationsArray = recommendedProducts.recommended_products;
-      products = await Article.find({ _id: { $in: recomendationsArray } });
-     
+    if(cart.length !== 0){
+      const recommendedProducts = await recommendations_cart_view(userId, lastProductAddedToCart);
+      if(recommendedProducts){
+        const recomendationsArray = recommendedProducts.recommended_products;
+        products = await Article.find({ _id: { $in: recomendationsArray } });
+      }
     }
     // Calculate total cost
     const productCost = cart.reduce((total, item) => {
@@ -907,10 +908,12 @@ app.get('/favorites', requireAuth, countFavoriteProduct, countCartProduct, async
     ))
     const totalProducts = favoriteProductIds.length - 1;
     const lastProductAddedToCart = productId[totalProducts];
+    if(favorites.length !== 0){
     const recommendedProducts = await recommendations_favorite_view(userId, lastProductAddedToCart);
-    if(recommendedProducts){
-      const recomendationsArray = recommendedProducts.recommended_products;
-      products = await Article.find({ _id: { $in: recomendationsArray } });
+      if(recommendedProducts){
+        const recomendationsArray = recommendedProducts.recommended_products;
+        products = await Article.find({ _id: { $in: recomendationsArray } });
+      }
     }
     res.render('Favorites', {nrFavorites: req.nrFavorites, nrCart:  req.nrCart, favorites, products})
   } catch (error) {
