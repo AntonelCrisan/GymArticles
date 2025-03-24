@@ -18,6 +18,7 @@ const nodemailer = require('nodemailer');
 const bcrypt = require('bcryptjs');
 const createObjectCsvWriter  = require('csv-writer').createObjectCsvWriter;
 const axios = require("axios");
+const Activity = require('./public/activity');
 require("dotenv").config();
 const stripe = require('stripe')(process.env.SECRET_STRIPE_KEY);
 app.use(express.static('public'));
@@ -458,21 +459,21 @@ app.post('/addFavorite', async (req, res) => {
           // Add productId to favorites if it's not already present
           if (!user.favorites.includes(productId)) {
             //Save the interaction into a csv file
-                const csvWriter = createObjectCsvWriter({
-                  path: 'recommender/recommendations.csv', 
-                  header: [
-                    { id: 'userId', title: 'userId' },
-                    { id: 'productId', title: 'productId' },
-                    { id: 'productName', title: 'productName' },
-                    { id: 'category', title: 'category' },
-                    { id: 'subcategory', title: 'subcategory' },
-                    { id: 'price', title: 'price' },
-                    { id: 'action', title: 'action' },
-                    { id: 'timestamp', title: 'timestamp' }
-                  ],
-                  append: true 
-                });
-              const userInteraction = [{
+                // const csvWriter = createObjectCsvWriter({
+                //   path: 'recommender/recommendations.csv', 
+                //   header: [
+                //     { id: 'userId', title: 'userId' },
+                //     { id: 'productId', title: 'productId' },
+                //     { id: 'productName', title: 'productName' },
+                //     { id: 'category', title: 'category' },
+                //     { id: 'subcategory', title: 'subcategory' },
+                //     { id: 'price', title: 'price' },
+                //     { id: 'action', title: 'action' },
+                //     { id: 'timestamp', title: 'timestamp' }
+                //   ],
+                //   append: true 
+                // });
+              const userInteraction = new Activity({
                 userId: userId,
                 productId: productId,
                 productName: product.name,
@@ -481,14 +482,18 @@ app.post('/addFavorite', async (req, res) => {
                 price: product.price,
                 action: "added_to_favorite",
                 timestamp : Math.floor(Date.now() / 1000)
-              }];
-              csvWriter.writeRecords(userInteraction)
-              .then(() => {
-                  console.log('Datele noi au fost adăugate cu succes în fișierul CSV!');
-              })
-              .catch((err) => {
-                  console.error('Eroare la scrierea datelor în fișierul CSV:', err);
               });
+              userInteraction.save()
+              .then(() => {
+                console.log("Activity saved successfully!");
+              })
+              // csvWriter.writeRecords(userInteraction)
+              // .then(() => {
+              //     console.log('Datele noi au fost adăugate cu succes în fișierul CSV!');
+              // })
+              // .catch((err) => {
+              //     console.error('Eroare la scrierea datelor în fișierul CSV:', err);
+              // });
               user.favorites.push(productId);
               await user.save();
           }
@@ -580,28 +585,28 @@ app.post('/addToCart', async (req, res) => {
       } else {
         user.cart.push({ productId, quantity: 1 });
         console.log(productId);
-        const recommendedProducts = await recommendations_cart(userId, productId);
+        const recommendedProducts = await recommendations_cart(userId, productId) || [];
         if(recommendedProducts){
           const recomendationsArray = recommendedProducts.recommended_products;
           products = await Article.find({ _id: { $in: recomendationsArray } });
         }
-        // If product not in cart, add a new entry with quantity 1
-        //Save the interaction into a csv file
-        const csvWriter = createObjectCsvWriter({
-          path: 'recommender/recommendations.csv', 
-          header: [
-            { id: 'userId', title: 'userId' },
-            { id: 'productId', title: 'productId' },
-            { id: 'productName', title: 'productName' },
-            { id: 'category', title: 'category' },
-            { id: 'subcategory', title: 'subcategory' },
-            { id: 'price', title: 'price' },
-            { id: 'action', title: 'action' },
-            { id: 'timestamp', title: 'timestamp' }
-          ],
-          append: true 
-        });
-      const userInteraction = [{
+        // // If product not in cart, add a new entry with quantity 1
+        // //Save the interaction into a csv file
+        // const csvWriter = createObjectCsvWriter({
+        //   path: 'recommender/recommendations.csv', 
+        //   header: [
+        //     { id: 'userId', title: 'userId' },
+        //     { id: 'productId', title: 'productId' },
+        //     { id: 'productName', title: 'productName' },
+        //     { id: 'category', title: 'category' },
+        //     { id: 'subcategory', title: 'subcategory' },
+        //     { id: 'price', title: 'price' },
+        //     { id: 'action', title: 'action' },
+        //     { id: 'timestamp', title: 'timestamp' }
+        //   ],
+        //   append: true 
+        // });
+      const userInteraction =  new Activity({
         userId: userId,
         productId: productId,
         productName: stockProduct.name,
@@ -610,14 +615,18 @@ app.post('/addToCart', async (req, res) => {
         price: stockProduct.price,
         action: "added_to_cart",
         timestamp : Math.floor(Date.now() / 1000)
-      }];
-      csvWriter.writeRecords(userInteraction)
-      .then(() => {
-          console.log('Datele noi au fost adăugate cu succes în fișierul CSV!');
-      })
-      .catch((err) => {
-          console.error('Eroare la scrierea datelor în fișierul CSV:', err);
       });
+      userInteraction.save()
+      .then(() => {
+        console.log("Activity saved successfully!");
+      })
+      // csvWriter.writeRecords(userInteraction)
+      // .then(() => {
+      //     console.log('Datele noi au fost adăugate cu succes în fișierul CSV!');
+      // })
+      // .catch((err) => {
+      //     console.error('Eroare la scrierea datelor în fișierul CSV:', err);
+      // });
       }
       await user.save();
       const newCartCount = user.cart.reduce((total, item) => total + item.quantity, 0);
@@ -731,8 +740,8 @@ app.get('/', countFavoriteProduct, countCartProduct, async (req, res) => {
     } else {
       articles = await Article.find(); //Showing all products
     }
-    const top15Products = await showTop15Products();
-    const product_recomendations = await recommendations(userId);
+    const top15Products = await showTop15Products() || [];
+    const product_recomendations = await recommendations(userId) || [];
     if (top15Products && product_recomendations) {
       const productIds = top15Products.map(product => product.productId);
       const recomendationsArray = product_recomendations.recommendations;
@@ -778,27 +787,27 @@ app.get('/product', countFavoriteProduct,countCartProduct, async (req, res) => {
     const user = await User.findById(userId);
     const favoriteProductsID = user ? user.favorites : [];
     let products;
-    const viewProductRecommendations = await recommendations_product_view(userId, id);
+    const viewProductRecommendations = await recommendations_product_view(userId, id) || [];
     if(viewProductRecommendations){
       const recomendationsArray = viewProductRecommendations.recommended_products;
       products = await Article.find({ _id: { $in: recomendationsArray } });
     }
-      //Save the interaction into a csv file
-      const csvWriter = createObjectCsvWriter({
-        path: 'recommender/recommendations.csv', 
-        header: [
-          { id: 'userId', title: 'userId' },
-          { id: 'productId', title: 'productId' },
-          { id: 'productName', title: 'productName' },
-          { id: 'category', title: 'category' },
-          { id: 'subcategory', title: 'subcategory' },
-          { id: 'price', title: 'price' },
-          { id: 'action', title: 'action' },
-          { id: 'timestamp', title: 'timestamp' }
-        ],
-        append: true 
-      });
-    const userInteraction = [{
+      // //Save the interaction into a csv file
+      // const csvWriter = createObjectCsvWriter({
+      //   path: 'recommender/recommendations.csv', 
+      //   header: [
+      //     { id: 'userId', title: 'userId' },
+      //     { id: 'productId', title: 'productId' },
+      //     { id: 'productName', title: 'productName' },
+      //     { id: 'category', title: 'category' },
+      //     { id: 'subcategory', title: 'subcategory' },
+      //     { id: 'price', title: 'price' },
+      //     { id: 'action', title: 'action' },
+      //     { id: 'timestamp', title: 'timestamp' }
+      //   ],
+      //   append: true 
+      // });
+    const userInteraction = new Activity({
       userId: userId,
       productId: article._id,
       productName: article.name,
@@ -807,14 +816,18 @@ app.get('/product', countFavoriteProduct,countCartProduct, async (req, res) => {
       price: parseFloat(article.price).toFixed(2),
       action: "viewed",
       timestamp : Math.floor(Date.now() / 1000)
-    }];
-    csvWriter.writeRecords(userInteraction)
-    .then(() => {
-        console.log('Datele noi au fost adăugate cu succes în fișierul CSV!');
-    })
-    .catch((err) => {
-        console.error('Eroare la scrierea datelor în fișierul CSV:', err);
     });
+    userInteraction.save()
+    .then(() => {
+      console.log("Activity saved successfully!");
+    })
+    // csvWriter.writeRecords(userInteraction)
+    // .then(() => {
+    //     console.log('Datele noi au fost adăugate cu succes în fișierul CSV!');
+    // })
+    // .catch((err) => {
+    //     console.error('Eroare la scrierea datelor în fișierul CSV:', err);
+    // });
     res.render('Product', {article, nrFavorites: req.nrFavorites,  nrCart:  req.nrCart, products, favoriteProductsID});//Display the product result and render the 'Product' page
   } catch (error) {
     console.error('Error for getting the product:', error);  
@@ -877,7 +890,7 @@ app.get('/cart', requireAuth, countFavoriteProduct, countCartProduct, async (req
     const totalProducts = productId.length - 1;
     const lastProductAddedToCart = productId[totalProducts];
     if(cart.length !== 0){
-      const recommendedProducts = await recommendations_cart_view(userId, lastProductAddedToCart);
+      const recommendedProducts = await recommendations_cart_view(userId, lastProductAddedToCart) || [];
       if(recommendedProducts){
         const recomendationsArray = recommendedProducts.recommended_products;
         products = await Article.find({ _id: { $in: recomendationsArray } });
@@ -912,7 +925,7 @@ app.get('/favorites', requireAuth, countFavoriteProduct, countCartProduct, async
     const totalProducts = favoriteProductIds.length - 1;
     const lastProductAddedToCart = productId[totalProducts];
     if(favorites.length !== 0){
-    const recommendedProducts = await recommendations_favorite_view(userId, lastProductAddedToCart);
+    const recommendedProducts = await recommendations_favorite_view(userId, lastProductAddedToCart) || [];
       if(recommendedProducts){
         const recomendationsArray = recommendedProducts.recommended_products;
         products = await Article.find({ _id: { $in: recomendationsArray } });
@@ -1000,20 +1013,20 @@ const cartWithDetails = await Promise.all(
   })
 );
 
-const csvWriter = createObjectCsvWriter({
-  path: 'recommender/recommendations.csv',
-  header: [
-      { id: 'userId', title: 'userId' },
-      { id: 'productId', title: 'productId' },
-      { id: 'productName', title: 'productName' },
-      { id: 'category', title: 'category' },
-      { id: 'subcategory', title: 'subcategory' },
-      { id: 'price', title: 'price' },
-      { id: 'action', title: 'action' },
-      { id: 'timestamp', title: 'timestamp' },
-  ],
-  append: true,
-});
+// const csvWriter = createObjectCsvWriter({
+//   path: 'recommender/recommendations.csv',
+//   header: [
+//       { id: 'userId', title: 'userId' },
+//       { id: 'productId', title: 'productId' },
+//       { id: 'productName', title: 'productName' },
+//       { id: 'category', title: 'category' },
+//       { id: 'subcategory', title: 'subcategory' },
+//       { id: 'price', title: 'price' },
+//       { id: 'action', title: 'action' },
+//       { id: 'timestamp', title: 'timestamp' },
+//   ],
+//   append: true,
+// });
 // Construiește datele pentru CSV
 const userInteractions = cartWithDetails.map(item => ({
   userId: userId,
@@ -1025,9 +1038,14 @@ const userInteractions = cartWithDetails.map(item => ({
   action: "purchased",
   timestamp: Math.floor(Date.now() / 1000)
 }));
-// Scrie în CSV
-await csvWriter.writeRecords(userInteractions);
-console.log('Datele noi au fost adăugate cu succes în fișierul CSV!');
+Activity.insertMany(userInteractions)
+  .then(() => {
+    console.log("All interactions saved successfully!");
+  })
+  .catch(err => console.error("Error saving interactions:", err));
+// // Scrie în CSV
+// await csvWriter.writeRecords(userInteractions);
+// console.log('Datele noi au fost adăugate cu succes în fișierul CSV!');
   res.status(200).json({success: true});
   } catch (error) {
       console.error('Eroare la procesarea comenzii:', error);
@@ -1111,20 +1129,20 @@ app.get('/order-placed',countCartProduct, async (req, res) => {
             };
         })
     );
-        const csvWriter = createObjectCsvWriter({
-          path: 'recommender/recommendations.csv',
-          header: [
-              { id: 'userId', title: 'userId' },
-              { id: 'productId', title: 'productId' },
-              { id: 'productName', title: 'productName' },
-              { id: 'category', title: 'category' },
-              { id: 'subcategory', title: 'subcategory' },
-              { id: 'price', title: 'price' },
-              { id: 'action', title: 'action' },
-              { id: 'timestamp', title: 'timestamp' },
-          ],
-          append: true,
-      });
+      //   const csvWriter = createObjectCsvWriter({
+      //     path: 'recommender/recommendations.csv',
+      //     header: [
+      //         { id: 'userId', title: 'userId' },
+      //         { id: 'productId', title: 'productId' },
+      //         { id: 'productName', title: 'productName' },
+      //         { id: 'category', title: 'category' },
+      //         { id: 'subcategory', title: 'subcategory' },
+      //         { id: 'price', title: 'price' },
+      //         { id: 'action', title: 'action' },
+      //         { id: 'timestamp', title: 'timestamp' },
+      //     ],
+      //     append: true,
+      // });
       // Construiește datele pentru CSV
       const userInteractions = cartWithDetails.map(item => ({
           userId: userId,
@@ -1136,13 +1154,18 @@ app.get('/order-placed',countCartProduct, async (req, res) => {
           action: "purchased",
           timestamp: Math.floor(Date.now() / 1000)
       }));
+      Activity.insertMany(userInteractions)
+      .then(() => {
+        console.log("All interactions saved successfully!");
+      })
+      .catch(err => console.error("Error saving interactions:", err));
       // Clear the cart
       user.cart = [];
       // Save the updated user data
       await user.save();
-      // Scrie în CSV
-      await csvWriter.writeRecords(userInteractions);
-      console.log('Datele noi au fost adăugate cu succes în fișierul CSV!');
+      // // Scrie în CSV
+      // await csvWriter.writeRecords(userInteractions);
+      // console.log('Datele noi au fost adăugate cu succes în fișierul CSV!');
         // Render the success page
         res.render('SuccessPayOnlineCard');
   });

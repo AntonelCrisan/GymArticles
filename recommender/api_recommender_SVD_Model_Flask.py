@@ -16,7 +16,8 @@ app = Flask(__name__)
 
 data_file = os.path.join(os.path.dirname(__file__), "recommendations.csv")
 data = None
-user_model, trainset = None, None
+user_model = None
+trainset = None
 pred = None
 
 
@@ -32,9 +33,9 @@ def load_data(file_path):
 
     data['rating'] = data['action'].map(action_to_rating)
     data['timestamp'] = pd.to_datetime(data['timestamp'], unit='s')
-    max_time = data['timestamp'].max()
 
     # Ajustăm decăderea temporală pentru a nu penaliza excesiv produsele noi
+    max_time = data['timestamp'].max()
     data['time_decay'] = (max_time - data['timestamp']).dt.days
     data['time_decay'] = np.exp(-data['time_decay'] / 14)  #Pentru produsele mai recente de 14 zile
 
@@ -62,8 +63,9 @@ def train_svd_model(data):
     }
     gs = GridSearchCV(SVD, param_grid, measures=['rmse', 'mae'], cv=3)
     gs.fit(dataset)
-
+    print("########## EROAREA MODELULUI ##########")
     print(f"Best RMSE: {gs.best_score['rmse']}")
+    print(f"Best MAE: {gs.best_score['mae']}")
     print(f"Best Parameters: {gs.best_params['rmse']}")
     
     # Antrenăm modelul cu cei mai buni parametri
@@ -92,12 +94,7 @@ def initialize_model():
     data = load_data(data_file)
     user_model, trainset = train_svd_model(data)
     print("Model antrenat cu succes!")
-
-    print("########## EROAREA MODELULUI ##########")
-    accuracy.rmse(pred)
-    accuracy.mae(pred)
     print("########## SCORUL MODELULUI ##########")
-
     real_values = [p.r_ui for p in pred]
     predicted_values = [p.est for p in pred]
     r2 = r2_score(real_values, predicted_values)
@@ -141,10 +138,10 @@ def content_based_recommendations(data, product_id, top_n=20):
     recommended_products = data.iloc[similar_product_indices]['productId'].tolist()
     
     return recommended_products
-def cart_recommendations(data, user_model, trainset, user_id, product_id, top_n=15):
+def cart_recommendations(data, product_id, top_n=15):
     """ Recomandă produse relevante folosind ML (SVD) + conținut + co-ocurență """
 
-    #  PAS 1: Filtrare pe bază de conținut (similaritate de produs)
+    #Filtrare pe bază de conținut (similaritate de produs)
     data["features"] = data[['category', 'subcategory', 'price']].apply(lambda x: ' '.join(x.astype(str)), axis=1)
     vectorizer = TfidfVectorizer(stop_words='english')
     X = vectorizer.fit_transform(data["features"])
@@ -155,7 +152,7 @@ def cart_recommendations(data, user_model, trainset, user_id, product_id, top_n=
     similar_product_indices = similar_products.argsort()[-(top_n + 1):][::-1]
     content_recommendations = data.iloc[similar_product_indices]['productId'].tolist()
 
-    #  PAS 2: Co-ocurență (produse cumpărate împreună)
+    #Co-ocurență (produse cumpărate împreună)
     purchased_together = data[data['action'] == 'purchased'].groupby('userId')['productId'].apply(list)
     co_occur = {}
     for products in purchased_together:
@@ -164,7 +161,7 @@ def cart_recommendations(data, user_model, trainset, user_id, product_id, top_n=
                 if p != product_id:
                     co_occur[p] = co_occur.get(p, 0) + 1
     co_occurrence_recommendations = sorted(co_occur, key=co_occur.get, reverse=True)[:top_n]
-    #  PAS 4: Combinăm toate metodele
+    #Combinăm toate metodele
     hybrid_recommendations = list(set(co_occurrence_recommendations + content_recommendations))[:top_n]
 
     return hybrid_recommendations
@@ -289,7 +286,7 @@ def get_cart_recommendations():
     if not user_id or not product_id:
         return jsonify({"error": "Missing user_id or product_id"}), 400
 
-    recommended_products = cart_recommendations(data, user_model, trainset, user_id, product_id, top_n=15)
+    recommended_products = cart_recommendations(data, product_id, top_n=15)
     
     # Eliminăm produsul adăugat în coș din recomandări
     if product_id in recommended_products:
