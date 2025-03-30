@@ -748,11 +748,13 @@ app.get('/', countFavoriteProduct, countCartProduct, async (req, res) => {
       topProducts = await Article.find({ _id: { $in: productIds } });
       top15ProductsRecomendations = await Article.find({ _id: { $in: recomendationsArray } });
     }
+
     res.render('HomePage', {articles, topProducts,top15ProductsRecomendations, nrFavorites: req.nrFavorites, nrCart:  req.nrCart, favoriteProductsID});
   } catch (err) {
     return res.status(500).json({error: err.message});
   }
 });
+
 //Search get method
 app.get('/search', countFavoriteProduct, countCartProduct, async (req, res) => {
   try {

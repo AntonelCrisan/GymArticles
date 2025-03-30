@@ -16,7 +16,7 @@ async function updateFavoriteStatus(cart) {
 
         const result = await response.json();
         if (result.success) {
-            fetchRecommendations(result.products)
+            // fetchRecommendations(result.products)
             return result.newCartCount; // Return the new favorite count
         }else {
             console.error('Failed to update favorite status.');
