@@ -730,6 +730,23 @@ app.get('/', countFavoriteProduct, countCartProduct, async (req, res) => {
     let articles;
     let topProducts;
     let top15ProductsRecomendations;
+    const articlesFilter = await Article.find();
+    const grouped = {};
+    for (const article of articlesFilter) {
+      const category = article.category;
+      const subcategory = article.subcategory;
+
+      if (!grouped[category]) {
+        grouped[category] = new Set();
+      }
+
+      grouped[category].add(subcategory);
+    }
+
+    const categories = Object.entries(grouped).map(([category, subcats]) => ({
+      category,
+      subcategories: Array.from(subcats)
+    }));
     const userId = getId();
     const user = await User.findById(userId);
     const favoriteProductsID = user ? user.favorites : [];
@@ -749,7 +766,7 @@ app.get('/', countFavoriteProduct, countCartProduct, async (req, res) => {
       top15ProductsRecomendations = await Article.find({ _id: { $in: recomendationsArray } });
     }
 
-    res.render('HomePage', {articles, topProducts,top15ProductsRecomendations, nrFavorites: req.nrFavorites, nrCart:  req.nrCart, favoriteProductsID});
+    res.render('HomePage', {articles, categories, topProducts,top15ProductsRecomendations, nrFavorites: req.nrFavorites, nrCart:  req.nrCart, favoriteProductsID});
   } catch (err) {
     return res.status(500).json({error: err.message});
   }
@@ -767,33 +784,47 @@ app.get('/search', countFavoriteProduct, countCartProduct, async (req, res) => {
     console.error('Error for searching the product:', err);
   }
 });
+
 //Category results get method
 app.get('/category-results', countFavoriteProduct, countCartProduct, async (req, res) => {
-  const {subcategory} = req.query;
+  const { category, subcategory } = req.query;
+
   try {
-    let results = 0; //Storing the results found
-    const articles = await Article.find({subcategory: subcategory});//Finding the articles by subcategory name from database
-    results = articles.length;//Counting the results found
-    res.render( 'CategoryResults', {articles, subcategory, results, nrFavorites: req.nrFavorites,  nrCart:  req.nrCart}); //Render the 'CategoryResults' page and passing all variables to frontend
+    let filter = {};
+    if (subcategory) filter.subcategory = subcategory;
+    if (category) filter.category = category;
+
+    const articles = await Article.find(filter);
+    const results = articles.length;
+
+    res.render('CategoryResults', {
+      articles,
+      subcategory,
+      category,
+      results,
+      nrFavorites: req.nrFavorites,
+      nrCart: req.nrCart
+    });
   } catch (error) {
-    console.error('Error for searching the product:', error);
+    console.error('Error searching the product:', error);
+    res.status(500).send('Server error');
   }
- 
 });
+
 //Product get method
 app.get('/product', countFavoriteProduct,countCartProduct, async (req, res) => {
   try {
-    const userId = getId();
+    // const userId = getId();
     const {id} = req.query; //Get product id from query
     const article = await Article.findById(id); //Searching the article from database by product id
-    const user = await User.findById(userId);
-    const favoriteProductsID = user ? user.favorites : [];
-    let products;
-    const viewProductRecommendations = await recommendations_product_view(userId, id) || [];
-    if(viewProductRecommendations){
-      const recomendationsArray = viewProductRecommendations.recommended_products;
-      products = await Article.find({ _id: { $in: recomendationsArray } });
-    }
+    // const user = await User.findById(userId);
+    // const favoriteProductsID = user ? user.favorites : [];
+    // let products;
+    // const viewProductRecommendations = await recommendations_product_view(userId, id) || [];
+    // if(viewProductRecommendations){
+    //   const recomendationsArray = viewProductRecommendations.recommended_products;
+    //   products = await Article.find({ _id: { $in: recomendationsArray } });
+    // }
       // //Save the interaction into a csv file
       // const csvWriter = createObjectCsvWriter({
       //   path: 'recommender/recommendations.csv', 
@@ -809,20 +840,20 @@ app.get('/product', countFavoriteProduct,countCartProduct, async (req, res) => {
       //   ],
       //   append: true 
       // });
-    const userInteraction = new Activity({
-      userId: userId,
-      productId: article._id,
-      productName: article.name,
-      category: article.category,
-      subcategory: article.subcategory,
-      price: parseFloat(article.price).toFixed(2),
-      action: "viewed",
-      timestamp : Math.floor(Date.now() / 1000)
-    });
-    userInteraction.save()
-    .then(() => {
-      console.log("Activity saved successfully!");
-    })
+    // const userInteraction = new Activity({
+    //   userId: userId,
+    //   productId: article._id,
+    //   productName: article.name,
+    //   category: article.category,
+    //   subcategory: article.subcategory,
+    //   price: parseFloat(article.price).toFixed(2),
+    //   action: "viewed",
+    //   timestamp : Math.floor(Date.now() / 1000)
+    // });
+    // userInteraction.save()
+    // .then(() => {
+    //   console.log("Activity saved successfully!");
+    // })
     // csvWriter.writeRecords(userInteraction)
     // .then(() => {
     //     console.log('Datele noi au fost adăugate cu succes în fișierul CSV!');
@@ -830,40 +861,110 @@ app.get('/product', countFavoriteProduct,countCartProduct, async (req, res) => {
     // .catch((err) => {
     //     console.error('Eroare la scrierea datelor în fișierul CSV:', err);
     // });
-    res.render('Product', {article, nrFavorites: req.nrFavorites,  nrCart:  req.nrCart, products, favoriteProductsID});//Display the product result and render the 'Product' page
+    res.render('Product', {article, nrFavorites: req.nrFavorites,  nrCart:  req.nrCart});//Display the product result and render the 'Product' page
   } catch (error) {
     console.error('Error for getting the product:', error);  
   }
 });
 app.post('/product', async (req, res) => {
   try {
-      const {name, id} = req.body; // Assuming id and name are in the request body
-      const cart = await Cart.create({idProduct: id, name });
-      cart.save();
-      return res.status(200).json({ message: "Product added successfully!" });
+    const userId = getId();
+    const user = await User.findById(userId).populate('cart.productId');
+    const { productId } = req.body;
+    // Find if the product is already in the cart
+    const cartItem = user.cart.find(item => item.productId.toString() === productId);
+    const stockProduct = await Article.findById(productId);
+    let products;
+    if(stockProduct.cantity !== 0){
+      if (cartItem) {
+        // If product already in cart, increase the quantity
+        cartItem.quantity += 1;
+      } else {
+        user.cart.push({ productId, quantity: 1 });
+        console.log(productId);
+        const recommendedProducts = await recommendations_cart(userId, productId) || [];
+        if(recommendedProducts){
+          const recomendationsArray = recommendedProducts.recommended_products;
+          products = await Article.find({ _id: { $in: recomendationsArray } });
+        }
+        // // If product not in cart, add a new entry with quantity 1
+        // //Save the interaction into a csv file
+        // const csvWriter = createObjectCsvWriter({
+        //   path: 'recommender/recommendations.csv', 
+        //   header: [
+        //     { id: 'userId', title: 'userId' },
+        //     { id: 'productId', title: 'productId' },
+        //     { id: 'productName', title: 'productName' },
+        //     { id: 'category', title: 'category' },
+        //     { id: 'subcategory', title: 'subcategory' },
+        //     { id: 'price', title: 'price' },
+        //     { id: 'action', title: 'action' },
+        //     { id: 'timestamp', title: 'timestamp' }
+        //   ],
+        //   append: true 
+        // });
+      const userInteraction =  new Activity({
+        userId: userId,
+        productId: productId,
+        productName: stockProduct.name,
+        category: stockProduct.category,
+        subcategory: stockProduct.subcategory,
+        price: stockProduct.price,
+        action: "added_to_cart",
+        timestamp : Math.floor(Date.now() / 1000)
+      });
+      userInteraction.save()
+      .then(() => {
+        console.log("Activity saved successfully!");
+      })
+      // csvWriter.writeRecords(userInteraction)
+      // .then(() => {
+      //     console.log('Datele noi au fost adăugate cu succes în fișierul CSV!');
+      // })
+      // .catch((err) => {
+      //     console.error('Eroare la scrierea datelor în fișierul CSV:', err);
+      // });
+      }
+      await user.save();
+      const newCartCount = user.cart.reduce((total, item) => total + item.quantity, 0);
+      return res.json({ success: true, newCartCount, user, products});
+    }else{
+      return res.json({success: false, message: 'Product is out of stock'});
+    }
   } catch (error) {
-      console.error("Error in adding to cart:", error.message);
-      return res.status(500).json({ error: "Internal server error" });
+    console.error('Error in /addToCart:', error);
+    return res.status(500).json({ success: false, message: 'Server error' });
   }
 });
-app.get('/edit-product/:id',  async (req, res) => {
+app.get('/edit-product/:id', async (req, res) => {
   try {
     const article = await Article.findById(req.params.id);
-    res.render('EditProduct', {article}); 
+    res.render('EditProduct', { article });
   } catch (error) {
-      console.log(error);
-      return res.status(400).json({error});
+    console.log(error);
+    return res.status(400).json({ error });
   }
 });
 app.post('/edit-product/:id', async (req, res) => {
   try {
-    const {image, name, price, category, subcategory, cantity } = req.body;
-    const {id} = req.params.id;
-    const articleID = await Article.findById(id);
-    if(!articleID){
-      return res.status(404).json({error: "Product not found"});
+    const { image, name, price, category, subcategory, cantity, description } = req.body;
+    const id = req.params.id;
+
+    const article = await Article.findById(id);
+    if (!article) {
+      return res.status(404).json({ error: "Product not found" });
     }
-    await Article.findByIdAndUpdate(id, {image: image, name: name, price:price, category:category, subcategory:category, cantity:cantity});
+
+    await Article.findByIdAndUpdate(id, {
+      image,
+      name,
+      price,
+      category,
+      subcategory,
+      cantity,
+      description
+    });
+
     return res.status(201).json({ msg: 'Article modified successfully' });
   } catch (err) {
     console.log("Error editing the article:", err);

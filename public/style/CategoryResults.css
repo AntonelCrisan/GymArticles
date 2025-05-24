@@ -110,3 +110,11 @@ li:hover .subcategories {
     display: none;
     padding: 10px;
 }
+.article{
+    text-decoration: none;
+    color: inherit;
+}
+.article:hover{
+    text-decoration: none;
+    color: inherit;
+}

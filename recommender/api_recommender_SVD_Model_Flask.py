@@ -37,7 +37,7 @@ def load_data(file_path):
     # Ajustăm decăderea temporală pentru a nu penaliza excesiv produsele noi
     max_time = data['timestamp'].max()
     data['time_decay'] = (max_time - data['timestamp']).dt.days
-    data['time_decay'] = np.exp(-data['time_decay'] / 14)  #Pentru produsele mai recente de 14 zile
+    data['time_decay'] = np.exp(-data['time_decay'] / 60)  #Pentru produsele mai recente de 60 zile
 
     # Normalizăm prețul folosind StandardScaler
     scaler = StandardScaler()

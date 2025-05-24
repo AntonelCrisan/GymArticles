@@ -23,6 +23,10 @@ const articleSchema = new mongoose.Schema({
     cantity: {
         type: Number,
         required: true
+    },
+    description: {
+        type: String,
+        required: true
     }
 });
 articleSchema.index({name: 'text'});
