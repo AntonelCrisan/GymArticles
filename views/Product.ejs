@@ -58,7 +58,7 @@
                         <p class="text-danger">Not available in stock</p>
                     <% } %>
                       <div>
-                         <button class="btn btn-primary mb-3" id="addToCartButton" data-product-id="<%= article._id %>"  data-bs-toggle="modal" data-bs-target="#myModal">Add to cart</button>
+                         <button class="btn btn-primary mb-3" id="addToCartButtonFromDetails" data-product-id="<%= article._id %>"  data-bs-toggle="modal" data-bs-target="#myModal">Add to cart</button>
                     </div>
                     <div>
                         <a href="#" class="btn btn-primary">Leave a review</a>
@@ -72,6 +72,22 @@
                         <% } else{ %>
                     <% } %>
                     <% } %>
+                     <div class="price-cantity last">
+                        <div class="text-decoration-none text-dark price">
+                        <strong data-base-price="<%= article.price %>">$<%= article.price * article.cantity %></strong>
+                        </div>
+
+                        <div class="qty-container">
+                            <button type="button" disabled class="btn-minus" id="decreaseCantityButton" data-id="<%=article._id%>">
+                            -
+                            </button>
+                            <span class="qty-value"><%= article.cantity %></span>
+                            <input class="hidden" type="number" min="1" max="10" value="<%= article.cantity %>" step="1" readonly="" name="cantity">
+                            <button type="button" class="btn-plus" id="increaseCantityButton" data-id="<%=article._id%>">
+                            +
+                            </button>
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>

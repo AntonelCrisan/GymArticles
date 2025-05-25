@@ -569,13 +569,86 @@ async function recommendations_product_view(user_id, product_id){
   }
 }
 //POST method for adding products to cart
+app.post('/addToCartFromDetail', async (req, res) => {
+  try {
+    const userId = getId();
+    const user = await User.findById(userId).populate('cart.productId');
+    const { productId, quantity } = req.body;
+    const qtyToAdd = quantity;
+    // Find if the product is already in the cart
+    const cartItem = user.cart.find(item => item.productId.equals(productId));
+    const stockProduct = await Article.findById(productId);
+    let products;
+    if(stockProduct.cantity !== 0){
+      if (cartItem) {
+        // If product already in cart, increase the quantity
+        cartItem.quantity += qtyToAdd;
+      } else {
+        user.cart.push({ productId, quantity: qtyToAdd });
+        console.log(productId);
+        const recommendedProducts = await recommendations_cart(userId, productId) || [];
+        if(recommendedProducts){
+          const recomendationsArray = recommendedProducts.recommended_products;
+          products = await Article.find({ _id: { $in: recomendationsArray } });
+        }
+        // // If product not in cart, add a new entry with quantity 1
+        // //Save the interaction into a csv file
+        // const csvWriter = createObjectCsvWriter({
+        //   path: 'recommender/recommendations.csv', 
+        //   header: [
+        //     { id: 'userId', title: 'userId' },
+        //     { id: 'productId', title: 'productId' },
+        //     { id: 'productName', title: 'productName' },
+        //     { id: 'category', title: 'category' },
+        //     { id: 'subcategory', title: 'subcategory' },
+        //     { id: 'price', title: 'price' },
+        //     { id: 'action', title: 'action' },
+        //     { id: 'timestamp', title: 'timestamp' }
+        //   ],
+        //   append: true 
+        // });
+      const userInteraction =  new Activity({
+        userId: userId,
+        productId: productId,
+        productName: stockProduct.name,
+        category: stockProduct.category,
+        subcategory: stockProduct.subcategory,
+        price: stockProduct.price,
+        action: "added_to_cart",
+        timestamp : Math.floor(Date.now() / 1000)
+      });
+      userInteraction.save()
+      .then(() => {
+        console.log("Activity saved successfully!");
+      })
+      // csvWriter.writeRecords(userInteraction)
+      // .then(() => {
+      //     console.log('Datele noi au fost adăugate cu succes în fișierul CSV!');
+      // })
+      // .catch((err) => {
+      //     console.error('Eroare la scrierea datelor în fișierul CSV:', err);
+      // });
+      }
+      await user.save();
+      const newCartCount = user.cart.reduce((total, item) => total + item.quantity, 0);
+      return res.json({ success: true, newCartCount, user, products});
+    }else{
+      return res.json({success: false, message: 'Product is out of stock'});
+    }
+  } catch (error) {
+    console.error('Error in /addToCart:', error);
+    return res.status(500).json({ success: false, message: 'Server error' });
+  }
+});
+
+//POST method for adding products to cart
 app.post('/addToCart', async (req, res) => {
   try {
     const userId = getId();
     const user = await User.findById(userId).populate('cart.productId');
-    const { productId } = req.body;
+    const { productId} = req.body;
     // Find if the product is already in the cart
-    const cartItem = user.cart.find(item => item.productId.toString() === productId);
+    const cartItem = user.cart.find(item => item.productId.equals(productId));
     const stockProduct = await Article.findById(productId);
     let products;
     if(stockProduct.cantity !== 0){
@@ -662,7 +735,7 @@ app.post('/updateCantity/:id', async (req, res) => {
   const { quantity } = req.body; // The new quantity from the request body
   const stockProduct = await Article.findById(productId);
   // Validate the quantity
-  if (typeof quantity !== 'number' || quantity <= 0) {
+  if (typeof quantity !== 'string' || quantity <= 0) {
     return res.status(400).json({ error: 'Invalid quantity' });
   }
   try {
@@ -817,8 +890,9 @@ app.get('/product', countFavoriteProduct,countCartProduct, async (req, res) => {
     const userId = getId();
     const user = await User.findById(userId);
     const {id} = req.query; //Get product id from query
-    const article = await Article.findById(id); //Searching the article from database by product id
+    const article = await Article.findById(id).lean(); //Searching the article from database by product id
     const favoriteProductsID = user ? user.favorites : [];
+    article.cantity = 1;
     // const user = await User.findById(userId);
     // const favoriteProductsID = user ? user.favorites : [];
     // let products;

@@ -58,7 +58,7 @@ increaseCantityButtons.forEach((plus, index) => {
         updateButtonStates(); // Update button states after increment
         const id = plus.dataset.id;
         const cantity = inputHidden.value;
-        await updateCantity(id, cantity);
+        await updateCantity(id, parseInt(cantity));
     });
 });
 // Add event listeners to each decrease button
@@ -72,7 +72,7 @@ decreaseCantityButtons.forEach((minus, index) => {
             inputHidden.value = currentValue;
             const id = minus.dataset.id;
             const cantity = inputHidden.value;
-            await updateCantity(id, cantity);
+            await updateCantity(id, parseInt(cantity));
         }
         updateButtonStates(); // Update button states after decrement
     });

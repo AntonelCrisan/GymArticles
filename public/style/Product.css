@@ -236,3 +236,53 @@ color: orange;
     opacity: 0;
     transform: translateX(100%);
   }
+
+/* Increment quantity */
+ .qty-container {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 5px;
+    width: 120px;
+}
+
+.last{
+    margin-left: auto;
+}
+.price-cantity{
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: space-between;
+}
+.price{
+    font-size: 25px;
+}
+.btn-minus,
+.btn-plus {
+    background-color: #e6e6e6;
+    border: none;
+    border-radius: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    width: 40px;
+    height: 40px; 
+    font-size: large;
+}
+
+.btn-minus:hover,
+.btn-plus:hover {
+    color: #06b6d4;
+}
+
+.qty-value {
+    font-size: 18px;
+    margin: 0 10px;
+    color: #333;
+    user-select: none;
+}
+.hidden{
+    display: none;
+}
