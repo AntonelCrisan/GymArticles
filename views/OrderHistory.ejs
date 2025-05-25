@@ -41,7 +41,7 @@
             <div class="order-card" id="order-<%= order._id %>">
               <div class="d-flex justify-content-between">
                 <div>
-                  <div class="order-header">Nr. comandă: <%= order._id %></div>
+                  <div class="order-header">Order number: <%= order._id %></div>
                   <div class="order-details">
                     Order delivered by GymArticles | Subtotal: $<%= order.totalPrice %>
                   </div>
@@ -63,7 +63,7 @@
                   <% }) %>
                 </div>
                 <div>
-                  <button class="track-delivery-btn" data-id="<%= order._id %>">Urmărește livrarea</button>
+                  <button class="track-delivery-btn" data-id="<%= order._id %>">Track delivery</button>
                 </div>
               </div>
             </div>
