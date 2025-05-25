@@ -54,7 +54,9 @@ document.addEventListener('DOMContentLoaded', () => {
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ productId, quantity })
       });
-
+       if (!response.ok) {
+            throw new Error('Network response was not ok.');
+        }
       const result = await response.json();
       if (result.success) {
         const newCount = result.newCartCount;
@@ -65,7 +67,9 @@ document.addEventListener('DOMContentLoaded', () => {
           cartCountElement.style.display = 'none';
         }
       } else {
-        showWarningOutOfStock();
+            console.error('Failed to update cart status.');
+            showWarningOutOfStock();
+            return null;
       }
     } catch (error) {
       console.error('Error adding to cart:', error);

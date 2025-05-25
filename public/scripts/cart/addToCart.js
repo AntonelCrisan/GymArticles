@@ -19,12 +19,12 @@ async function updateFavoriteStatus(cart) {
             // fetchRecommendations(result.products)
             return result.newCartCount; // Return the new favorite count
         }else {
-            console.error('Failed to update favorite status.');
+            console.error('Failed to update cart status.');
             showWarningOutOfStock();
             return null;
         }
     } catch (error) {
-        console.error('Error updating favorite status:', error);
+        console.error('Error updating cart status:', error);
         window.location.assign('/login');
     }
 }
