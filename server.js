@@ -814,9 +814,11 @@ app.get('/category-results', countFavoriteProduct, countCartProduct, async (req,
 //Product get method
 app.get('/product', countFavoriteProduct,countCartProduct, async (req, res) => {
   try {
-    // const userId = getId();
+    const userId = getId();
+    const user = await User.findById(userId);
     const {id} = req.query; //Get product id from query
     const article = await Article.findById(id); //Searching the article from database by product id
+    const favoriteProductsID = user ? user.favorites : [];
     // const user = await User.findById(userId);
     // const favoriteProductsID = user ? user.favorites : [];
     // let products;
@@ -861,7 +863,7 @@ app.get('/product', countFavoriteProduct,countCartProduct, async (req, res) => {
     // .catch((err) => {
     //     console.error('Eroare la scrierea datelor în fișierul CSV:', err);
     // });
-    res.render('Product', {article, nrFavorites: req.nrFavorites,  nrCart:  req.nrCart});//Display the product result and render the 'Product' page
+    res.render('Product', {article, nrFavorites: req.nrFavorites,  nrCart:  req.nrCart, favoriteProductsID});//Display the product result and render the 'Product' page
   } catch (error) {
     console.error('Error for getting the product:', error);  
   }
