@@ -9,12 +9,13 @@ form.addEventListener('submit', async (e) => {
     const category = form.category.value;
     const subcategory = form.subcategory.value;
     const cantity = form.cantity.value;
+    const description = form.description.value;
     msgError.textContent = '';
     msgOk.textContent = '';
     try{
         const res = await fetch('/add-article', {
             method: 'POST',
-            body: JSON.stringify({image, name, price, category, subcategory, cantity}),
+            body: JSON.stringify({image, name, price, category, subcategory, cantity, description}),
             headers: {'Content-Type': 'application/json'}
           });
         const data = await res.json();

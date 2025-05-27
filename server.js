@@ -757,9 +757,9 @@ app.post('/updateCantity/:id', async (req, res) => {
 app.get('/add-article', (req, res) => res.render('AddArticle'));
 //Add article post method 
 app.post('/add-article', async (req, res) => {
-  const {image, name, price, category, subcategory, cantity} = req.body;
+  const {image, name, price, category, subcategory, cantity, description} = req.body;
   try{
-      const article = await Article.create({image, name, price, category, subcategory, cantity});//Adding new article in database by admin
+      const article = await Article.create({image, name, price, category, subcategory, cantity, description});//Adding new article in database by admin
       article.save();
       res.status(201).json({msg:'Article added successfully'});//Handle successfully message for admin
   }catch(err){
