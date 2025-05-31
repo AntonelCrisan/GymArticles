@@ -78,21 +78,26 @@ body {
 .card.hide{
     display: none;
 }
-.carousel-img {
-  height: 400px;
+.carousel-img-desktop{
+  height: 500px;
   width: 100%;
   object-fit: contain; /* sau 'contain' dacă nu vrei tăiere */
 }
-
-@media (max-width: 768px) {
-  .carousel-img {
-    height: 250px;
+@media (max-width: 767px) {
+  .carousel-img-desktop {
+    display: none !important;
+  }
+  .carousel-img-mobile {
+    display: block !important;
   }
 }
 
-@media (max-width: 480px) {
-  .carousel-img {
-    height: 180px;
+@media (min-width: 767px) {
+  .carousel-img-desktop {
+    display: block !important;
+  }
+  .carousel-img-mobile {
+    display: none !important;
   }
 }
 
