@@ -185,23 +185,18 @@
 <script>
   window.onload = function () {
    new Swiper('.swiper-container-recommended', {
-       slidesPerView: 4,
-       slidesPerGroup: 4,
-       navigation: {
-           nextEl: '.swiper-button-next-recommended',
-           prevEl: '.swiper-button-prev-recommended',
-       },
-       pagination: {
-           el: '.swiper-pagination-recommended',
-           clickable: true,
-       },
-       loop: false,
-       breakpoints: {
-           1024: { slidesPerView: 4, slidesPerGroup: 4 },
-           768: { slidesPerView: 3, slidesPerGroup: 3 },
-           480: { slidesPerView: 2, slidesPerGroup: 2 }
-       }
-   });
+        slidesPerView: 'auto',
+        spaceBetween: 10,
+        freeMode: true,
+        navigation: {
+            nextEl: '.swiper-button-next-recommended',
+            prevEl: '.swiper-button-prev-recommended',
+        },
+        pagination: {
+            el: '.swiper-pagination-recommended',
+            clickable: true,
+        },
+    });
 };
    
 </script>

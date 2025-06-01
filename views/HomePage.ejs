@@ -262,28 +262,24 @@
 
 <script>
    window.onload = function () {
-    new Swiper('.swiper-container-top15', {
-        slidesPerView: 5,
-        slidesPerGroup: 5,
-        navigation: {
-            nextEl: '.swiper-button-next-top15',
-            prevEl: '.swiper-button-prev-top15',
-        },
-        pagination: {
-            el: '.swiper-pagination-top15',
-            clickable: true,
-        },
-        loop: false,
-        breakpoints: {
-            1024: { slidesPerView: 5, slidesPerGroup: 5 },
-            768: { slidesPerView: 3, slidesPerGroup: 3 },
-            480: { slidesPerView: 2, slidesPerGroup: 2 }
-        }
-    });
+   new Swiper('.swiper-container-top15', {
+    slidesPerView: 'auto',
+    spaceBetween: 10,
+    freeMode: true, 
+    navigation: {
+        nextEl: '.swiper-button-next-top15',
+        prevEl: '.swiper-button-prev-top15',
+    },
+    pagination: {
+        el: '.swiper-pagination-top15',
+        clickable: true,
+    }
+});
 
     new Swiper('.swiper-container-recommended', {
-        slidesPerView: 5,
-        slidesPerGroup: 5,
+        slidesPerView: 'auto',
+        spaceBetween: 10,
+        freeMode: true,
         navigation: {
             nextEl: '.swiper-button-next-recommended',
             prevEl: '.swiper-button-prev-recommended',
@@ -292,12 +288,6 @@
             el: '.swiper-pagination-recommended',
             clickable: true,
         },
-        loop: false,
-        breakpoints: {
-            1024: { slidesPerView: 5, slidesPerGroup: 5 },
-            768: { slidesPerView: 3, slidesPerGroup: 3 },
-            480: { slidesPerView: 2, slidesPerGroup: 2 }
-        }
     });
 };
     
