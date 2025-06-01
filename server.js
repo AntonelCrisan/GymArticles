@@ -720,7 +720,7 @@ const createToken = (id) => {
 }
 async function showTop15Products() {
   try {
-      const response = await axios.get("http://127.0.0.1:8000/top15");
+      const response = await axios.get("https://recommender-api-gd0e.onrender.com/top15");
       return response.data;
   } catch (error) {
       console.error("Eroare la preluarea datelor:", error);
