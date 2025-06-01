@@ -20,7 +20,7 @@ trainset = None
 pred = None
 def load_data_from_api():
     try:
-        response = requests.get("http://localhost:3012/activities")
+        response = requests.get("https://gymarticles.onrender.com/activities")
         response.raise_for_status()
         activities = response.json()
     except requests.RequestException as e:
