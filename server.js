@@ -462,7 +462,7 @@ app.post('/deleteFavorite/:id', async(req, res) => {
 });
 async function recommendations(user_id){
   try {
-    const response = await axios.get(`http://127.0.0.1:8000/recommendations?user_id=${user_id}`);
+    const response = await axios.get(`https://recommender-api-gd0e.onrender.com/recommendations?user_id=${user_id}`);
     return response.data;
   } catch (error) {
       console.error("Eroare la preluarea datelor:", error);
@@ -472,7 +472,7 @@ async function recommendations(user_id){
 
 async function recommendations_cart(user_id, product_id){
   try {
-    const response = await axios.get(`http://127.0.0.1:8000/cart-recommendations?user_id=${user_id}&product_id=${product_id}`);
+    const response = await axios.get(`https://recommender-api-gd0e.onrender.com/cart-recommendations?user_id=${user_id}&product_id=${product_id}`);
     return response.data;
   } catch (error) {
       console.error("Eroare la preluarea datelor:", error);
@@ -482,7 +482,7 @@ async function recommendations_cart(user_id, product_id){
 
 async function recommendations_cart_view(user_id, product_id){
   try {
-    const response = await axios.get(`http://127.0.0.1:8000/cart-view-recommendations?user_id=${user_id}&product_id=${product_id}`);
+    const response = await axios.get(`https://recommender-api-gd0e.onrender.com/cart-view-recommendations?user_id=${user_id}&product_id=${product_id}`);
     return response.data;
   } catch (error) {
       console.error("Eroare la preluarea datelor:", error);
@@ -491,7 +491,7 @@ async function recommendations_cart_view(user_id, product_id){
 }
 async function recommendations_favorite_view(user_id, product_id){
   try {
-    const response = await axios.get(`http://127.0.0.1:8000/favorite-view-recommendations?user_id=${user_id}&product_id=${product_id}`);
+    const response = await axios.get(`https://recommender-api-gd0e.onrender.com/favorite-view-recommendations?user_id=${user_id}&product_id=${product_id}`);
     return response.data;
   } catch (error) {
       console.error("Eroare la preluarea datelor:", error);
@@ -500,7 +500,7 @@ async function recommendations_favorite_view(user_id, product_id){
 }
 async function recommendations_product_view(user_id, product_id){
   try {
-    const response = await axios.get(`http://127.0.0.1:8000/view-product?user_id=${user_id}&product_id=${product_id}`);
+    const response = await axios.get(`https://recommender-api-gd0e.onrender.com/view-product?user_id=${user_id}&product_id=${product_id}`);
     return response.data;
   } catch (error) {
       console.error("Eroare la preluarea datelor:", error);
