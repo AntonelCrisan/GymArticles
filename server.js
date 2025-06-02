@@ -21,6 +21,7 @@ const axios = require("axios");
 const Activity = require('./public/activity');
 require("dotenv").config();
 const stripe = require('stripe')(process.env.SECRET_STRIPE_KEY);
+const apiBaseUrl = process.env.MODEL_API_URL || 'http://127.0.0.1:8000'; 
 app.use(express.static('public'));
 app.use(express.json());
 app.use(cookieParser());
@@ -462,7 +463,7 @@ app.post('/deleteFavorite/:id', async(req, res) => {
 });
 async function recommendations(user_id){
   try {
-    const response = await axios.get(`https://recommender-api-gd0e.onrender.com/recommendations?user_id=${user_id}`);
+    const response = await axios.get(`${apiBaseUrl}/recommendations?user_id=${user_id}`);
     return response.data;
   } catch (error) {
       console.error("Eroare la preluarea datelor:", error);
@@ -472,7 +473,7 @@ async function recommendations(user_id){
 
 async function recommendations_cart(user_id, product_id){
   try {
-    const response = await axios.get(`https://recommender-api-gd0e.onrender.com/cart-recommendations?user_id=${user_id}&product_id=${product_id}`);
+    const response = await axios.get(`${apiBaseUrl}/cart-recommendations?user_id=${user_id}&product_id=${product_id}`);
     return response.data;
   } catch (error) {
       console.error("Eroare la preluarea datelor:", error);
@@ -482,7 +483,7 @@ async function recommendations_cart(user_id, product_id){
 
 async function recommendations_cart_view(user_id, product_id){
   try {
-    const response = await axios.get(`https://recommender-api-gd0e.onrender.com/cart-view-recommendations?user_id=${user_id}&product_id=${product_id}`);
+    const response = await axios.get(`${apiBaseUrl}/cart-view-recommendations?user_id=${user_id}&product_id=${product_id}`);
     return response.data;
   } catch (error) {
       console.error("Eroare la preluarea datelor:", error);
@@ -491,7 +492,7 @@ async function recommendations_cart_view(user_id, product_id){
 }
 async function recommendations_favorite_view(user_id, product_id){
   try {
-    const response = await axios.get(`https://recommender-api-gd0e.onrender.com/favorite-view-recommendations?user_id=${user_id}&product_id=${product_id}`);
+    const response = await axios.get(`${apiBaseUrl}/favorite-view-recommendations?user_id=${user_id}&product_id=${product_id}`);
     return response.data;
   } catch (error) {
       console.error("Eroare la preluarea datelor:", error);
@@ -500,7 +501,7 @@ async function recommendations_favorite_view(user_id, product_id){
 }
 async function recommendations_product_view(user_id, product_id){
   try {
-    const response = await axios.get(`https://recommender-api-gd0e.onrender.com/view-product?user_id=${user_id}&product_id=${product_id}`);
+    const response = await axios.get(`${apiBaseUrl}/view-product?user_id=${user_id}&product_id=${product_id}`);
     return response.data;
   } catch (error) {
       console.error("Eroare la preluarea datelor:", error);
@@ -720,7 +721,7 @@ const createToken = (id) => {
 }
 async function showTop15Products() {
   try {
-      const response = await axios.get("https://recommender-api-gd0e.onrender.com/top15");
+      const response = await axios.get(`${apiBaseUrl}/top15`);
       return response.data;
   } catch (error) {
       console.error("Eroare la preluarea datelor:", error);

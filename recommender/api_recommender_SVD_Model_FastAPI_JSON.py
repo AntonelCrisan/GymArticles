@@ -13,22 +13,28 @@ from sklearn.metrics.pairwise import cosine_similarity
 from sklearn.feature_extraction.text import TfidfVectorizer
 import matplotlib.pyplot as plt
 import numpy as np
+from dotenv import load_dotenv
+import os
+
 app = FastAPI()
 data = None
 user_model = None
 trainset = None
 pred = None
+new_products = []
+
 def load_data_from_api():
     try:
-        response = requests.get("https://gymarticles.onrender.com/activities")
+        load_dotenv()
+        API_BASE_URL = os.getenv("API_BASE_URL", "http://localhost:3012")
+        response = requests.get(f"{API_BASE_URL}/activities")
         response.raise_for_status()
         activities = response.json()
     except requests.RequestException as e:
         print(f"Error fetching data from API: {e}")
-        return pd.DataFrame()  # Returnează un DataFrame gol în caz de eroare
+        return pd.DataFrame()
 
     df = pd.DataFrame(activities)
-    # Mapează acțiunile la rating-uri
     action_to_rating = {
         "purchased": 5.0,
         "added_to_cart": 4.5,
@@ -36,35 +42,31 @@ def load_data_from_api():
         "viewed": 1.0
     }
     df['rating'] = df['action'].map(action_to_rating)
-    # Convertim timestamp-ul în datetime
     df['timestamp'] = pd.to_datetime(df['timestamp'], unit='s')
 
-    # Calculăm decăderea temporală
     max_time = df['timestamp'].max()
     df['time_decay'] = (max_time - df['timestamp']).dt.days
     df['time_decay'] = np.exp(-df['time_decay'] / 14)
 
-    # Normalizăm prețul
     scaler = StandardScaler()
     df['price'] = scaler.fit_transform(df[['price']])
 
-    # Calculăm rating-ul final
     df['rating'] *= df['time_decay']
     df['rating'] += df.groupby(['userId', 'productId'])['action'].transform('count') * 0.5
     df['rating'] = df['rating'].clip(3, 5)
 
     return df
+
 def train_svd_model(data):
     reader = Reader(rating_scale=(3, 5))
     dataset = Dataset.load_from_df(data[['userId', 'productId', 'rating']], reader)
     trainset = dataset.build_full_trainset()
-    
-    # Optimizăm hiperparametrii folosind GridSearchCV
+
     param_grid = {
-    'n_factors': [20, 50, 100, 150],
-    'n_epochs': [10, 20, 30],
-    'lr_all': [0.002, 0.005, 0.01],
-    'reg_all': [0.02, 0.05, 0.1, 0.2]
+        'n_factors': [20, 50, 100, 150],
+        'n_epochs': [10, 20, 30],
+        'lr_all': [0.002, 0.005, 0.01],
+        'reg_all': [0.02, 0.05, 0.1, 0.2]
     }
     gs = GridSearchCV(SVD, param_grid, measures=['rmse', 'mae'], cv=3)
     gs.fit(dataset)
@@ -72,17 +74,17 @@ def train_svd_model(data):
     print(f"Best RMSE: {gs.best_score['rmse']}")
     print(f"Best MAE: {gs.best_score['mae']}")
     print(f"Best Parameters: {gs.best_params['rmse']}")
-    
-    # Antrenăm modelul cu cei mai buni parametri
+
     best_model = SVD(**gs.best_params['rmse'])
     best_model.fit(trainset)
-    
+
     global pred
     testset = trainset.build_testset()
     pred = best_model.test(testset)
     return best_model, trainset
+
 def initialize_model():
-    global data, user_model, trainset
+    global data, user_model, trainset, new_products
     print("Antrenare model ...")
     data = load_data_from_api()
     if data.empty:
@@ -95,7 +97,6 @@ def initialize_model():
     user_model = SVD()
     user_model.fit(trainset)
 
-    # Generează predicții
     user_model, trainset = train_svd_model(data)
     print("Model antrenat cu succes!")
     print("########## SCORUL MODELULUI ##########")
@@ -109,7 +110,6 @@ def initialize_model():
     print(f"Recall: {recall}")
     print(f"F1-Score: {f1}")
 
-    # Grafic
     coefficients = np.polyfit(real_values, predicted_values, 1)
     regression_line = np.polyval(coefficients, real_values)
 
@@ -123,15 +123,35 @@ def initialize_model():
     plt.grid(True)
     plt.show()
 
+    new_products = identify_new_products(data, trainset)
+
 def calculate_classification_metrics(real_values, predicted_values, threshold=3.5):
     pred_binary = [1 if pred >= threshold else 0 for pred in predicted_values]
     real_binary = [1 if real >= threshold else 0 for real in real_values]
-    
     precision = precision_score(real_binary, pred_binary)
     recall = recall_score(real_binary, pred_binary)
     f1 = f1_score(real_binary, pred_binary)
-    
     return precision, recall, f1
+
+def identify_new_products(data, trainset):
+    train_product_ids = set(trainset._raw2inner_id_items.keys())
+    all_product_ids = set(data['productId'].unique())
+    return list(all_product_ids - train_product_ids)
+
+def cold_start_recommendations(data, new_products, top_n=10):
+    if not new_products:
+        return []
+
+    data["features"] = data[['category', 'subcategory', 'price']].apply(lambda x: ' '.join(x.astype(str)), axis=1)
+    vectorizer = TfidfVectorizer(stop_words='english')
+    X = vectorizer.fit_transform(data["features"])
+    cosine_sim = cosine_similarity(X, X)
+
+    new_indices = data[data['productId'].isin(new_products)].index
+    sim_scores = cosine_sim[new_indices].mean(axis=0)
+    top_indices = np.argsort(sim_scores)[-top_n:][::-1]
+
+    return data.iloc[top_indices]['productId'].tolist()
 #Funcția de filtrare pe bază de conținut
 def content_based_recommendations(data, product_id, top_n=20):
     data["features"] = data[['category', 'subcategory', 'price']].apply(lambda x: ' '.join(x.astype(str)), axis=1)
@@ -271,15 +291,16 @@ def view_product(data, user_model, trainset, user_id, product_id, top_n=15):
     return hybrid_recommendations
 
 @app.get("/recommendations")
-def get_recommendations(user_id: str = Query(..., description="User ID pentru recomandări")):
+def get_recommendations(user_id: str = Query(...)):
     all_products = data['productId'].unique()
-    predictions = [(pid, user_model.predict(user_id, pid).est) for pid in all_products]
+    predictions = [(pid, user_model.predict(user_id, pid).est) for pid in all_products if pid not in new_products]
     predictions.sort(key=lambda x: x[1], reverse=True)
-    
-    svd_recommendations = [pid for pid, _ in predictions[:20]]
-    content_recommendations = content_based_recommendations(data, svd_recommendations[0], top_n=20)
-    
-    hybrid_recommendations = list(set(svd_recommendations + content_recommendations))[:20]
+
+    svd_recommendations = [pid for pid, _ in predictions[:15]]
+    content_recommendations = content_based_recommendations(data, svd_recommendations[0], top_n=10) if svd_recommendations else []
+    cold_start = cold_start_recommendations(data, new_products, top_n=5)
+
+    hybrid_recommendations = list(set(svd_recommendations + content_recommendations + cold_start))[:20]
 
     return JSONResponse(content={
         "user_id": user_id,
@@ -296,10 +317,13 @@ def get_cart_recommendations(
     if product_id in recommended_products:
         recommended_products.remove(product_id)
 
+    cold_start = cold_start_recommendations(data, new_products, top_n=5)
+    hybrid_recommendations = list(set(recommended_products + cold_start))[:20]
+
     return JSONResponse(content={
         "user_id": user_id,
         "product_id": product_id,
-        "recommended_products": recommended_products
+        "recommended_products": hybrid_recommendations
     })
 
 @app.get("/cart-view-recommendations")
@@ -311,11 +335,13 @@ def get_cart_view_recommendations(
 
     if product_id in recommended_products:
         recommended_products.remove(product_id)
+    cold_start = cold_start_recommendations(data, new_products, top_n=5)
+    hybrid_recommendations = list(set(recommended_products + cold_start))[:20]
 
     return JSONResponse(content={
         "user_id": user_id,
         "product_id": product_id,
-        "recommended_products": recommended_products
+        "recommended_products": hybrid_recommendations
     })
 
 @app.get("/favorite-view-recommendations")
@@ -327,11 +353,12 @@ def get_favorite_recommendations(
 
     if product_id in recommended_products:
         recommended_products.remove(product_id)
-
+    cold_start = cold_start_recommendations(data, new_products, top_n=5)
+    hybrid_recommendations = list(set(recommended_products + cold_start))[:20]
     return JSONResponse(content={
         "user_id": user_id,
         "product_id": product_id,
-        "recommended_products": recommended_products
+        "recommended_products": hybrid_recommendations
     })
 
 @app.get("/view-product")
@@ -343,11 +370,12 @@ def get_view_recommendations(
 
     if product_id in recommended_products:
         recommended_products.remove(product_id)
-
+    cold_start = cold_start_recommendations(data, new_products, top_n=5)
+    hybrid_recommendations = list(set(recommended_products + cold_start))[:20]
     return JSONResponse(content={
         "user_id": user_id,
         "product_id": product_id,
-        "recommended_products": recommended_products
+        "recommended_products": hybrid_recommendations
     })
 
 @app.get("/top15")
