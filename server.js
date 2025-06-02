@@ -11,12 +11,10 @@ const jwt = require('jsonwebtoken');
 const app = express();
 const port = process.env.PORT || 3012;
 const Article = require('./public/article');
-const Cart = require('./public/cart');
 const Addresses = require('./public/addresses');
 const path = require('path');
 const nodemailer = require('nodemailer');
 const bcrypt = require('bcryptjs');
-const createObjectCsvWriter  = require('csv-writer').createObjectCsvWriter;
 const axios = require("axios");
 const Activity = require('./public/activity');
 require("dotenv").config();
@@ -565,7 +563,7 @@ app.post('/addToCartFromDetail', async (req, res) => {
         cartItem.quantity += qtyToAdd;
       } else {
         user.cart.push({ productId, quantity: qtyToAdd });
-        const recommendedProducts = await recommendations_cart(userId, productId) || [];
+        const recommendedProducts = await recommendations_cart(userId, productId);
         if(recommendedProducts){
           const recomendationsArray = recommendedProducts.recommended_products;
           products = await Article.find({ _id: { $in: recomendationsArray } });
@@ -613,7 +611,7 @@ app.post('/addToCart', async (req, res) => {
         cartItem.quantity += 1;
       } else {
         user.cart.push({ productId, quantity: 1 });
-        const recommendedProducts = await recommendations_cart(userId, productId) || [];
+        const recommendedProducts = await recommendations_cart(userId, productId);
         if(recommendedProducts){
           const recomendationsArray = recommendedProducts.recommended_products;
           products = await Article.find({ _id: { $in: recomendationsArray } });
@@ -763,7 +761,7 @@ app.get('/', countFavoriteProduct, countCartProduct, async (req, res) => {
       articles = await Article.find(); //Showing all products
     }
     const top15Products = await showTop15Products();
-    const product_recomendations = await recommendations(userId) || [];
+    const product_recomendations = await recommendations(userId);
     if (top15Products && product_recomendations) {
       const productIds = top15Products.map(product => product.productId);
       const recomendationsArray = product_recomendations.recommendations;
@@ -826,7 +824,7 @@ app.get('/product', countFavoriteProduct,countCartProduct, async (req, res) => {
     const favoriteProductsID = user ? user.favorites : [];
     article.cantity = 1;
     let products;
-    const viewProductRecommendations = await recommendations_product_view(userId, id) || [];
+    const viewProductRecommendations = await recommendations_product_view(userId, id);
     if(viewProductRecommendations){
       const recomendationsArray = viewProductRecommendations.recommended_products;
       products = await Article.find({ _id: { $in: recomendationsArray } });
@@ -907,7 +905,7 @@ app.get('/cart', requireAuth, countFavoriteProduct, countCartProduct, async (req
     const totalProducts = productId.length - 1;
     const lastProductAddedToCart = productId[totalProducts];
     if(cart.length !== 0){
-      const recommendedProducts = await recommendations_cart_view(userId, lastProductAddedToCart) || [];
+      const recommendedProducts = await recommendations_cart_view(userId, lastProductAddedToCart);
       if(recommendedProducts){
         const recomendationsArray = recommendedProducts.recommended_products;
         products = await Article.find({ _id: { $in: recomendationsArray } });
@@ -942,7 +940,7 @@ app.get('/favorites', requireAuth, countFavoriteProduct, countCartProduct, async
     const totalProducts = favoriteProductIds.length - 1;
     const lastProductAddedToCart = productId[totalProducts];
     if(favorites.length !== 0){
-    const recommendedProducts = await recommendations_favorite_view(userId, lastProductAddedToCart) || [];
+    const recommendedProducts = await recommendations_favorite_view(userId, lastProductAddedToCart);
       if(recommendedProducts){
         const recomendationsArray = recommendedProducts.recommended_products;
         products = await Article.find({ _id: { $in: recomendationsArray } });

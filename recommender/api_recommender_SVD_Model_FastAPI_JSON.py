@@ -16,6 +16,7 @@ import numpy as np
 from dotenv import load_dotenv
 import os
 
+
 app = FastAPI()
 data = None
 user_model = None
@@ -158,31 +159,33 @@ def content_based_recommendations(data, product_id, top_n=20):
     vectorizer = TfidfVectorizer(stop_words='english')
     X = vectorizer.fit_transform(data["features"])
     cosine_sim = cosine_similarity(X, X)
-    
-    # Obținem recomandările pentru produsul dat
-    product_index = data[data['productId'] == product_id].index[0]
+
+    filtered = data[data['productId'] == product_id]
+    if filtered.empty:
+        return []
+
+    product_index = filtered.index[0]
     similar_products = cosine_sim[product_index]
-    
-    # Sortează produsele pe baza similarității
     similar_product_indices = similar_products.argsort()[-top_n:][::-1]
     recommended_products = data.iloc[similar_product_indices]['productId'].tolist()
-    
-    return recommended_products
-def cart_recommendations(data, product_id, top_n=15):
-    """ Recomandă produse relevante folosind ML (SVD) + conținut + co-ocurență """
 
-    #Filtrare pe bază de conținut (similaritate de produs)
+    return recommended_products
+
+def cart_recommendations(data, product_id, top_n=15):
     data["features"] = data[['category', 'subcategory', 'price']].apply(lambda x: ' '.join(x.astype(str)), axis=1)
     vectorizer = TfidfVectorizer(stop_words='english')
     X = vectorizer.fit_transform(data["features"])
     cosine_sim = cosine_similarity(X, X)
 
-    product_index = data[data['productId'] == product_id].index[0]
+    filtered = data[data['productId'] == product_id]
+    if filtered.empty:
+        return []
+
+    product_index = filtered.index[0]
     similar_products = cosine_sim[product_index]
     similar_product_indices = similar_products.argsort()[-(top_n + 1):][::-1]
     content_recommendations = data.iloc[similar_product_indices]['productId'].tolist()
 
-    #Co-ocurență (produse cumpărate împreună)
     purchased_together = data[data['action'] == 'purchased'].groupby('userId')['productId'].apply(list)
     co_occur = {}
     for products in purchased_together:
@@ -191,13 +194,20 @@ def cart_recommendations(data, product_id, top_n=15):
                 if p != product_id:
                     co_occur[p] = co_occur.get(p, 0) + 1
     co_occurrence_recommendations = sorted(co_occur, key=co_occur.get, reverse=True)[:top_n]
-    #Combinăm toate metodele
+
     hybrid_recommendations = list(set(co_occurrence_recommendations + content_recommendations))[:top_n]
 
     return hybrid_recommendations
 
+
 def cart_view_recommendations(data, user_model, trainset, user_id, product_id, top_n=15):
     """ Recomandă produse relevante folosind ML (SVD) + conținut """
+
+    # Verificăm dacă produsul există în date
+    filtered = data[data['productId'] == product_id]
+    if filtered.empty:
+        # Dacă produsul nu există, întoarce o listă goală sau cold start, depinde ce vrei
+        return []
 
     #Filtrare pe bază de conținut (similaritate de produs)
     data["features"] = data[['category', 'subcategory', 'price']].apply(lambda x: ' '.join(x.astype(str)), axis=1)
@@ -205,7 +215,7 @@ def cart_view_recommendations(data, user_model, trainset, user_id, product_id, t
     X = vectorizer.fit_transform(data["features"])
     cosine_sim = cosine_similarity(X, X)
 
-    product_index = data[data['productId'] == product_id].index[0]
+    product_index = filtered.index[0]
     similar_products = cosine_sim[product_index]
     similar_product_indices = similar_products.argsort()[-(top_n + 1):][::-1]
     content_recommendations = data.iloc[similar_product_indices]['productId'].tolist()
@@ -228,6 +238,7 @@ def cart_view_recommendations(data, user_model, trainset, user_id, product_id, t
     hybrid_recommendations = list(set(svd_recommendations + content_recommendations))[:top_n]
 
     return hybrid_recommendations
+
 def favorite_view_recommendations(data, user_model, trainset, user_id, product_id, top_n=15):
     """ Recomandă produse relevante folosind ML (SVD) + co-ocurență """
 
@@ -261,9 +272,6 @@ def favorite_view_recommendations(data, user_model, trainset, user_id, product_i
     return hybrid_recommendations
 
 def view_product(data, user_model, trainset, user_id, product_id, top_n=15):
-    """ Recomandă produse relevante folosind ML (SVD) + co-ocurență """
-
-    #Co-ocurență (produse cumpărate împreună)
     purchased_together = data[data['action'] == 'purchased'].groupby('userId')['productId'].apply(list)
     co_occur = {}
     for products in purchased_together:
@@ -273,22 +281,24 @@ def view_product(data, user_model, trainset, user_id, product_id, top_n=15):
                     co_occur[p] = co_occur.get(p, 0) + 1
     co_occurrence_recommendations = sorted(co_occur, key=co_occur.get, reverse=True)[:top_n]
 
-    #Filtrare pe bază de conținut (similaritate de produs)
     data["features"] = data[['category', 'subcategory', 'price']].apply(lambda x: ' '.join(x.astype(str)), axis=1)
     vectorizer = TfidfVectorizer(stop_words='english')
     X = vectorizer.fit_transform(data["features"])
     cosine_sim = cosine_similarity(X, X)
 
-    product_index = data[data['productId'] == product_id].index[0]
+    filtered = data[data['productId'] == product_id]
+    if filtered.empty:
+        return co_occurrence_recommendations
+
+    product_index = filtered.index[0]
     similar_products = cosine_sim[product_index]
     similar_product_indices = similar_products.argsort()[-(top_n + 1):][::-1]
     content_recommendations = data.iloc[similar_product_indices]['productId'].tolist()
 
-
-    #Combinăm toate metodele
     hybrid_recommendations = list(set(co_occurrence_recommendations + content_recommendations))[:top_n]
 
     return hybrid_recommendations
+
 
 @app.get("/recommendations")
 def get_recommendations(user_id: str = Query(...)):
