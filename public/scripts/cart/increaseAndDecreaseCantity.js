@@ -5,7 +5,7 @@ const qtyValues = document.querySelectorAll('.qty-value');
 const inputHidden = document.querySelectorAll('.hidden');
 async function updateCantity(id, cantity) {
     try {
-        const response = await fetch(`updateCantity/${id}`, {
+        const response = await fetch(`/updateCantity/${id}`, {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json'
