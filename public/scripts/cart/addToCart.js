@@ -21,13 +21,12 @@ async function updateFavoriteStatus(cart) {
         const result = await response.json();
         if (result.success) {
         if (result.products && result.products.length > 0) {
+            console.log(results.products);
+            console.log(results.products.length);
             fetchRecommendations(result.products);
             return result.newCartCount;
         } else {
             return result.newCartCount;
-            // Ascunde modalul dacă e deschis și nu sunt recomandări
-            const recommendationModalElement = document.getElementById('myModal');
-            recommendationModalElement.style.display = "none";
         }
 } else {
     console.error('Failed to update cart status.');
