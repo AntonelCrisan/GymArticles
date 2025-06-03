@@ -828,7 +828,7 @@ app.get('/category-results', countFavoriteProduct, countCartProduct, async (req,
 });
 
 //Product get method
-app.get('/product', countFavoriteProduct,countCartProduct, requireAuth, async (req, res) => {
+app.get('/product', countFavoriteProduct,countCartProduct, async (req, res) => {
   try {
     const userId = req.userId;
     const user = await User.findById(userId);
