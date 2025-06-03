@@ -73,7 +73,7 @@ document.addEventListener('DOMContentLoaded', () => {
       }
     } catch (error) {
       console.error('Error adding to cart:', error);
-      window.location.assign('/login');
+      // window.location.assign('/login');
     }
   }
 
