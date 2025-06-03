@@ -84,7 +84,8 @@ form.addEventListener('submit', async (e) => {
     const res = await fetch('/manage-information', {
       method: 'POST',
       body: JSON.stringify({nameUser, phoneNumber, year, month, day}),
-      headers: {'Content-Type': 'application/json'}
+      headers: {'Content-Type': 'application/json'},
+         credentials: 'include'
     });
     const data = await res.json();
     if(data.warning){
