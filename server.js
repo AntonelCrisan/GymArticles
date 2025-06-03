@@ -259,7 +259,7 @@ app.get('/myAccount',countFavoriteProduct, countCartProduct, (req, res) =>  {
 });
 //Manage information post method from user account
 app.post('/manage-information', async (req, res) => {
-  const userId = getId(); //Useing getter method for geting the id from token
+ const userId = req.userId; //Useing getter method for geting the id from token
   const {nameUser, phoneNumber, year, day} = req.body;
   //Change the months into number for inserting corectlly in database
   let {month} = req.body;
@@ -290,14 +290,14 @@ app.post('/manage-information', async (req, res) => {
 });
 //GET method for address page
 app.get('/addresses', countFavoriteProduct, countCartProduct, async (req, res) => {
-  const userID = getId(); //Gets id from middleware when user is loged in for displaing his addresses
+  const userId = req.userId; //Gets id from middleware when user is loged in for displaing his addresses
   const addresses = await Addresses.find({idUser: userID}); //Finds all addresses by idUser
   res.render('Addresses', {addresses, nrFavorites: req.nrFavorites,  nrCart:  req.nrCart});//Pass the addresses to frontend
 });
 //Add addresses post method
 app.post('/add-address', async(req, res) => {
   const {name, phoneNumber, street, city, country} = req.body;//Reqests all inputs
-  const idUser = getId();//Gets id from middleware for adding addresses
+ const idUser = req.userId;//Gets id from middleware for adding addresses
   try{
     if(!idUser){//Checks the user id and display a warning message
       return res.status(400).json({warning: 'Something went wrong, please try again later!'});
@@ -388,7 +388,7 @@ app.get('/change-password', requirePasswordValidation, (req, res) => {
 //POST method for change password
 app.post('/change-password', async(req, res) => {
   const {password, confPassword} = req.body;//Gets the values of password and confirm password
-  const id = getId();//Gets id from authMiddleWare
+  const id = req.userId;//Gets id from authMiddleWare
   try {
     if(!password || !confPassword){//Checks the input password and confirm password are empty
       return res.status(400).json({warning: 'All fields must be filled!'});
@@ -422,7 +422,7 @@ app.get('/validate-password', (req, res) => {
 //POST method for validate password
 app.post('/validate-password', async(req, res) => {
   const {password, intendedUrl} = req.body;//Gets the value of password
-  const id = getId();//Gets the id for checking the password by user id
+  const id = req.userId;//Gets the id for checking the password by user id
   try {
     if(!password){//Checks the input password is empty
       return res.status(400).json({warning: 'Please enter the password!'});
@@ -450,7 +450,7 @@ app.get('/settings', countFavoriteProduct,countCartProduct, (req, res) => {
 
 //POST method for deleting favorite product
 app.post('/deleteFavorite/:id', async(req, res) => {
-  const userId = getId();
+  const userId = req.userId;
   const id = req.params.id;
   try {
     await User.findByIdAndUpdate(userId, { $pull: { favorites: id } });
@@ -510,7 +510,7 @@ async function recommendations_product_view(user_id, product_id){
 app.post('/addFavorite', async (req, res) => {
   try {
       const { productId, isAdding } = req.body;
-      const userId = getId(); // Ensure this function returns the correct user ID
+      const userId = req.userId; // Ensure this function returns the correct user ID
       const user = await User.findById(userId);
       const product = await Article.findById(productId);
       if (isAdding) {
@@ -658,7 +658,7 @@ app.post('/addToCart', requireAuth, async (req, res) => {
 
 //POST method for deleting products from cart
 app.post('/deleteFromCart/:id', async(req, res) => {
-  const userId = getId();
+  const userId = req.userId;
   const id = req.params.id;
   try {
     await User.updateOne(
@@ -673,7 +673,7 @@ app.post('/deleteFromCart/:id', async(req, res) => {
 });
 //POST method for increasing products in cart
 app.post('/updateCantity/:id', async (req, res) => {
-  const userId = getId();
+  const userId = req.userId;
   const productId = req.params.id;
   const { quantity } = req.body; // The new quantity from the request body
   const stockProduct = await Article.findById(productId);
@@ -763,7 +763,7 @@ app.get('/', countFavoriteProduct, countCartProduct, async (req, res) => {
       category,
       subcategories: Array.from(subcats)
     }));
-    const userId = getId();
+    const userId = req.userId;
     const user = await User.findById(userId);
     const favoriteProductsID = user ? user.favorites : [];
     if (category) {
@@ -830,7 +830,7 @@ app.get('/category-results', countFavoriteProduct, countCartProduct, async (req,
 //Product get method
 app.get('/product', countFavoriteProduct,countCartProduct, async (req, res) => {
   try {
-    const userId = getId();
+    const userId = req.userId;
     const user = await User.findById(userId);
     const {id} = req.query; //Get product id from query
     const article = await Article.findById(id).lean(); //Searching the article from database by product id
@@ -904,7 +904,7 @@ app.post('/getArticles', async (req, res) => {
 });
 app.get('/cart', requireAuth, countFavoriteProduct, countCartProduct, async (req, res) => {
   try {
-    const userId = getId();
+    const userId = req.userId;
     const user = await User.findById(userId).populate('cart.productId');
     const favoriteProductsID = user ? user.favorites : [];
     let products;
@@ -941,7 +941,7 @@ app.get('/cart', requireAuth, countFavoriteProduct, countCartProduct, async (req
 
 app.get('/favorites', requireAuth, countFavoriteProduct, countCartProduct, async (req, res) => {
   try {
-    const userId = getId();
+    const userId = req.userId;
     const user = await User.findById(userId).populate('favorites');
     const favoriteProductsID = user ? user.favorites : [];
     const favoriteProductIds = user.favorites;
@@ -965,7 +965,7 @@ app.get('/favorites', requireAuth, countFavoriteProduct, countCartProduct, async
   }
 });
 app.get('/checkout', countCartProduct, async (req, res) => {
-  const userID = getId(); //Gets id from middleware when user is loged in for displaing his addresses
+  const userId = req.userId; //Gets id from middleware when user is loged in for displaing his addresses
   const addresses = await Addresses.find({idUser: userID}); //Finds all addresses by idUser
   const user = await User.findById(userID).populate('cart.productId');
   const cart = user.cart.map(item => ({
@@ -978,7 +978,7 @@ app.get('/checkout', countCartProduct, async (req, res) => {
 });
 
 app.get('/summary',countCartProduct, async (req, res) => {
-  const userId = getId();
+  const userId = req.userId;
   const user = await User.findById(userId).populate('cart.productId');
   const cart = user.cart.map(item => ({
     ...item.productId.toObject(),
@@ -991,7 +991,7 @@ app.get('/summary',countCartProduct, async (req, res) => {
 
 app.post('/pay-courier', async (req, res) => {
   try {
-      const userId = getId(); // Retrieve user ID
+      const userId = req.userId; // Retrieve user ID
       const { deliveryAddress, billingAddress, paymentMethod, orderTotal, deliveryCostAndProcessingCost } = req.body;
       const user = await User.findById(userId).populate('cart.productId');
       if (!user) {
@@ -1065,7 +1065,7 @@ app.get('/order-placed',countCartProduct, async (req, res) => {
   res.render('OrderPlaced', { nrCart: req.nrCart});
 });
   app.post('/pay', async (req, res) => {
-    const userId = getId(); // Retrieve user ID
+    const userId = req.userId; // Retrieve user ID
     const user = await User.findById(userId).populate('cart.productId');
     const { deliveryAddress, billingAddress, paymentMethod, orderTotal, deliveryCostAndProcessingCost } = req.body;
     const cart = user.cart.map(item => ({
@@ -1118,7 +1118,7 @@ app.get('/order-placed',countCartProduct, async (req, res) => {
   app.get('/success-payment', async (req, res) => {
       // Retrieve the session details from Stripe
         await stripe.checkout.sessions.retrieve(req.query.session_id);
-        const userId = getId(); // Get the user ID from session metadata
+        const userId = req.userId; // Get the user ID from session metadata
         // Retrieve the user and cart details
         const user = await User.findById(userId).populate('cart.productId');
         const cartItems = user.cart.map(item => ({
@@ -1162,7 +1162,7 @@ app.get('/order-placed',countCartProduct, async (req, res) => {
   });
   app.get('/order-history', countFavoriteProduct, countCartProduct, async (req, res) => {
     try {
-      const userId = getId();
+      const userId = req.userId;
       const user = await User.findById(userId).select('orders').lean();
       const orders = user.orders;
       // Renderizează pagina HTML pentru utilizatori
