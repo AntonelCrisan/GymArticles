@@ -258,7 +258,7 @@ app.get('/myAccount',countFavoriteProduct, countCartProduct, (req, res) =>  {
   res.render('MyAccount', {nrFavorites: req.nrFavorites, nrCart:  req.nrCart});
 });
 //Manage information post method from user account
-app.post('/manage-information', async (req, res) => {
+app.post('/manage-information',  requireAuth, async (req, res) => {
  const userId = req.userId; //Useing getter method for geting the id from token
   const {nameUser, phoneNumber, year, day} = req.body;
   //Change the months into number for inserting corectlly in database
@@ -289,13 +289,13 @@ app.post('/manage-information', async (req, res) => {
   }
 });
 //GET method for address page
-app.get('/addresses', countFavoriteProduct, countCartProduct, async (req, res) => {
+app.get('/addresses', countFavoriteProduct, countCartProduct, requireAuth, async (req, res) => {
   const userId = req.userId; //Gets id from middleware when user is loged in for displaing his addresses
   const addresses = await Addresses.find({idUser: userID}); //Finds all addresses by idUser
   res.render('Addresses', {addresses, nrFavorites: req.nrFavorites,  nrCart:  req.nrCart});//Pass the addresses to frontend
 });
 //Add addresses post method
-app.post('/add-address', async(req, res) => {
+app.post('/add-address', requireAuth, async(req, res) => {
   const {name, phoneNumber, street, city, country} = req.body;//Reqests all inputs
  const idUser = req.userId;//Gets id from middleware for adding addresses
   try{
@@ -386,7 +386,7 @@ app.get('/change-password', requirePasswordValidation, (req, res) => {
   res.render('ChangePassword');
 });
 //POST method for change password
-app.post('/change-password', async(req, res) => {
+app.post('/change-password', requireAuth, async(req, res) => {
   const {password, confPassword} = req.body;//Gets the values of password and confirm password
   const id = req.userId;//Gets id from authMiddleWare
   try {
@@ -420,7 +420,7 @@ app.get('/validate-password', (req, res) => {
   res.render('ValidatePassword', {intendedUrl});
 });
 //POST method for validate password
-app.post('/validate-password', async(req, res) => {
+app.post('/validate-password', requireAuth, async(req, res) => {
   const {password, intendedUrl} = req.body;//Gets the value of password
   const id = req.userId;//Gets the id for checking the password by user id
   try {
@@ -449,7 +449,7 @@ app.get('/settings', countFavoriteProduct,countCartProduct, (req, res) => {
 });
 
 //POST method for deleting favorite product
-app.post('/deleteFavorite/:id', async(req, res) => {
+app.post('/deleteFavorite/:id', requireAuth, async(req, res) => {
   const userId = req.userId;
   const id = req.params.id;
   try {
@@ -657,7 +657,7 @@ app.post('/addToCart', requireAuth, async (req, res) => {
 
 
 //POST method for deleting products from cart
-app.post('/deleteFromCart/:id', async(req, res) => {
+app.post('/deleteFromCart/:id', requireAuth, async(req, res) => {
   const userId = req.userId;
   const id = req.params.id;
   try {
@@ -672,7 +672,7 @@ app.post('/deleteFromCart/:id', async(req, res) => {
   }
 });
 //POST method for increasing products in cart
-app.post('/updateCantity/:id', async (req, res) => {
+app.post('/updateCantity/:id', requireAuth, async (req, res) => {
   const userId = req.userId;
   const productId = req.params.id;
   const { quantity } = req.body; // The new quantity from the request body
@@ -740,7 +740,7 @@ async function showTop15Products() {
   }
 }
 //Home page get method
-app.get('/', countFavoriteProduct, countCartProduct, async (req, res) => {
+app.get('/', countFavoriteProduct, countCartProduct, requireAuth, async (req, res) => {
   try {
     const { subcategory, category } = req.query;
     let articles;
@@ -828,7 +828,7 @@ app.get('/category-results', countFavoriteProduct, countCartProduct, async (req,
 });
 
 //Product get method
-app.get('/product', countFavoriteProduct,countCartProduct, async (req, res) => {
+app.get('/product', countFavoriteProduct,countCartProduct, requireAuth, async (req, res) => {
   try {
     const userId = req.userId;
     const user = await User.findById(userId);
@@ -964,7 +964,7 @@ app.get('/favorites', requireAuth, countFavoriteProduct, countCartProduct, async
     res.status(500).json({error: 'Server error'});
   }
 });
-app.get('/checkout', countCartProduct, async (req, res) => {
+app.get('/checkout', countCartProduct, requireAuth, async (req, res) => {
   const userId = req.userId; //Gets id from middleware when user is loged in for displaing his addresses
   const addresses = await Addresses.find({idUser: userID}); //Finds all addresses by idUser
   const user = await User.findById(userID).populate('cart.productId');
@@ -977,7 +977,7 @@ app.get('/checkout', countCartProduct, async (req, res) => {
   res.render('Checkout', {cart, addresses, nrCart: req.nrCart, productCost, deliveryCost });
 });
 
-app.get('/summary',countCartProduct, async (req, res) => {
+app.get('/summary',countCartProduct, requireAuth, async (req, res) => {
   const userId = req.userId;
   const user = await User.findById(userId).populate('cart.productId');
   const cart = user.cart.map(item => ({
@@ -989,7 +989,7 @@ app.get('/summary',countCartProduct, async (req, res) => {
   res.render('OrderSummary', { nrCart: req.nrCart, cart,  productCost, deliveryCost});
 });
 
-app.post('/pay-courier', async (req, res) => {
+app.post('/pay-courier', requireAuth, async (req, res) => {
   try {
       const userId = req.userId; // Retrieve user ID
       const { deliveryAddress, billingAddress, paymentMethod, orderTotal, deliveryCostAndProcessingCost } = req.body;
@@ -1064,7 +1064,7 @@ Activity.insertMany(userInteractions)
 app.get('/order-placed',countCartProduct, async (req, res) => {
   res.render('OrderPlaced', { nrCart: req.nrCart});
 });
-  app.post('/pay', async (req, res) => {
+  app.post('/pay', requireAuth, async (req, res) => {
     const userId = req.userId; // Retrieve user ID
     const user = await User.findById(userId).populate('cart.productId');
     const { deliveryAddress, billingAddress, paymentMethod, orderTotal, deliveryCostAndProcessingCost } = req.body;
@@ -1115,7 +1115,7 @@ app.get('/order-placed',countCartProduct, async (req, res) => {
       res.status(500).send({ error: 'Internal Server Error' });
     }
   });
-  app.get('/success-payment', async (req, res) => {
+  app.get('/success-payment', requireAuth, async (req, res) => {
       // Retrieve the session details from Stripe
         await stripe.checkout.sessions.retrieve(req.query.session_id);
         const userId = req.userId; // Get the user ID from session metadata
@@ -1160,7 +1160,7 @@ app.get('/order-placed',countCartProduct, async (req, res) => {
         // Render the success page
         res.render('SuccessPayOnlineCard');
   });
-  app.get('/order-history', countFavoriteProduct, countCartProduct, async (req, res) => {
+  app.get('/order-history', countFavoriteProduct, countCartProduct, requireAuth, async (req, res) => {
     try {
       const userId = req.userId;
       const user = await User.findById(userId).select('orders').lean();
