@@ -22,21 +22,12 @@ async function updateFavoriteStatus(cart) {
         if (result.success) {
         if (result.products && result.products.length > 0) {
             fetchRecommendations(result.products);
-    
-            // Afișează modalul cu recomandări (ex: Bootstrap modal)
-            const recommendationModal = new bootstrap.Modal(document.getElementById('myModal'));
-            recommendationModal.show();
-    
             return result.newCartCount;
         } else {
+            return result.newCartCount;
             // Ascunde modalul dacă e deschis și nu sunt recomandări
             const recommendationModalElement = document.getElementById('myModal');
-            const modalInstance = bootstrap.Modal.getInstance(recommendationModalElement);
-            if (modalInstance) {
-                modalInstance.hide();
-            }
-    
-            return result.newCartCount;
+            recommendationModalElement.style.display = "none";
         }
 } else {
     console.error('Failed to update cart status.');
