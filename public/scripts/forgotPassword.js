@@ -16,7 +16,8 @@ form.addEventListener('submit', async (e) => {
         const res = await fetch('/forgot-password', {
             method: 'POST',
             body: JSON.stringify({email}),
-            headers: {'Content-Type': 'application/json'}
+            headers: {'Content-Type': 'application/json'},
+             credentials: 'include'
         });
         const data = await res.json();
         if(data.error){
