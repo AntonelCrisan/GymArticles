@@ -52,7 +52,8 @@ document.addEventListener('DOMContentLoaded', () => {
       const response = await fetch('/addToCartFromDetail', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ productId, quantity })
+        body: JSON.stringify({ productId, quantity }),
+         credentials: 'include'
       });
        if (!response.ok) {
             throw new Error('Network response was not ok.');
