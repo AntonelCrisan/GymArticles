@@ -507,7 +507,7 @@ async function recommendations_product_view(user_id, product_id){
   }
 }
 //POST method for adding favorite product
-app.post('/addFavorite', async (req, res) => {
+app.post('/addFavorite', requireAuth, async (req, res) => {
   try {
       const { productId, isAdding } = req.body;
       const userId = req.userId; // Ensure this function returns the correct user ID
