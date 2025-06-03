@@ -19,7 +19,8 @@ try{
     const res = await fetch(`/reset-password/${token}`, {
     method: 'POST', 
     body: JSON.stringify({password, confPassword}),
-    headers: {'Content-Type': 'application/json'}
+    headers: {'Content-Type': 'application/json'},
+    credentials: 'include'
     });
     const data = await res.json();
     if(data.warning){
