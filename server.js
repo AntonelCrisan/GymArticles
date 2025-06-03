@@ -627,7 +627,7 @@ app.post('/addToCart', async (req, res) => {
       }
       await user.save();
       const newCartCount = user.cart.reduce((total, item) => total + item.quantity, 0);
-      return res.json({ success: true, newCartCount, user, products});
+      return res.json({ success: true, newCartCount, user});
     }else{
       return res.json({success: false, message: 'Product is out of stock'});
     }
