@@ -8,7 +8,8 @@ deleteFavorite.forEach(button => {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json'
-                }
+                },
+                 credentials: 'include'
             });
             const result = await response.json();
             if(result.success){
