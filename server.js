@@ -600,42 +600,44 @@ app.post('/addToCart', async (req, res) => {
   try {
     const userId = getId();
     const user = await User.findById(userId).populate('cart.productId');
-    const {productId} = req.body;
-    // Find if the product is already in the cart
+    const { productId } = req.body;
+
     const cartItem = user.cart.find(item => item.productId.equals(productId));
     const stockProduct = await Article.findById(productId);
-    if(stockProduct.cantity !== 0){
+
+    if (stockProduct.cantity !== 0) {
       if (cartItem) {
-        // If product already in cart, increase the quantity
         cartItem.quantity += 1;
       } else {
         user.cart.push({ productId, quantity: 1 });
-      const userInteraction =  new Activity({
-        userId: userId,
-        productId: productId,
-        productName: stockProduct.name,
-        category: stockProduct.category,
-        subcategory: stockProduct.subcategory,
-        price: stockProduct.price,
-        action: "added_to_cart",
-        timestamp : Math.floor(Date.now() / 1000)
-      });
-      userInteraction.save()
-      .then(() => {
-        console.log("Activity saved successfully!");
-      })
+
+        const userInteraction = new Activity({
+          userId: userId,
+          productId: productId,
+          productName: stockProduct.name,
+          category: stockProduct.category,
+          subcategory: stockProduct.subcategory,
+          price: stockProduct.price,
+          action: "added_to_cart",
+          timestamp: Math.floor(Date.now() / 1000)
+        });
+
+        await userInteraction.save();
       }
+
       await user.save();
       const newCartCount = user.cart.reduce((total, item) => total + item.quantity, 0);
-      return res.json({ success: true, newCartCount, user});
-    }else{
-      return res.json({success: false, message: 'Product is out of stock'});
+      return res.json({ success: true, newCartCount });
+    } else {
+      return res.json({ success: false, message: 'Product is out of stock' });
     }
+
   } catch (error) {
     console.error('Error in /addToCart:', error);
     return res.status(500).json({ success: false, message: 'Server error' });
   }
 });
+
 
 //POST method for deleting products from cart
 app.post('/deleteFromCart/:id', async(req, res) => {
