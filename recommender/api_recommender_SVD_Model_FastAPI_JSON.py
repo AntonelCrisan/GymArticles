@@ -24,16 +24,7 @@ user_model = None
 trainset = None
 pred = None
 new_products = []
-scheduler = BackgroundScheduler()
 
-# Programăm reantrenarea la fiecare 12 ore
-scheduler.add_job(initialize_model, 'interval', hours=12)
-
-# Pornim schedulerul
-scheduler.start()
-
-# Oprire sigură la închiderea aplicației
-atexit.register(lambda: scheduler.shutdown())
 def load_data_from_api():
     try:
         load_dotenv()
@@ -396,6 +387,16 @@ def get_top15_popular_products():
     popular_products = purchased_data.groupby(['productId']).size().reset_index(name='purchased')
     
     return JSONResponse(content=popular_products.head(15).to_dict(orient='records'))
-initialize_model() 
+@app.get("/refresh-model")
+def refresh_model():
+    initialize_model()
+    return JSONResponse(content={"status": "Model retrained successfully"})
+
+initialize_model()
+#Added scheduler for learning after 12 hours
+scheduler = BackgroundScheduler()
+scheduler.add_job(initialize_model, 'interval', hours=12)
+scheduler.start()
+atexit.register(lambda: scheduler.shutdown())
 if __name__ == "__main__":
     uvicorn.run(app, host="127.0.0.1", port=5000, reload=True)
