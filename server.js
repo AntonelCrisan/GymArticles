@@ -599,11 +599,21 @@ app.post('/addToCartFromDetail', async (req, res) => {
 app.post('/addToCart', async (req, res) => {
   try {
     const userId = getId();
+    if (!userId) {
+      return res.status(401).json({ success: false, message: 'User not authenticated' });
+    }
     const user = await User.findById(userId).populate('cart.productId');
+    if (!user) {
+      return res.status(404).json({ success: false, message: 'User not found' });
+    }
     const {productId} = req.body;
     // Find if the product is already in the cart
     const cartItem = user.cart.find(item => item.productId.equals(productId));
     const stockProduct = await Article.findById(productId);
+    const stockProduct = await Article.findById(productId);
+    if (!stockProduct) {
+      return res.status(404).json({ success: false, message: 'Product not found' });
+    }
     let products;
     if(stockProduct.cantity !== 0){
       if (cartItem) {
