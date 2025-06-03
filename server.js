@@ -547,9 +547,12 @@ app.post('/addFavorite', async (req, res) => {
 });
 
 //POST method for adding products to cart
-app.post('/addToCartFromDetail', async (req, res) => {
+app.post('/addToCartFromDetail', requireAuth, async (req, res) => {
   try {
-    const userId = getId();
+    const userId = req.userId; // obținut din middleware
+    if (!userId) {
+      return res.status(401).json({ success: false, message: 'User not authenticated' });
+    }
     const user = await User.findById(userId).populate('cart.productId');
     const { productId, quantity } = req.body;
     const qtyToAdd = quantity;
@@ -647,7 +650,7 @@ app.post('/addToCart', requireAuth, async (req, res) => {
     return res.json({ success: true, newCartCount });
 
   } catch (error) {
-    console.error('Error in /addToCart:', error);
+    console.error('Error in :', error);
     return res.status(500).json({ success: false, message: 'Server error' });
   }
 });
