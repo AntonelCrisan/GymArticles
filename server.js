@@ -590,47 +590,61 @@ app.post('/addToCartFromDetail', async (req, res) => {
       return res.json({success: false, message: 'Product is out of stock'});
     }
   } catch (error) {
-    console.error('Error in /addToCart:', error);
+    console.error('Error in :', error);
     return res.status(500).json({ success: false, message: 'Server error' });
   }
 });
 
 //POST method for adding products to cart
-app.post('/addToCart', async (req, res) => {
+app.post('/addToCart', requireAuth, async (req, res) => {
   try {
-    const userId = getId();
-    const user = await User.findById(userId).populate('cart.productId');
+    const userId = req.userId; // obținut din middleware
+    if (!userId) {
+      return res.status(401).json({ success: false, message: 'User not authenticated' });
+    }
+
     const { productId } = req.body;
 
-    const cartItem = user.cart.find(item => item.productId.equals(productId));
+    const user = await User.findById(userId).populate('cart.productId');
+    if (!user) {
+      return res.status(404).json({ success: false, message: 'User not found' });
+    }
+
     const stockProduct = await Article.findById(productId);
+    if (!stockProduct) {
+      return res.status(404).json({ success: false, message: 'Product not found' });
+    }
 
-    if (stockProduct.cantity !== 0) {
-      if (cartItem) {
-        cartItem.quantity += 1;
-      } else {
-        user.cart.push({ productId, quantity: 1 });
-
-        const userInteraction = new Activity({
-          userId: userId,
-          productId: productId,
-          productName: stockProduct.name,
-          category: stockProduct.category,
-          subcategory: stockProduct.subcategory,
-          price: stockProduct.price,
-          action: "added_to_cart",
-          timestamp: Math.floor(Date.now() / 1000)
-        });
-
-        await userInteraction.save();
-      }
-
-      await user.save();
-      const newCartCount = user.cart.reduce((total, item) => total + item.quantity, 0);
-      return res.json({ success: true, newCartCount });
-    } else {
+    if (stockProduct.cantity === 0) {
       return res.json({ success: false, message: 'Product is out of stock' });
     }
+
+    // Verificăm dacă produsul e deja în coș
+    const cartItem = user.cart.find(item => item.productId.equals(productId));
+
+    if (cartItem) {
+      cartItem.quantity += 1;
+    } else {
+      user.cart.push({ productId, quantity: 1 });
+
+      const userInteraction = new Activity({
+        userId,
+        productId,
+        productName: stockProduct.name,
+        category: stockProduct.category,
+        subcategory: stockProduct.subcategory,
+        price: stockProduct.price,
+        action: "added_to_cart",
+        timestamp: Math.floor(Date.now() / 1000)
+      });
+
+      await userInteraction.save();
+    }
+
+    await user.save();
+
+    const newCartCount = user.cart.reduce((total, item) => total + item.quantity, 0);
+    return res.json({ success: true, newCartCount });
 
   } catch (error) {
     console.error('Error in /addToCart:', error);
