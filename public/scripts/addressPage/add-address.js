@@ -46,6 +46,7 @@ addAddress.addEventListener('submit', async(e) => {
         const res = await fetch('/add-address', {
           method: 'POST',
           body: JSON.stringify({ name, phoneNumber, street, city, country}),
+          credentials: 'include',
           headers: {'Content-Type': 'application/json'}
         });
         const data = await res.json();
