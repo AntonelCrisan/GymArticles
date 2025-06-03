@@ -22,7 +22,8 @@ form.addEventListener('submit', async (e) => {
     const res = await fetch('/signup', {
       method: 'POST',
       body: JSON.stringify({name, email, password}),
-      headers: {'Content-Type': 'application/json'}
+      headers: {'Content-Type': 'application/json'},
+       credentials: 'include'
     });
     const data = await res.json();
     if(data.errors){
