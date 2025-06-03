@@ -10,10 +10,10 @@ async function updateFavoriteStatus(cart) {
                 productId: cart.dataset.productId
             })
         });
-         if (response.status === 401) {
-            window.location.assign('/login');
-            return;
-        }
+        //  if (response.status === 401) {
+        //     window.location.assign('/login');
+        //     return;
+        // }
         if (!response.ok) {
             throw new Error('Network response was not ok.');
         }
