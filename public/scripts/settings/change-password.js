@@ -19,7 +19,8 @@ form.addEventListener('submit', async (e) => {
     const res = await fetch('/change-password', {
       method: 'POST',
       body: JSON.stringify({password, confPassword}),
-      headers: {'Content-Type': 'application/json'}
+      headers: {'Content-Type': 'application/json'},
+       credentials: 'include'
     });
     const data = await res.json();
     if(data.errors){
