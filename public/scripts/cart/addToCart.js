@@ -20,13 +20,18 @@ async function updateFavoriteStatus(cart) {
 
         const result = await response.json();
         if (result.success) {
-            fetchRecommendations(result.products)
-            return result.newCartCount; // Return the new favorite count
-        }else {
-            console.error('Failed to update cart status.');
-            showWarningOutOfStock();
-            return null;
+        if (result.products && result.products.length > 0) {
+            fetchRecommendations(result.products);
+            return result.newCartCount;
+        } else {
+            // Nu afișăm nimic dacă nu sunt recomandări
+            return result.newCartCount;
         }
+} else {
+    console.error('Failed to update cart status.');
+    showWarningOutOfStock();
+    return null;
+}
     } catch (error) {
         console.error('Error updating cart status:', error);
         return null;
