@@ -740,7 +740,7 @@ async function showTop15Products() {
   }
 }
 //Home page get method
-app.get('/', countFavoriteProduct, countCartProduct, requireAuth, async (req, res) => {
+app.get('/', countFavoriteProduct, countCartProduct, async (req, res) => {
   try {
     const { subcategory, category } = req.query;
     let articles;
