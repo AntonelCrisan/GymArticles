@@ -38,7 +38,7 @@ document.addEventListener('DOMContentLoaded', () => {
                     productId: heart.dataset.productId,
                     isAdding: isAdding
                 }),
-                 credentials: 'include'
+                 credentials: 'include' // send cookies
             });
 
             if (!response.ok) {

@@ -6,7 +6,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 headers: {
                     'Content-Type': 'application/json'
                 },
-                credentials: 'include',
+                credentials: 'include',  // send cookies
                 body: JSON.stringify({
                     productId: cart.dataset.productId
                 })

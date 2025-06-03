@@ -18,7 +18,7 @@ form.addEventListener('submit', async (e) => {
             method: 'PUT',
             body: JSON.stringify({image, name, price, category, subcategory, cantity}),
             headers: {'Content-Type': 'application/json'},
-             credentials: 'include'
+             credentials: 'include'  // send cookies
           });
         const data = await res.json();
         if(data.msg){

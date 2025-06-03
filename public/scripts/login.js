@@ -22,8 +22,8 @@ form.addEventListener('submit', async (e) => {
       method: 'POST',
       body: JSON.stringify({email, password}),
       headers: {'Content-Type': 'application/json'},
-       credentials: 'include'
-    });
+       credentials: 'include'  // send cookies
+    }); 
     const data = await res.json();
     
     if(data.errors){

@@ -7,9 +7,9 @@ deleteFavorite.forEach(button => {
             const response = await fetch(`/deleteFavorite/${id}`, {
                 method: 'POST',
                 headers: {
-                    'Content-Type': 'application/json'
+                    'Content-Type': 'application/json' 
                 },
-                 credentials: 'include'
+                 credentials: 'include'  // send cookies
             });
             const result = await response.json();
             if(result.success){

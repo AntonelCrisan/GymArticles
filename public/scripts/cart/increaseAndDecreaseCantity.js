@@ -10,7 +10,7 @@ async function updateCantity(id, cantity) {
             headers: {
                 'Content-Type': 'application/json'
             },
-             credentials: 'include',
+             credentials: 'include',  // send cookies
             body: JSON.stringify({
                 productId: id.dataset,
                 quantity: cantity

@@ -67,7 +67,7 @@ editAddressButton.forEach(button => {
             const res = await fetch(`/update-address/${id}`, {
                 method: 'POST',
                 body: JSON.stringify({name, phoneNumber, street, city, country}),
-                 credentials: 'include',
+                 credentials: 'include',  // send cookies
                 headers: {'Content-Type': 'application/json'}
             });
             const data = await res.json();

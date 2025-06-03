@@ -53,7 +53,7 @@ document.addEventListener('DOMContentLoaded', () => {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ productId, quantity }),
-         credentials: 'include'
+         credentials: 'include'  // send cookies
       });
        if (!response.ok) {
             throw new Error('Network response was not ok.');
