@@ -967,7 +967,7 @@ app.get('/favorites', requireAuth, countFavoriteProduct, countCartProduct, async
 app.get('/checkout', countCartProduct, requireAuth, async (req, res) => {
   const userId = req.userId; //Gets id from middleware when user is loged in for displaing his addresses
   const addresses = await Addresses.find({idUser: userId}); //Finds all addresses by idUser
-  const user = await User.findById(userID).populate('cart.productId');
+  const user = await User.findById(userId).populate('cart.productId');
   const cart = user.cart.map(item => ({
     ...item.productId.toObject(),
     quantity: item.quantity
