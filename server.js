@@ -258,7 +258,7 @@ app.get('/myAccount',countFavoriteProduct, countCartProduct, (req, res) =>  {
   res.render('MyAccount', {nrFavorites: req.nrFavorites, nrCart:  req.nrCart});
 });
 //Manage information post method from user account
-app.post('/manage-information',  requireAuth, async (req, res) => {
+app.post('/manage-information', async (req, res) => {
  const userId = req.userId; //Useing getter method for geting the id from token
   const {nameUser, phoneNumber, year, day} = req.body;
   //Change the months into number for inserting corectlly in database
@@ -289,7 +289,7 @@ app.post('/manage-information',  requireAuth, async (req, res) => {
   }
 });
 //GET method for address page
-app.get('/addresses', countFavoriteProduct, countCartProduct, requireAuth, async (req, res) => {
+app.get('/addresses', countFavoriteProduct, countCartProduct, async (req, res) => {
   const userId = req.userId; //Gets id from middleware when user is loged in for displaing his addresses
   const addresses = await Addresses.find({idUser: userId}); //Finds all addresses by idUser
   res.render('Addresses', {addresses, nrFavorites: req.nrFavorites,  nrCart:  req.nrCart});//Pass the addresses to frontend
@@ -297,7 +297,7 @@ app.get('/addresses', countFavoriteProduct, countCartProduct, requireAuth, async
 //Add addresses post method
 app.post('/add-address', requireAuth, async(req, res) => {
   const {name, phoneNumber, street, city, country} = req.body;//Reqests all inputs
- const idUser = req.userId;//Gets id from middleware for adding addresses
+  const idUser = req.userId;//Gets id from middleware for adding addresses
   try{
     if(!idUser){//Checks the user id and display a warning message
       return res.status(400).json({warning: 'Something went wrong, please try again later!'});
@@ -449,7 +449,7 @@ app.get('/settings', countFavoriteProduct,countCartProduct, (req, res) => {
 });
 
 //POST method for deleting favorite product
-app.post('/deleteFavorite/:id', requireAuth, async(req, res) => {
+app.post('/deleteFavorite/:id', requireAuth,async(req, res) => {
   const userId = req.userId;
   const id = req.params.id;
   try {
@@ -657,7 +657,7 @@ app.post('/addToCart', requireAuth, async (req, res) => {
 
 
 //POST method for deleting products from cart
-app.post('/deleteFromCart/:id', requireAuth, async(req, res) => {
+app.post('/deleteFromCart/:id', requireAuth,async(req, res) => {
   const userId = req.userId;
   const id = req.params.id;
   try {
@@ -676,9 +676,8 @@ app.post('/updateCantity/:id', requireAuth, async (req, res) => {
   const userId = req.userId;
   const productId = req.params.id;
   const { quantity } = req.body; // The new quantity from the request body
-  const stockProduct = await Article.findById(productId);
   // Validate the quantity
-  if (typeof quantity !== 'string' || quantity <= 0) {
+  if (typeof quantity !== 'number' || quantity <= 0) {
     return res.status(400).json({ error: 'Invalid quantity' });
   }
   try {
@@ -828,39 +827,55 @@ app.get('/category-results', countFavoriteProduct, countCartProduct, async (req,
 });
 
 //Product get method
-app.get('/product', countFavoriteProduct,countCartProduct, async (req, res) => {
+app.get('/product', checkUser, countFavoriteProduct, countCartProduct, async (req, res) => {
   try {
     const userId = req.userId;
-    const user = await User.findById(userId);
-    const {id} = req.query; //Get product id from query
-    const article = await Article.findById(id).lean(); //Searching the article from database by product id
-    const favoriteProductsID = user ? user.favorites : [];
+    const { id } = req.query;
+    const article = await Article.findById(id).lean();
     article.cantity = 1;
-    let products;
-    const viewProductRecommendations = await recommendations_product_view(userId, id);
-    if(viewProductRecommendations){
-      const recomendationsArray = viewProductRecommendations.recommended_products;
-      products = await Article.find({ _id: { $in: recomendationsArray } });
-    }
-    const userInteraction = new Activity({
-      userId: userId,
-      productId: article._id,
-      productName: article.name,
-      category: article.category,
-      subcategory: article.subcategory,
-      price: parseFloat(article.price).toFixed(2),
-      action: "viewed",
-      timestamp : Math.floor(Date.now() / 1000)
-    });
-    userInteraction.save()
-    .then(() => {
+
+    let user = null;
+    let favoriteProductsID = [];
+    let products = [];
+
+    if (userId) {
+      user = await User.findById(userId);
+      favoriteProductsID = user.favorites;
+
+      const viewProductRecommendations = await recommendations_product_view(userId, id);
+      if (viewProductRecommendations) {
+        const recomendationsArray = viewProductRecommendations.recommended_products;
+        products = await Article.find({ _id: { $in: recomendationsArray } });
+      }
+
+      const userInteraction = new Activity({
+        userId,
+        productId: article._id,
+        productName: article.name,
+        category: article.category,
+        subcategory: article.subcategory,
+        price: parseFloat(article.price).toFixed(2),
+        action: "viewed",
+        timestamp: Math.floor(Date.now() / 1000)
+      });
+
+      await userInteraction.save();
       console.log("Activity saved successfully!");
-    })
-    res.render('Product', {article, nrFavorites: req.nrFavorites,  nrCart:  req.nrCart, favoriteProductsID, products});//Display the product result and render the 'Product' page
+    }
+
+    res.render('Product', {
+      article,
+      nrFavorites: req.nrFavorites || 0,
+      nrCart: req.nrCart || 0,
+      favoriteProductsID,
+      products
+    });
   } catch (error) {
-    console.error('Error for getting the product:', error);  
+    console.error('Error for getting the product:', error);
+    res.status(500).send('Server error');
   }
 });
+
 app.get('/edit-product/:id', async (req, res) => {
   try {
     const article = await Article.findById(req.params.id);
@@ -964,7 +979,7 @@ app.get('/favorites', requireAuth, countFavoriteProduct, countCartProduct, async
     res.status(500).json({error: 'Server error'});
   }
 });
-app.get('/checkout', countCartProduct, requireAuth, async (req, res) => {
+app.get('/checkout', countCartProduct, async (req, res) => {
   const userId = req.userId; //Gets id from middleware when user is loged in for displaing his addresses
   const addresses = await Addresses.find({idUser: userId}); //Finds all addresses by idUser
   const user = await User.findById(userId).populate('cart.productId');
@@ -977,7 +992,7 @@ app.get('/checkout', countCartProduct, requireAuth, async (req, res) => {
   res.render('Checkout', {cart, addresses, nrCart: req.nrCart, productCost, deliveryCost });
 });
 
-app.get('/summary',countCartProduct, requireAuth, async (req, res) => {
+app.get('/summary',countCartProduct, async (req, res) => {
   const userId = req.userId;
   const user = await User.findById(userId).populate('cart.productId');
   const cart = user.cart.map(item => ({
@@ -1115,7 +1130,7 @@ app.get('/order-placed',countCartProduct, async (req, res) => {
       res.status(500).send({ error: 'Internal Server Error' });
     }
   });
-  app.get('/success-payment', requireAuth, async (req, res) => {
+  app.get('/success-payment', async (req, res) => {
       // Retrieve the session details from Stripe
         await stripe.checkout.sessions.retrieve(req.query.session_id);
         const userId = req.userId; // Get the user ID from session metadata
@@ -1160,7 +1175,7 @@ app.get('/order-placed',countCartProduct, async (req, res) => {
         // Render the success page
         res.render('SuccessPayOnlineCard');
   });
-  app.get('/order-history', countFavoriteProduct, countCartProduct, requireAuth, async (req, res) => {
+  app.get('/order-history', countFavoriteProduct, countCartProduct, async (req, res) => {
     try {
       const userId = req.userId;
       const user = await User.findById(userId).select('orders').lean();

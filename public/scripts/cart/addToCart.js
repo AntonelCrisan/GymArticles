@@ -26,6 +26,7 @@ document.addEventListener('DOMContentLoaded', () => {
             }
         } catch (error) {
             console.error('Error updating cart status:', error);
+            window.location.assign('/login');
         }
     }
 
