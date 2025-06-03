@@ -15,7 +15,8 @@ import matplotlib.pyplot as plt
 import numpy as np
 from dotenv import load_dotenv
 import os
-
+from apscheduler.schedulers.background import BackgroundScheduler
+import atexit
 
 app = FastAPI()
 data = None
@@ -23,7 +24,16 @@ user_model = None
 trainset = None
 pred = None
 new_products = []
+scheduler = BackgroundScheduler()
 
+# Programăm reantrenarea la fiecare 12 ore
+scheduler.add_job(initialize_model, 'interval', hours=12)
+
+# Pornim schedulerul
+scheduler.start()
+
+# Oprire sigură la închiderea aplicației
+atexit.register(lambda: scheduler.shutdown())
 def load_data_from_api():
     try:
         load_dotenv()
@@ -201,48 +211,39 @@ def cart_recommendations(data, product_id, top_n=15):
 
 
 def cart_view_recommendations(data, user_model, trainset, user_id, product_id, top_n=15):
-    """ Recomandă produse relevante folosind ML (SVD) + conținut """
+    if product_id not in data['productId'].values:
+        return cold_start_recommendations(data, new_products, top_n=top_n)
 
-    # Verificăm dacă produsul există în date
-    filtered = data[data['productId'] == product_id]
-    if filtered.empty:
-        # Dacă produsul nu există, întoarce o listă goală sau cold start, depinde ce vrei
-        return []
-
-    #Filtrare pe bază de conținut (similaritate de produs)
     data["features"] = data[['category', 'subcategory', 'price']].apply(lambda x: ' '.join(x.astype(str)), axis=1)
     vectorizer = TfidfVectorizer(stop_words='english')
     X = vectorizer.fit_transform(data["features"])
     cosine_sim = cosine_similarity(X, X)
 
+    filtered = data[data['productId'] == product_id]
     product_index = filtered.index[0]
     similar_products = cosine_sim[product_index]
     similar_product_indices = similar_products.argsort()[-(top_n + 1):][::-1]
     content_recommendations = data.iloc[similar_product_indices]['productId'].tolist()
 
-    #Recomandări bazate pe modelul SVD
     all_products = data['productId'].unique()
     predictions = []
-    
+
     for pid in all_products:
-        try:
+        if pid in trainset._raw2inner_id_items:
             pred = user_model.predict(user_id, pid)
             predictions.append((pid, pred.est))
-        except:
-            continue
 
     predictions.sort(key=lambda x: x[1], reverse=True)
     svd_recommendations = [pid for pid, _ in predictions[:top_n]]
 
-    #Combinăm toate metodele
     hybrid_recommendations = list(set(svd_recommendations + content_recommendations))[:top_n]
 
     return hybrid_recommendations
 
 def favorite_view_recommendations(data, user_model, trainset, user_id, product_id, top_n=15):
-    """ Recomandă produse relevante folosind ML (SVD) + co-ocurență """
+    if product_id not in data['productId'].values:
+        return cold_start_recommendations(data, new_products, top_n=top_n)
 
-    #Co-ocurență (produse cumpărate împreună)
     purchased_together = data[data['action'] == 'purchased'].groupby('userId')['productId'].apply(list)
     co_occur = {}
     for products in purchased_together:
@@ -252,26 +253,24 @@ def favorite_view_recommendations(data, user_model, trainset, user_id, product_i
                     co_occur[p] = co_occur.get(p, 0) + 1
     co_occurrence_recommendations = sorted(co_occur, key=co_occur.get, reverse=True)[:top_n]
 
-    #Recomandări bazate pe modelul SVD
     all_products = data['productId'].unique()
     predictions = []
-    
     for pid in all_products:
-        try:
+        if pid in trainset._raw2inner_id_items:
             pred = user_model.predict(user_id, pid)
             predictions.append((pid, pred.est))
-        except:
-            continue
 
     predictions.sort(key=lambda x: x[1], reverse=True)
     svd_recommendations = [pid for pid, _ in predictions[:top_n]]
 
-    #Combinăm toate metodele
     hybrid_recommendations = list(set(co_occurrence_recommendations + svd_recommendations))[:top_n]
 
     return hybrid_recommendations
 
 def view_product(data, user_model, trainset, user_id, product_id, top_n=15):
+    if product_id not in data['productId'].values:
+        return cold_start_recommendations(data, new_products, top_n=top_n)
+
     purchased_together = data[data['action'] == 'purchased'].groupby('userId')['productId'].apply(list)
     co_occur = {}
     for products in purchased_together:
@@ -287,9 +286,6 @@ def view_product(data, user_model, trainset, user_id, product_id, top_n=15):
     cosine_sim = cosine_similarity(X, X)
 
     filtered = data[data['productId'] == product_id]
-    if filtered.empty:
-        return co_occurrence_recommendations
-
     product_index = filtered.index[0]
     similar_products = cosine_sim[product_index]
     similar_product_indices = similar_products.argsort()[-(top_n + 1):][::-1]
@@ -299,14 +295,18 @@ def view_product(data, user_model, trainset, user_id, product_id, top_n=15):
 
     return hybrid_recommendations
 
-
 @app.get("/recommendations")
 def get_recommendations(user_id: str = Query(...)):
     all_products = data['productId'].unique()
-    predictions = [(pid, user_model.predict(user_id, pid).est) for pid in all_products if pid not in new_products]
-    predictions.sort(key=lambda x: x[1], reverse=True)
+    predictions = []
+    for pid in all_products:
+        if pid not in new_products and pid in trainset._raw2inner_id_items:
+            pred = user_model.predict(user_id, pid)
+            predictions.append((pid, pred.est))
 
+    predictions.sort(key=lambda x: x[1], reverse=True)
     svd_recommendations = [pid for pid, _ in predictions[:15]]
+
     content_recommendations = content_based_recommendations(data, svd_recommendations[0], top_n=10) if svd_recommendations else []
     cold_start = cold_start_recommendations(data, new_products, top_n=5)
 
