@@ -610,7 +610,6 @@ app.post('/addToCart', async (req, res) => {
     // Find if the product is already in the cart
     const cartItem = user.cart.find(item => item.productId.equals(productId));
     const stockProduct = await Article.findById(productId);
-    const stockProduct = await Article.findById(productId);
     if (!stockProduct) {
       return res.status(404).json({ success: false, message: 'Product not found' });
     }
@@ -1192,6 +1191,22 @@ app.get('/activities', async (req, res) => {
     } catch (err) {
         res.status(500).json({ message: err.message });
     }
+});
+app.delete('/deleteActivities/:userId', async (req, res) => {
+  const { userId } = req.params;
+
+  try {
+    const result = await Activity.deleteMany({ userId });
+
+    if (result.deletedCount === 0) {
+      return res.status(404).json({ success: false, message: 'No activities found for this userId.' });
+    }
+
+    return res.json({ success: true, message: `Deleted ${result.deletedCount} activities for userId: ${userId}` });
+  } catch (error) {
+    console.error('Error deleting activities:', error);
+    return res.status(500).json({ success: false, message: 'Server error' });
+  }
 });
 
 app.listen(port, ()=> console.log(`Server is running at http://localhost:${port}`)); 
