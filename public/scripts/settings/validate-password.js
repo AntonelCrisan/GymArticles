@@ -17,7 +17,8 @@ form.addEventListener('submit', async (e) => {
     const res = await fetch('/validate-password', {
       method: 'POST',
       body: JSON.stringify({password, intendedUrl}),
-      headers: {'Content-Type': 'application/json'}
+      headers: {'Content-Type': 'application/json'},
+       credentials: 'include'
     });
     const data = await res.json();
     
