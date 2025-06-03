@@ -102,6 +102,7 @@ const payCourier = document.getElementById('pay-courier-button');
           headers: {
             'Content-Type': 'application/json'
           },
+           credentials: 'include',
           body: JSON.stringify(orderData)
         });
         const data = await response.json();
