@@ -37,7 +37,8 @@ document.addEventListener('DOMContentLoaded', () => {
                 body: JSON.stringify({
                     productId: heart.dataset.productId,
                     isAdding: isAdding
-                })
+                }),
+                 credentials: 'include'
             });
 
             if (!response.ok) {
