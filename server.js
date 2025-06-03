@@ -291,7 +291,7 @@ app.post('/manage-information',  requireAuth, async (req, res) => {
 //GET method for address page
 app.get('/addresses', countFavoriteProduct, countCartProduct, requireAuth, async (req, res) => {
   const userId = req.userId; //Gets id from middleware when user is loged in for displaing his addresses
-  const addresses = await Addresses.find({idUser: userID}); //Finds all addresses by idUser
+  const addresses = await Addresses.find({idUser: userId}); //Finds all addresses by idUser
   res.render('Addresses', {addresses, nrFavorites: req.nrFavorites,  nrCart:  req.nrCart});//Pass the addresses to frontend
 });
 //Add addresses post method
