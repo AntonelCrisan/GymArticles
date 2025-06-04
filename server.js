@@ -1095,7 +1095,9 @@ Activity.insertMany(userInteractions)
   }
 });
 app.get('/order-placed',countCartProduct, async (req, res) => {
-  res.render('OrderPlaced', { nrCart: req.nrCart});
+  const userId = req.userId;
+  const user = await User.findById(userId);
+  res.render('OrderPlaced', { nrCart: req.nrCart, user});
 });
   app.post('/pay', requireAuth, async (req, res) => {
     const userId = req.userId; // Retrieve user ID
