@@ -790,11 +790,14 @@ app.get('/', countFavoriteProduct, countCartProduct, async (req, res) => {
 //Search get method
 app.get('/search', countFavoriteProduct, countCartProduct, async (req, res) => {
   try {
+    const userId = req.userId;
+    const user = await User.findById(userId);
+    const favoriteProductsID = user ? user.favorites : [];
     let nrArticle = 0; //Number of results found
     const query = req.query.q; 
     const article = await Article.find({ $text: { $search: query } });  //Search by text in database
     nrArticle = article.length; //Passing the number of results to 'nrArticle' variable
-    res.render('SearchResults', { article, query, nrArticle, nrFavorites: req.nrFavorites,  nrCart:  req.nrCart }); //Passing the variables to frontend and render the SearchResults page
+    res.render('SearchResults', { article, query, nrArticle, nrFavorites: req.nrFavorites,  nrCart:  req.nrCart, favoriteProductsID }); //Passing the variables to frontend and render the SearchResults page
   } catch (err) {
     console.error('Error for searching the product:', err);
   }
@@ -805,6 +808,9 @@ app.get('/category-results', countFavoriteProduct, countCartProduct, async (req,
   const { category, subcategory } = req.query;
 
   try {
+    const userId = req.userId;
+    const user = await User.findById(userId);
+    const favoriteProductsID = user ? user.favorites : [];
     const articlesFilter = await Article.find();
     const grouped = {};
     for (const article of articlesFilter) {
@@ -836,7 +842,8 @@ app.get('/category-results', countFavoriteProduct, countCartProduct, async (req,
       results,
       nrFavorites: req.nrFavorites,
       nrCart: req.nrCart,
-      categories
+      categories,
+      favoriteProductsID
     });
   } catch (error) {
     console.error('Error searching the product:', error);

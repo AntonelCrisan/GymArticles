@@ -34,7 +34,7 @@
                 <div class="col-lg-4 col-md-6 mb-4 filtrable-card">
                     <div class="card" data-name = "<%= element.subcategory %>">
                         <div class="card-body"> 
-                            <span class="fa fa-heart heartIcon"></span>
+                            <span class="fa fa-heart heartIcon <%= favoriteProductsID.includes(element._id.toString()) ? 'clicked' : '' %>" id="addFavorite" data-product-id="<%= element._id %>"></span>
                             <img src="<%= element.image %>" alt="img" style="max-width: 100%; height: auto;">
                             <h5 class="card-title" id="name" style="white-space: nowrap; overflow: hidden; text-overflow: ellipsis; padding-top: 10px;"><%=  element.name %></h5>
                             <ul class="rating">
