@@ -15,6 +15,26 @@
 <body style="background-color: #f5f5f5;">
     <%- include('Navbar') %>
   <div class="container mt-5">
+     <div class="sidebar" style="margin-top: 80px;">
+                <!-- Meniu drop-down pentru sortare -->
+                <h5 class="text-center mb-3">Category</h5>
+                <ul class="list-unstyled">
+                <% categories.forEach(cat => { %>
+                    <li>
+                    <details>
+                        <summary><%= cat.category %></summary>
+                        <% cat.subcategories.forEach(sub => { %>
+                        <li>
+                            <a href="/category-results/?category=<%= encodeURIComponent(cat.category) %>&subcategory=<%= encodeURIComponent(sub) %>">
+                            <%= sub %>
+                            </a>
+                        </li>
+                        <% }) %>
+                    </details>
+                    </li>
+                <% }) %>
+                </ul>
+                </div>
 <div style="margin-top: 80px;"><%= results %> results found for <strong>"<%= subcategory %>"</strong></div>
   <% if (!subcategory) { %>
     <div class="text-danger">

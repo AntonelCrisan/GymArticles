@@ -805,6 +805,23 @@ app.get('/category-results', countFavoriteProduct, countCartProduct, async (req,
   const { category, subcategory } = req.query;
 
   try {
+    const articlesFilter = await Article.find();
+    const grouped = {};
+    for (const article of articlesFilter) {
+      const category = article.category;
+      const subcategory = article.subcategory;
+
+      if (!grouped[category]) {
+        grouped[category] = new Set();
+      }
+
+      grouped[category].add(subcategory);
+    }
+
+    const categories = Object.entries(grouped).map(([category, subcats]) => ({
+      category,
+      subcategories: Array.from(subcats)
+    }));
     let filter = {};
     if (subcategory) filter.subcategory = subcategory;
     if (category) filter.category = category;
@@ -818,7 +835,8 @@ app.get('/category-results', countFavoriteProduct, countCartProduct, async (req,
       category,
       results,
       nrFavorites: req.nrFavorites,
-      nrCart: req.nrCart
+      nrCart: req.nrCart,
+      categories
     });
   } catch (error) {
     console.error('Error searching the product:', error);
