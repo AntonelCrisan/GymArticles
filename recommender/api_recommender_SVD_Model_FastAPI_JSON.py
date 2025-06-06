@@ -41,14 +41,14 @@ def load_data_from_api():
         "purchased": 5.0,
         "added_to_cart": 4.5,
         "added_to_favorite": 3.5,
-        "viewed": 1.0
+        "viewed": 3.0
     }
     df['rating'] = df['action'].map(action_to_rating)
     df['timestamp'] = pd.to_datetime(df['timestamp'], unit='s')
 
     max_time = df['timestamp'].max()
     df['time_decay'] = (max_time - df['timestamp']).dt.days
-    df['time_decay'] = np.exp(-df['time_decay'] / 14)
+    df['time_decay'] = np.exp(-df['time_decay'] / 30)
 
     scaler = StandardScaler()
     df['price'] = scaler.fit_transform(df[['price']])
@@ -60,15 +60,15 @@ def load_data_from_api():
     return df
 
 def train_svd_model(data):
-    reader = Reader(rating_scale=(1, 5))
+    reader = Reader(rating_scale=(3, 5))
     dataset = Dataset.load_from_df(data[['userId', 'productId', 'rating']], reader)
     trainset = dataset.build_full_trainset()
 
     param_grid = {
-        'n_factors': [20, 50, 100, 150],
-        'n_epochs': [10, 20, 30],
+        'n_factors': [50, 100, 150],
+        'n_epochs': [20, 30, 40],
         'lr_all': [0.002, 0.005, 0.01],
-        'reg_all': [0.02, 0.05, 0.1, 0.2]
+        'reg_all': [0.02, 0.1, 0.2]
     }
     gs = GridSearchCV(SVD, param_grid, measures=['rmse', 'mae'], cv=3)
     gs.fit(dataset)
@@ -93,7 +93,7 @@ def initialize_model():
         print("Nu s-au putut încărca datele pentru antrenarea modelului.")
         return
 
-    reader = Reader(rating_scale=(1, 5))
+    reader = Reader(rating_scale=(3, 5))
     dataset = Dataset.load_from_df(data[['userId', 'productId', 'rating']], reader)
     trainset = dataset.build_full_trainset()
     user_model = SVD()
