@@ -41,7 +41,7 @@ def load_data_from_api():
         "purchased": 5.0,
         "added_to_cart": 4.5,
         "added_to_favorite": 3.5,
-        "viewed": 1.0
+        "viewed": 3.0
     }
     df['rating'] = df['action'].map(action_to_rating)
     df['timestamp'] = pd.to_datetime(df['timestamp'], unit='s')
@@ -55,12 +55,12 @@ def load_data_from_api():
 
     df['rating'] *= df['time_decay']
     df['rating'] += df.groupby(['userId', 'productId'])['action'].transform('count') * 0.5
-    df['rating'] = df['rating'].clip(1, 5)
+    df['rating'] = df['rating'].clip(3, 5)
 
     return df
 
 def train_svd_model(data):
-    reader = Reader(rating_scale=(1, 5))
+    reader = Reader(rating_scale=(3, 5))
     dataset = Dataset.load_from_df(data[['userId', 'productId', 'rating']], reader)
     trainset = dataset.build_full_trainset()
 
@@ -93,7 +93,7 @@ def initialize_model():
         print("Nu s-au putut încărca datele pentru antrenarea modelului.")
         return
 
-    reader = Reader(rating_scale=(1, 5))
+    reader = Reader(rating_scale=(3, 5))
     dataset = Dataset.load_from_df(data[['userId', 'productId', 'rating']], reader)
     trainset = dataset.build_full_trainset()
     user_model = SVD()
