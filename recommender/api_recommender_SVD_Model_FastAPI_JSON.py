@@ -12,6 +12,7 @@ from sklearn.metrics import precision_score, recall_score, f1_score
 from sklearn.metrics.pairwise import cosine_similarity
 from sklearn.feature_extraction.text import TfidfVectorizer
 import matplotlib.pyplot as plt
+from io import BytesIO
 import numpy as np
 from dotenv import load_dotenv
 import os
@@ -24,6 +25,7 @@ user_model = None
 trainset = None
 pred = None
 new_products = []
+plot_image_bytes = None
 
 def load_data_from_api():
     try:
@@ -86,7 +88,7 @@ def train_svd_model(data):
     return best_model, trainset
 
 def initialize_model():
-    global data, user_model, trainset, new_products
+    global data, user_model, trainset, new_products, plot_image_bytes
     print("Antrenare model ...")
     data = load_data_from_api()
     if data.empty:
@@ -115,15 +117,23 @@ def initialize_model():
     coefficients = np.polyfit(real_values, predicted_values, 1)
     regression_line = np.polyval(coefficients, real_values)
 
-    plt.figure(figsize=(10, 6))
-    plt.scatter(real_values, predicted_values, color='green', label='Valori prezise')
-    plt.plot(real_values, regression_line, color='red', label='Linie de regresie', linewidth=2)
-    plt.title("Grafic Valori Reale vs. Valori Prezise")
-    plt.xlabel("Valori Reale")
-    plt.ylabel("Valori Prezise")
-    plt.legend()
-    plt.grid(True)
-    plt.show()
+    # Generare figura și salvare în buffer
+    fig, ax = plt.subplots(figsize=(10, 6))
+    ax.scatter(real_values, predicted_values, color='green', label='Valori prezise')
+    ax.plot(real_values, regression_line, color='red', label='Linie de regresie', linewidth=2)
+    ax.set_title("Grafic Valori Reale vs. Valori Prezise")
+    ax.set_xlabel("Valori Reale")
+    ax.set_ylabel("Valori Prezise")
+    ax.legend()
+    ax.grid(True)
+
+    # Salvare în memorie
+    buf = BytesIO()
+    plt.savefig(buf, format='png')
+    buf.seek(0)
+    plot_image_bytes = buf.read()
+    buf.close()
+    plt.close(fig)
 
     new_products = identify_new_products(data, trainset)
 
@@ -391,7 +401,12 @@ def get_top15_popular_products():
 def refresh_model():
     initialize_model()
     return JSONResponse(content={"status": "Model retrained successfully"})
-
+@app.get("/model-plot")
+def get_model_plot():
+    global plot_image_bytes
+    if plot_image_bytes is None:
+        return JSONResponse(status_code=404, content={"error": "Graficul nu este disponibil. Modelul nu a fost antrenat încă."})
+    return Response(content=plot_image_bytes, media_type="image/png")
 initialize_model()
 #Added scheduler for learning after 12 hours
 scheduler = BackgroundScheduler()
