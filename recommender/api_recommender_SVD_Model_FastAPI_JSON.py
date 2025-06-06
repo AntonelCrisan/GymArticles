@@ -60,7 +60,7 @@ def load_data_from_api():
     return df
 
 def train_svd_model(data):
-    reader = Reader(rating_scale=(3, 5))
+    reader = Reader(rating_scale=(1, 5))
     dataset = Dataset.load_from_df(data[['userId', 'productId', 'rating']], reader)
     trainset = dataset.build_full_trainset()
 
