@@ -51,7 +51,7 @@ def load_data_from_api():
 
     max_time = df['timestamp'].max()
     df['time_decay'] = (max_time - df['timestamp']).dt.days
-    df['time_decay'] = np.exp(-df['time_decay'] / 30)
+    df['time_decay'] = np.exp(-df['time_decay'] / 14)
 
     scaler = StandardScaler()
     df['price'] = scaler.fit_transform(df[['price']])
