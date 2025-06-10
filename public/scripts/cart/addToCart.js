@@ -18,7 +18,6 @@ document.addEventListener('DOMContentLoaded', () => {
 
             const result = await response.json();
             if (result.success) {
-                location.reload();
                 return result.newCartCount;
             } else {
                 console.error('Failed to update cart status.');
