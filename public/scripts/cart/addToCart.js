@@ -41,8 +41,13 @@ document.addEventListener('DOMContentLoaded', () => {
     addToCart.forEach(cart => {
         cart.addEventListener('click', async () => {
             const newCartCount = await updateFavoriteStatus(cart);
+            const isAdding = !cart.classList.contains('clicked');
             if (cartCountElement) {
                 if (newCartCount > 0) {
+                    if (isAdding) {
+                    cart.classList.add('clicked');
+                    showAddedCartMessage();
+                }
                     cartCountElement.textContent = newCartCount;
                     cartCountElement.style.display = 'flex';
                 } else {
@@ -56,6 +61,19 @@ document.addEventListener('DOMContentLoaded', () => {
 
     function showWarningOutOfStock() {
         const message = document.getElementById('product-outof-stock');
+        if (message) {
+            message.classList.remove('d-none');
+            setTimeout(() => {
+                message.classList.add('hide');
+                setTimeout(() => {
+                    message.classList.add('d-none');
+                    message.classList.remove('hide');
+                }, 1000);
+            }, 1500);
+        }
+    }
+       function showAddedCartMessage() {
+        const message = document.getElementById('added-cart');
         if (message) {
             message.classList.remove('d-none');
             setTimeout(() => {

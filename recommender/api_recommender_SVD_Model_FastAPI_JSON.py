@@ -7,7 +7,6 @@ import pandas as pd
 from sklearn.preprocessing import StandardScaler
 from surprise import SVD, Dataset, Reader
 from surprise.model_selection import GridSearchCV
-from surprise import accuracy
 from sklearn.metrics import r2_score
 from sklearn.metrics import precision_score, recall_score, f1_score
 from sklearn.metrics.pairwise import cosine_similarity
@@ -41,10 +40,10 @@ def load_data_from_api():
 
     df = pd.DataFrame(activities)
     action_to_rating = {
-        "purchased": 5.0,
-        "added_to_cart": 4.5,
-        "added_to_favorite": 3.5,
-        "viewed": 3.0
+        "purchased": 3.0,
+        "added_to_cart": 2.5,
+        "added_to_favorite": 1.5,
+        "viewed": 1.0
     }
     df['rating'] = df['action'].map(action_to_rating)
     df['timestamp'] = pd.to_datetime(df['timestamp'], unit='s')
@@ -58,12 +57,12 @@ def load_data_from_api():
 
     df['rating'] *= df['time_decay']
     df['rating'] += df.groupby(['userId', 'productId'])['action'].transform('count') * 0.5
-    df['rating'] = df['rating'].clip(3, 5)
+    df['rating'] = df['rating'].clip(1, 3)
 
     return df
 
 def train_svd_model(data):
-    reader = Reader(rating_scale=(3, 5))
+    reader = Reader(rating_scale=(1, 3))
     dataset = Dataset.load_from_df(data[['userId', 'productId', 'rating']], reader)
     trainset = dataset.build_full_trainset()
 
@@ -96,7 +95,7 @@ def initialize_model():
         print("Nu s-au putut încărca datele pentru antrenarea modelului.")
         return
 
-    reader = Reader(rating_scale=(3, 5))
+    reader = Reader(rating_scale=(1, 3))
     dataset = Dataset.load_from_df(data[['userId', 'productId', 'rating']], reader)
     trainset = dataset.build_full_trainset()
     user_model = SVD()
@@ -109,11 +108,6 @@ def initialize_model():
     predicted_values = [p.est for p in pred]
     r2 = r2_score(real_values, predicted_values)
     print(f"R-squared: {r2}")
-
-    precision, recall, f1 = calculate_classification_metrics(real_values, predicted_values)
-    print(f"Precision: {precision}")
-    print(f"Recall: {recall}")
-    print(f"F1-Score: {f1}")
 
     coefficients = np.polyfit(real_values, predicted_values, 1)
     regression_line = np.polyval(coefficients, real_values)
