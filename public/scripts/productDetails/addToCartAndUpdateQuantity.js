@@ -79,7 +79,13 @@ document.addEventListener('DOMContentLoaded', () => {
   }
 
   // Butonul de Adaugă în coș
-  addToCartBtn.addEventListener('click', updateCart);
+ addToCartBtn.addEventListener('click', () => {
+    addToCartBtn.classList.remove('clicked');
+    void addToCartBtn.offsetWidth; 
+    addToCartBtn.classList.add('clicked');
+    showAddedCartFromDetailMessage();
+    updateCart();
+});
 
   // Afișează mesajul de stoc epuizat
   function showWarningOutOfStock() {
@@ -95,4 +101,17 @@ document.addEventListener('DOMContentLoaded', () => {
       }, 1500);
     }
   }
+    function showAddedCartFromDetailMessage() {
+        const message = document.getElementById('added-cart');
+        if (message) {
+            message.classList.remove('d-none');
+            setTimeout(() => {
+                message.classList.add('hide');
+                setTimeout(() => {
+                    message.classList.add('d-none');
+                    message.classList.remove('hide');
+                }, 1000);
+            }, 1500);
+        }
+    }
 });

@@ -18,6 +18,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
             const result = await response.json();
             if (result.success) {
+                location.reload();
                 return result.newCartCount;
             } else {
                 console.error('Failed to update cart status.');
@@ -41,13 +42,12 @@ document.addEventListener('DOMContentLoaded', () => {
     addToCart.forEach(cart => {
         cart.addEventListener('click', async () => {
             const newCartCount = await updateFavoriteStatus(cart);
-            const isAdding = !cart.classList.contains('clicked');
             if (cartCountElement) {
                 if (newCartCount > 0) {
-                    if (isAdding) {
+                    cart.classList.remove('clicked');
+                    void cart.offsetWidth; 
                     cart.classList.add('clicked');
                     showAddedCartMessage();
-                }
                     cartCountElement.textContent = newCartCount;
                     cartCountElement.style.display = 'flex';
                 } else {
