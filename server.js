@@ -258,7 +258,7 @@ app.get('/myAccount',countFavoriteProduct, countCartProduct, (req, res) =>  {
   res.render('MyAccount', {nrFavorites: req.nrFavorites, nrCart:  req.nrCart});
 });
 //Manage information post method from user account
-app.post('/manage-information', async (req, res) => {
+app.post('/manage-information', requireAuth, async (req, res) => {
  const userId = req.userId; //Useing getter method for geting the id from token
   const {nameUser, phoneNumber, year, day} = req.body;
   //Change the months into number for inserting corectlly in database
@@ -279,7 +279,7 @@ app.post('/manage-information', async (req, res) => {
       return res.status(400).json({warning: 'All fields must be filled!'});
     }
     if(phoneNumber.length !== 10){//Checks the lenght of phone number, have to be 10 characters
-      return res.status(400).json({warning: 'Minimum length of phone number is 10 characters'});
+      return res.status(400).json({warning: 'The length of phone number must be 10 characters'});
     }
     await User.findByIdAndUpdate(userId, {name:nameUser, phoneNumber: phoneNumber, dateOfBirth: dateOfBirth});//Updateding the data by userID
     res.status(200).json({message: 'Your personal data was successfully modified!'});//Sending success message to frontend for displaying the message
@@ -309,7 +309,7 @@ app.post('/add-address', requireAuth, async(req, res) => {
       return res.status(400).json({warning: 'All fields must be filled!'});
       }
       if(phoneNumber.length !== 10){//Checking the length of phone number
-        return res.status(400).json({warning: 'Minimum length of phone number is 10'});
+        return res.status(400).json({warning: 'The length of phone number must be 10 characters'});
       }
       const address = await Addresses.create({idUser, name, phoneNumber, street, city, country}); //Adds new address
       address.save();//Saves the address
@@ -334,7 +334,7 @@ app.post('/update-address/:id', async (req, res) => {
       return res.status(400).json({warning: 'All fields must be filled!'});
     }
     if(phoneNumber.length !== 10){//Checks the phone number has 10 characters
-      return res.status(400).json({warning: 'Minimum length of phone number is 10'});
+      return res.status(400).json({warning: 'The length of phone number must be 10 characters'});
     }
     await Addresses.findByIdAndUpdate(id, req.body, {new:true});//Update the address
     return res.status(200).json({message: 'Address updated succesfully'});
