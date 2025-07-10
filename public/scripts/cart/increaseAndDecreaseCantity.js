@@ -39,12 +39,16 @@ async function updateCantity(id, cantity) {
 function updateButtonStates() {
     qtyValues.forEach((qtyValue, index) => {
         const decreaseButton = decreaseCantityButtons[index];
+        const increaseButton = increaseCantityButtons[index];
         let currentValue = parseInt(qtyValue.textContent, 10);
         // Enable/Disable decrease button based on quantity
         if (currentValue > 1) {
             decreaseButton.disabled = false;
         } else {
             decreaseButton.disabled = true;
+        }
+        if(currentValue === 10){
+            increaseButton.disabled = true;
         }
     });
 }
@@ -60,6 +64,7 @@ increaseCantityButtons.forEach((plus, index) => {
         const id = plus.dataset.id;
         const cantity = inputHidden.value;
         await updateCantity(id, parseInt(cantity));
+       
     });
 });
 // Add event listeners to each decrease button

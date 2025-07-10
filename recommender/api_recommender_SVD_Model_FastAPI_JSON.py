@@ -47,14 +47,14 @@ def load_data_from_api():
     }
     df['rating'] = df['action'].map(action_to_rating)
     df['timestamp'] = pd.to_datetime(df['timestamp'], unit='s')
-
+    # Ajustăm decăderea temporală pentru a nu penaliza excesiv produsele noi
     max_time = df['timestamp'].max()
     df['time_decay'] = (max_time - df['timestamp']).dt.days
     df['time_decay'] = np.exp(-df['time_decay'] / 14)
-
+    # Normalizăm prețul folosind StandardScaler
     scaler = StandardScaler()
     df['price'] = scaler.fit_transform(df[['price']])
-
+     # Calculăm rating-ul final
     df['rating'] *= df['time_decay']
     df['rating'] += df.groupby(['userId', 'productId'])['action'].transform('count') * 0.5
     df['rating'] = df['rating'].clip(1, 3)
