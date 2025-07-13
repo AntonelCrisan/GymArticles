@@ -777,11 +777,11 @@ app.get('/', countFavoriteProduct, countCartProduct, async (req, res) => {
     if (top15Products && product_recomendations) {
       const productIds = top15Products.map(product => product.productId);
       const recomendationsArray = product_recomendations.recommendations;
-      topProducts = await Article.find({ _id: { $in: productIds } });
-      top15ProductsRecomendations = await Article.find({ _id: { $in: recomendationsArray } });
+      topProducts = await Article.find({ _id: { $in: recomendationsArray } });
+      top15ProductsRecomendations = await Article.find({ _id: { $in: productIds } });
     }
 
-    res.render('HomePage', {articles, categories, topProducts,top15ProductsRecomendations, nrFavorites: req.nrFavorites, nrCart:  req.nrCart, favoriteProductsID});
+    res.render('HomePage', {articles, categories, topProducts, top15ProductsRecomendations, nrFavorites: req.nrFavorites, nrCart:  req.nrCart, favoriteProductsID});
   } catch (err) {
     return res.status(500).json({error: err.message});
   }
@@ -886,6 +886,12 @@ app.get('/product', checkUser, countFavoriteProduct, countCartProduct, async (re
 
       await userInteraction.save();
       console.log("Activity saved successfully!");
+    }else{
+      const top15Products = await showTop15Products();
+      if (top15Products) {
+        const productIds = top15Products.map(product => product.productId);
+        products = await Article.find({ _id: { $in: productIds } });
+      }
     }
 
     res.render('Product', {
@@ -1206,7 +1212,7 @@ app.get('/order-placed',countCartProduct, async (req, res) => {
     try {
       const userId = req.userId;
       const user = await User.findById(userId).select('orders').lean();
-      const orders = user.orders;
+      const orders = user.orders.sort((a, b) => new Date(b.orderDate) - new Date(a.orderDate));
       // Renderizează pagina HTML pentru utilizatori
       res.render('OrderHistory', {
         nrFavorites: req.nrFavorites,
