@@ -11,6 +11,8 @@ from sklearn.metrics import r2_score
 from sklearn.metrics import precision_score, recall_score, f1_score
 from sklearn.metrics.pairwise import cosine_similarity
 from sklearn.feature_extraction.text import TfidfVectorizer
+import matplotlib
+matplotlib.use('Agg')
 import matplotlib.pyplot as plt
 from io import BytesIO
 import numpy as np
@@ -220,27 +222,10 @@ def cart_view_recommendations(data, user_model, trainset, user_id, product_id, t
     similar_products = cosine_sim[product_index]
     similar_product_indices = similar_products.argsort()[-(top_n + 1):][::-1]
     content_recommendations = data.iloc[similar_product_indices]['productId'].tolist()
+    purchased_together = data[data['action'] == 'purchased'].groupby('userId')['productId'].apply(list)
 
     all_products = data['productId'].unique()
     predictions = []
-
-    for pid in all_products:
-        if pid in trainset._raw2inner_id_items:
-            pred = user_model.predict(user_id, pid)
-            predictions.append((pid, pred.est))
-
-    predictions.sort(key=lambda x: x[1], reverse=True)
-    svd_recommendations = [pid for pid, _ in predictions[:top_n]]
-
-    hybrid_recommendations = list(set(svd_recommendations + content_recommendations))[:top_n]
-
-    return hybrid_recommendations
-
-def favorite_view_recommendations(data, user_model, trainset, user_id, product_id, top_n=15):
-    if product_id not in data['productId'].values:
-        return cold_start_recommendations(data, new_products, top_n=top_n)
-
-    purchased_together = data[data['action'] == 'purchased'].groupby('userId')['productId'].apply(list)
     co_occur = {}
     for products in purchased_together:
         if product_id in products:
@@ -248,6 +233,21 @@ def favorite_view_recommendations(data, user_model, trainset, user_id, product_i
                 if p != product_id:
                     co_occur[p] = co_occur.get(p, 0) + 1
     co_occurrence_recommendations = sorted(co_occur, key=co_occur.get, reverse=True)[:top_n]
+    for pid in all_products:
+        if pid in trainset._raw2inner_id_items:
+            pred = user_model.predict(user_id, pid)
+            predictions.append((pid, pred.est))
+
+    predictions.sort(key=lambda x: x[1], reverse=True)
+    svd_recommendations = [pid for pid, _ in predictions[:top_n]]
+
+    hybrid_recommendations = list(set(svd_recommendations + content_recommendations + co_occurrence_recommendations))[:top_n]
+
+    return hybrid_recommendations
+
+def favorite_view_recommendations(data, user_model, trainset, user_id, product_id, top_n=15):
+    if product_id not in data['productId'].values:
+        return cold_start_recommendations(data, new_products, top_n=top_n)
 
     all_products = data['productId'].unique()
     predictions = []
@@ -258,8 +258,17 @@ def favorite_view_recommendations(data, user_model, trainset, user_id, product_i
 
     predictions.sort(key=lambda x: x[1], reverse=True)
     svd_recommendations = [pid for pid, _ in predictions[:top_n]]
+    
+    vectorizer = TfidfVectorizer(stop_words='english')
+    X = vectorizer.fit_transform(data["features"])
+    cosine_sim = cosine_similarity(X, X)
+    filtered = data[data['productId'] == product_id]
+    product_index = filtered.index[0]
+    similar_products = cosine_sim[product_index]
+    similar_product_indices = similar_products.argsort()[-(top_n + 1):][::-1]
+    content_recommendations = data.iloc[similar_product_indices]['productId'].tolist()
 
-    hybrid_recommendations = list(set(co_occurrence_recommendations + svd_recommendations))[:top_n]
+    hybrid_recommendations = list(set(content_recommendations + svd_recommendations))[:top_n]
 
     return hybrid_recommendations
 
@@ -408,4 +417,4 @@ scheduler.add_job(initialize_model, 'interval', hours=12)
 scheduler.start()
 atexit.register(lambda: scheduler.shutdown())
 if __name__ == "__main__":
-    uvicorn.run(app, host="127.0.0.1", port=5000, reload=True)
+    uvicorn.run(app, host="127.0.0.1", port=8000, reload=True)
