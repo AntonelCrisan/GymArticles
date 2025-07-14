@@ -47,14 +47,14 @@ def load_data_from_api():
     }
     df['rating'] = df['action'].map(action_to_rating)
     df['timestamp'] = pd.to_datetime(df['timestamp'], unit='s')
-    # Ajustăm decăderea temporală pentru a nu penaliza excesiv produsele noi
+    #Ajustam decaderea temporala
     max_time = df['timestamp'].max()
     df['time_decay'] = (max_time - df['timestamp']).dt.days
-    df['time_decay'] = np.exp(-df['time_decay'] / 30)
-    # Normalizăm prețul folosind StandardScaler
+    df['time_decay'] = np.exp(-df['time_decay'] / 14)
+    #Normalizam pretul folosind StandardScaler
     scaler = StandardScaler()
     df['price'] = scaler.fit_transform(df[['price']])
-     # Calculăm rating-ul final
+     # Calculam rating-ul final
     df['rating'] *= df['time_decay']
     df['rating'] += df.groupby(['userId', 'productId'])['action'].transform('count') * 0.5
     df['rating'] = df['rating'].clip(1, 3)
@@ -112,7 +112,7 @@ def initialize_model():
     coefficients = np.polyfit(real_values, predicted_values, 1)
     regression_line = np.polyval(coefficients, real_values)
 
-    # Generare figura și salvare în buffer
+    # Generare figura si salvare in buffer
     fig, ax = plt.subplots(figsize=(10, 6))
     ax.scatter(real_values, predicted_values, color='green', label='Valori prezise')
     ax.plot(real_values, regression_line, color='red', label='Linie de regresie', linewidth=2)
@@ -122,7 +122,7 @@ def initialize_model():
     ax.legend()
     ax.grid(True)
 
-    # Salvare în memorie
+    # Salvare in memorie
     buf = BytesIO()
     plt.savefig(buf, format='png')
     buf.seek(0)
@@ -159,7 +159,7 @@ def cold_start_recommendations(data, new_products, top_n=10):
     top_indices = np.argsort(sim_scores)[-top_n:][::-1]
 
     return data.iloc[top_indices]['productId'].tolist()
-#Funcția de filtrare pe bază de conținut
+#Functia filtrare pe baza de continut
 def content_based_recommendations(data, product_id, top_n=20):
     data["features"] = data[['category', 'subcategory', 'price']].apply(lambda x: ' '.join(x.astype(str)), axis=1)
     vectorizer = TfidfVectorizer(stop_words='english')
@@ -403,7 +403,6 @@ def get_model_plot():
         return JSONResponse(status_code=404, content={"error": "Graficul nu este disponibil. Modelul nu a fost antrenat încă."})
     return Response(content=plot_image_bytes, media_type="image/png")
 initialize_model()
-#Added scheduler for learning after 12 hours
 scheduler = BackgroundScheduler()
 scheduler.add_job(initialize_model, 'interval', hours=12)
 scheduler.start()
