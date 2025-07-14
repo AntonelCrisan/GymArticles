@@ -19,7 +19,7 @@ const axios = require("axios");
 const Activity = require('./public/activity');
 require("dotenv").config();
 const stripe = require('stripe')(process.env.SECRET_STRIPE_KEY);
-const apiBaseUrl = 'http://127.0.0.1:8000' || process.env.MODEL_API_URL; 
+const apiBaseUrl =  process.env.MODEL_API_URL || 'http://127.0.0.1:8000'; 
 app.use(express.static('public'));
 app.use(express.json());
 app.use(cookieParser());
