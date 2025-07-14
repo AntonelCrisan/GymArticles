@@ -258,7 +258,7 @@ def favorite_view_recommendations(data, user_model, trainset, user_id, product_i
 
     predictions.sort(key=lambda x: x[1], reverse=True)
     svd_recommendations = [pid for pid, _ in predictions[:top_n]]
-    
+
     vectorizer = TfidfVectorizer(stop_words='english')
     X = vectorizer.fit_transform(data["features"])
     cosine_sim = cosine_similarity(X, X)
@@ -417,4 +417,4 @@ scheduler.add_job(initialize_model, 'interval', hours=12)
 scheduler.start()
 atexit.register(lambda: scheduler.shutdown())
 if __name__ == "__main__":
-    uvicorn.run(app, host="127.0.0.1", port=8000, reload=True)
+    uvicorn.run(app, host="127.0.0.1", port=5000, reload=True)
